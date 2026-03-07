@@ -1857,6 +1857,206 @@
             margin: 0 auto;
             padding: 0 16px 32px;
         }
+
+        /* ══ UNIT CIRCLE THEORY PANEL ══ */
+        .uc-theory-panel {
+            margin: 0 0 28px 0;
+            border: 1px solid var(--border);
+            background: var(--parchment);
+            box-shadow: 0 2px 16px rgba(0,0,0,0.13);
+            position: relative;
+        }
+        .uc-theory-panel::before {
+            content: '';
+            position: absolute;
+            top: 4px; left: 4px; right: 4px; bottom: 4px;
+            border: 1px solid rgba(160,120,48,0.18);
+            pointer-events: none;
+        }
+        .uc-theory-toggle {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 24px;
+            cursor: pointer;
+            background: linear-gradient(135deg, #3b1f0a 0%, #5a3015 100%);
+            user-select: none;
+            transition: background 0.2s;
+        }
+        .uc-theory-toggle:hover { background: linear-gradient(135deg, #2a1508 0%, #4a2510 100%); }
+        .uc-theory-toggle h3 {
+            margin: 0;
+            color: #ffffff;
+            font-family: 'Cinzel', serif;
+            font-size: 0.82rem;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .uc-theory-chevron {
+            color: #ffffff;
+            font-size: 0.9rem;
+            transition: transform 0.32s cubic-bezier(.4,0,.2,1);
+        }
+        .uc-theory-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.45s cubic-bezier(.4,0,.2,1);
+            padding: 0 28px;
+            background: var(--parchment);
+        }
+        .uc-theory-body.uc-open {
+            max-height: 9000px;
+            padding: 28px;
+            transition: max-height 0.6s ease-in;
+        }
+        .uc-theory-chevron.uc-open { transform: rotate(180deg); }
+
+        /* Intro paragraph */
+        .uc-lead {
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 1.08rem;
+            color: #1a1008;
+            line-height: 1.82;
+            margin-bottom: 24px;
+            text-align: justify;
+            hyphens: auto;
+        }
+        body.dark-mode .uc-lead { color: var(--ink-mid); }
+
+        /* Section grid */
+        .uc-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(min(340px, 100%), 1fr));
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+        .uc-card {
+            border: 1px solid var(--panel-border);
+            border-left: 3px solid var(--gold);
+            background: var(--parchment-dark);
+            padding: 16px 18px;
+            position: relative;
+        }
+        .uc-card-num {
+            font-family: 'Cinzel', serif;
+            font-size: 0.55rem;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 6px;
+        }
+        .uc-card-title {
+            font-family: 'Cinzel', serif;
+            font-size: 0.78rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #1a1008;
+            margin-bottom: 10px;
+        }
+        body.dark-mode .uc-card-title { color: var(--ink); }
+        .uc-card-body {
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 0.96rem;
+            color: #1a1008;
+            line-height: 1.72;
+        }
+        body.dark-mode .uc-card-body { color: var(--ink-mid); }
+        .uc-formula {
+            display: block;
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 1.1rem;
+            color: var(--sepia);
+            background: rgba(255,255,240,0.6);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            padding: 8px 14px;
+            margin: 10px 0;
+            text-align: center;
+            line-height: 1.9;
+        }
+        body.dark-mode .uc-formula {
+            background: rgba(196,155,56,0.07);
+            color: var(--gold-light);
+        }
+
+        /* Summary table */
+        .uc-summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 0.96rem;
+            margin-bottom: 28px;
+        }
+        .uc-summary-table thead tr {
+            background: var(--ink);
+            color: var(--gold-light);
+        }
+        .uc-summary-table th {
+            font-family: 'Cinzel', serif;
+            font-size: 0.62rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            padding: 10px 16px;
+            text-align: left;
+            border: 1px solid var(--border);
+        }
+        .uc-summary-table td {
+            padding: 9px 16px;
+            border: 1px solid var(--panel-border);
+            color: #1a1008;
+            background: var(--parchment-dark);
+        }
+        body.dark-mode .uc-summary-table td { color: var(--ink-mid); }
+        .uc-summary-table tr:nth-child(even) td { background: var(--parchment); }
+        .uc-summary-table td:first-child { color: var(--gold); font-family: 'Cinzel', serif; font-size: 0.68rem; letter-spacing: 0.06em; text-transform: uppercase; }
+
+        /* Deep idea callout */
+        .uc-deep-idea {
+            background: rgba(139,26,26,0.05);
+            border-left: 3px solid var(--red-ink);
+            padding: 18px 22px;
+            margin: 8px 0 0 0;
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 1rem;
+            color: #1a1008;
+            line-height: 1.78;
+        }
+        body.dark-mode .uc-deep-idea { background: rgba(224,96,96,0.07); color: var(--ink-mid); }
+        .uc-deep-idea .uc-deep-label {
+            font-family: 'Cinzel', serif;
+            font-size: 0.62rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--red-ink);
+            margin-bottom: 8px;
+        }
+        .uc-formula-center {
+            font-size: 1.2rem;
+            font-family: 'EB Garamond', serif;
+            color: var(--sepia);
+            display: block;
+            text-align: center;
+            margin: 10px 0;
+        }
+        body.dark-mode .uc-formula-center { color: var(--gold-light); }
+        /* ── UC preset buttons ── */
+        .uc-preset-btn {
+            font-family: 'Cinzel', serif;
+            font-size: 0.54rem;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            padding: 3px 10px;
+            border: 1px solid #c084fc;
+            background: var(--parchment-dark);
+            color: #c084fc;
+            cursor: pointer;
+            transition: background 0.18s, color 0.18s;
+        }
+        .uc-preset-btn:hover { background: #c084fc; color: var(--parchment); }
+        .uc-preset-btn.active { background: #c084fc; color: #fff; }
     </style>
 </head>
 <body class="dark-mode">
@@ -1865,18 +2065,21 @@
         <div class="subtitle">An Interactive Visualization of Modular Arithmetic, Prime Structure, and the Farey Sequence</div>
         <div class="author">Wessen Getachew &nbsp;·&nbsp; 2026</div>
         <div class="tool-nav">
-            <a class="tool-nav-link" href="https://wessengetachew.github.io/G/" target="_blank">Interactive Tool</a>
+            <a class="tool-nav-link" href="https://wessengetachew.github.io/G/" target="_blank">Audio</a>
             &nbsp;·&nbsp;
             <a class="tool-nav-link" href="https://wessengetachew.github.io/Primes/" target="_blank">Modular Sieve</a>
             &nbsp;·&nbsp;
             <a class="tool-nav-link" href="https://wessengetachew.github.io/Composite/" target="_blank">Composite</a>
             &nbsp;·&nbsp;
             <a class="tool-nav-link" href="https://wessengetachew.github.io/Transform/" target="_blank">Transform</a>
+            &nbsp;·&nbsp;
+            <a class="tool-nav-link" href="https://wessengetachew.github.io/Zeta/" target="_blank">Decomposition / Zeta²</a>
         </div>
     </header>
     
 
     <div class="introduction">
+
         <div class="intro-section">
 
             <!-- 2πr/m Farey diagram -->
@@ -2076,7 +2279,6 @@
                 <input id="fcm-gap-play" type="hidden" value="">
               </div>
 
-
               <!-- Per-r path table (shown when gap active and table enabled) -->
               <div id="farey-r-table-wrap" style="display:none;margin-top:8px;padding:10px 14px;background:rgba(6,4,14,0.9);border:1px solid rgba(74,144,217,0.4);border-radius:4px;font-family:'Cinzel',serif;font-size:0.6rem;color:#e8d9b0;max-height:320px;overflow-y:auto;">
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;border-bottom:1px solid rgba(74,144,217,0.2);padding-bottom:6px;">
@@ -2091,7 +2293,7 @@
                 <div id="farey-r-table-body"></div>
               </div>
 
-              </div>
+              </div><!-- /farey-canvas-wrap -->
 
 <div id="farey-panel">
 <div class="farey-cards-grid">
@@ -2393,6 +2595,7 @@
                   </div>
 
     </div></div><!-- /card4 -->
+
 </div><!-- /farey-cards-grid -->
               </div><!-- /farey-panel -->
 
@@ -2418,14 +2621,121 @@
 
                 <!-- Farey Stats dropdown -->
                 <div style="background:var(--parchment-dark);border:1px solid var(--panel-border);border-radius:4px;margin-bottom:6px;">
-                  <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 14px;cursor:pointer;" onclick="var b=this.nextElementSibling;var a=this.querySelector('.farey-arrow');b.style.display=b.style.display==='none'?'block':'none';a.textContent=b.style.display==='none'?'▶':'▼';">
-                    <span style="font-family:'Cinzel',serif;font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);">&#9632; Farey Structure Statistics</span>
-                    <span class="farey-arrow" style="color:var(--gold);font-size:0.7rem;">▼</span>
-                  </div>
-                  <div style="display:block;padding:12px 16px;">
+                  <!-- Always-visible stats line -->
+                  <div style="padding:9px 14px 0 14px;">
                     <div id="farey-live-stats-detail" style="font-family:'Cinzel',serif;font-size:0.62rem;line-height:2;color:var(--ink-mid);"></div>
                   </div>
+                  <!-- Collapsible ring radii section -->
+                  <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 14px 7px 14px;cursor:pointer;border-top:1px solid var(--panel-border);margin-top:8px;" onclick="var b=this.nextElementSibling;var a=this.querySelector('.farey-arrow');b.style.display=b.style.display==='none'?'block':'none';a.textContent=b.style.display==='none'?'▶':'▼';">
+                    <span style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);">&#9632; Ring Radii &amp; Areas</span>
+                    <span class="farey-arrow" style="color:var(--gold);font-size:0.7rem;">▶</span>
+                  </div>
+                  <div id="farey-ring-radii-body" style="display:none;padding:0 14px 12px 14px;">
+                    <!-- filled by JS -->
+                  </div>
                 </div>
+
+                <!-- ══ DIPOLE FIELD DETAILS DROPDOWN ══ -->
+                <div id="farey-dipole-details-panel" style="display:none;background:var(--parchment-dark);border:1px solid rgba(232,121,249,0.5);border-radius:4px;margin-bottom:6px;">
+                  <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 14px;cursor:pointer;" onclick="var b=this.nextElementSibling;var a=this.querySelector('.farey-arrow');b.style.display=b.style.display==='none'?'block':'none';a.textContent=b.style.display==='none'?'▶':'▼';">
+                    <span style="font-family:'Cinzel',serif;font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:#e879f9;">&#8853;&#8854; Dipole Field Details</span>
+                    <span class="farey-arrow" style="color:#e879f9;font-size:0.7rem;">▼</span>
+                  </div>
+                  <div style="display:block;padding:12px 16px;">
+                    <div id="farey-dipole-detail-body" style="font-family:'Cinzel',serif;font-size:0.62rem;line-height:1.9;color:var(--ink-mid);"></div>
+                  </div>
+                </div>
+
+                <!-- ══ UNIT CIRCLE PRESETS DROPDOWN ══ -->
+                <div id="uc-presets-dropdown" style="background:var(--parchment-dark);border:1px solid rgba(192,132,252,0.5);border-radius:4px;margin-bottom:6px;">
+                  <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 14px;cursor:pointer;" onclick="(function(el){var b=el.parentElement.querySelector('.uc-presets-body');var a=el.querySelector('.uc-presets-arrow');var open=b.style.display==='none';b.style.display=open?'block':'none';a.textContent=open?'▼':'▶';})(this)">
+                    <span style="font-family:'Cinzel',serif;font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:#c084fc;">&#9670; Unit Circle Presets</span>
+                    <span class="uc-presets-arrow" style="color:#c084fc;font-size:0.7rem;">▶</span>
+                  </div>
+                  <div class="uc-presets-body" style="display:none;padding:12px 16px;">
+                    <div style="font-family:'Cinzel',serif;font-size:0.56rem;color:#9a8060;letter-spacing:0.08em;margin-bottom:10px;">Each preset opens Advanced view and maps a unit-circle representation onto the Farey canvas.</div>
+
+                    <!-- §1 Wave / Fourier -->
+                    <div style="margin-bottom:10px;">
+                      <div style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.1em;color:#f97316;margin-bottom:4px;text-transform:uppercase;">§1 · Wave / Fourier</div>
+                      <div style="display:flex;gap:5px;flex-wrap:wrap;">
+                        <button onclick="ucPreset({mod:60,colmode:'rainbow-angle',spokes:true,chords:false,polygon:false,label:'angle',labelScope:'outer',mode:'coprime',ringscale:'linear',spacing:100})" class="uc-preset-btn">Frequency Bands</button>
+                        <button onclick="ucPreset({mod:30,colmode:'spectral',spokes:true,chords:false,polygon:false,label:'radian',labelScope:'outer',mode:'coprime',ringscale:'log',spacing:100})" class="uc-preset-btn">Harmonic Spokes</button>
+                        <button onclick="ucPreset({mod:48,colmode:'spectral',spokes:false,chords:false,polygon:false,label:'none',mode:'both',ringscale:'linear',spacing:100,crossmod:false})" class="uc-preset-btn">Spectral Rings</button>
+                      </div>
+                    </div>
+
+                    <!-- §2/§10 Complex / Frequency -->
+                    <div style="margin-bottom:10px;">
+                      <div style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.1em;color:#4ecdc4;margin-bottom:4px;text-transform:uppercase;">§2 / §10 · Complex Exponential</div>
+                      <div style="display:flex;gap:5px;flex-wrap:wrap;">
+                        <button onclick="ucPreset({mod:12,colmode:'rainbow-angle',spokes:true,chords:false,polygon:false,label:'radian',labelScope:'all',mode:'coprime',ringscale:'linear',spacing:100})" class="uc-preset-btn">z = e^iθ Spokes</button>
+                        <button onclick="ucPreset({mod:24,colmode:'per-modulus',spokes:true,chords:false,polygon:false,label:'angle',labelScope:'outer',mode:'both',ringscale:'log',spacing:100})" class="uc-preset-btn">Phase Portrait</button>
+                        <button onclick="ucPreset({mod:60,colmode:'rainbow-angle',spokes:true,chords:false,polygon:false,label:'none',mode:'coprime',ringscale:'sqrt',spacing:100})" class="uc-preset-btn">Frequency Circle</button>
+                      </div>
+                    </div>
+
+                    <!-- §3 Polygon -->
+                    <div style="margin-bottom:10px;">
+                      <div style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.1em;color:#fbbf24;margin-bottom:4px;text-transform:uppercase;">§3 · Polygon Approximation</div>
+                      <div style="display:flex;gap:5px;flex-wrap:wrap;">
+                        <button onclick="ucPreset({mod:3,colmode:'rainbow-ring',spokes:false,chords:false,polygon:true,polyFilter:'all',polyRings:'outer',label:'fraction',labelScope:'outer',mode:'both',ringscale:'linear',spacing:100})" class="uc-preset-btn">Triangle (n=3)</button>
+                        <button onclick="ucPreset({mod:6,colmode:'rainbow-ring',spokes:false,chords:false,polygon:true,polyFilter:'all',polyRings:'outer',label:'fraction',labelScope:'outer',mode:'both',ringscale:'linear',spacing:100})" class="uc-preset-btn">Hexagon (n=6)</button>
+                        <button onclick="ucPreset({mod:30,colmode:'rainbow-ring',spokes:false,chords:false,polygon:true,polyFilter:'all',polyRings:'all',label:'none',mode:'both',ringscale:'linear',spacing:100})" class="uc-preset-btn">Polygon Evolution</button>
+                      </div>
+                    </div>
+
+                    <!-- §4 Diamond -->
+                    <div style="margin-bottom:10px;">
+                      <div style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.1em;color:#fb923c;margin-bottom:4px;text-transform:uppercase;">§4 · Diamond (L¹ Manhattan)</div>
+                      <div style="display:flex;gap:5px;flex-wrap:wrap;">
+                        <button onclick="ucPreset({mod:8,colmode:'rainbow-residue',spokes:false,chords:false,polygon:true,polyFilter:'gcd1',polyRings:'outer',label:'fraction',labelScope:'outer',mode:'coprime',ringscale:'linear',spacing:100})" class="uc-preset-btn">gcd=1 Diamond</button>
+                        <button onclick="ucPreset({mod:20,colmode:'rainbow-ring',spokes:false,chords:false,polygon:true,polyFilter:'all',polyRings:'all',label:'none',mode:'both',ringscale:'log',spacing:100})" class="uc-preset-btn">L¹ Shells</button>
+                        <button onclick="ucPreset({mod:60,colmode:'coprime-frac',spokes:true,chords:false,polygon:false,label:'none',mode:'coprime',ringscale:'linear',spacing:80})" class="uc-preset-btn">Manhattan Dense</button>
+                      </div>
+                    </div>
+
+                    <!-- §5 Square -->
+                    <div style="margin-bottom:10px;">
+                      <div style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.1em;color:#a78bfa;margin-bottom:4px;text-transform:uppercase;">§5 · Square (L∞ Chebyshev)</div>
+                      <div style="display:flex;gap:5px;flex-wrap:wrap;">
+                        <button onclick="ucPreset({mod:4,colmode:'rainbow-ring',spokes:false,chords:false,polygon:true,polyFilter:'all',polyRings:'outer',label:'fraction',labelScope:'outer',mode:'both',ringscale:'linear',spacing:100})" class="uc-preset-btn">Square (n=4)</button>
+                        <button onclick="ucPreset({mod:24,colmode:'per-modulus',spokes:false,chords:false,polygon:true,polyFilter:'gcd1',polyRings:'all',label:'none',mode:'coprime',ringscale:'quadratic',spacing:100})" class="uc-preset-btn">Chebyshev Shells</button>
+                        <button onclick="ucPreset({mod:60,colmode:'thermal',spokes:false,chords:false,polygon:true,polyFilter:'gcd1',polyRings:'outer5',label:'none',mode:'coprime',ringscale:'log',spacing:100})" class="uc-preset-btn">L∞ Dense</button>
+                      </div>
+                    </div>
+
+                    <!-- §6 Cylinder -->
+                    <div style="margin-bottom:10px;">
+                      <div style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.1em;color:#f97316;margin-bottom:4px;text-transform:uppercase;">§6 · Cylinder / Unwrapped</div>
+                      <div style="display:flex;gap:5px;flex-wrap:wrap;">
+                        <button onclick="ucPresetUnfold('split','both',180)" class="uc-preset-btn">Cylinder Split</button>
+                        <button onclick="ucPresetUnfold('rect','cop',90)" class="uc-preset-btn">Rectangle Strip</button>
+                        <button onclick="ucPresetUnfold('split','both',60)" class="uc-preset-btn">2π Wrap (60°)</button>
+                      </div>
+                    </div>
+
+                    <!-- §7 Mod Number Line -->
+                    <div style="margin-bottom:10px;">
+                      <div style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.1em;color:#34d399;margin-bottom:4px;text-transform:uppercase;">§7 · Modular Number Line (ℝ/ℤ)</div>
+                      <div style="display:flex;gap:5px;flex-wrap:wrap;">
+                        <button onclick="ucPreset({mod:7,colmode:'rainbow-residue',spokes:false,chords:false,polygon:false,crossmod:true,label:'fraction',labelScope:'all',mode:'coprime',ringscale:'log',spacing:100})" class="uc-preset-btn">Prime Mod (7)</button>
+                        <button onclick="ucPreset({mod:30,colmode:'spectral',spokes:false,chords:false,polygon:false,crossmod:true,label:'decimal',labelScope:'outer',mode:'both',ringscale:'linear',spacing:100})" class="uc-preset-btn">Arithmetic Wrap (30)</button>
+                        <button onclick="ucPreset({mod:12,colmode:'per-modulus',spokes:false,chords:true,polygon:false,crossmod:false,label:'radian',labelScope:'all',mode:'both',ringscale:'linear',spacing:100})" class="uc-preset-btn">Residue Chords (12)</button>
+                      </div>
+                    </div>
+
+                    <!-- §9 Lattice Shells -->
+                    <div style="margin-bottom:2px;">
+                      <div style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.1em;color:#60a5fa;margin-bottom:4px;text-transform:uppercase;">§9 · Lattice Shells (x²+y²=r²)</div>
+                      <div style="display:flex;gap:5px;flex-wrap:wrap;">
+                        <button onclick="ucPreset({mod:25,colmode:'rainbow-ring',spokes:false,chords:true,polygon:false,label:'none',mode:'both',ringscale:'natural',spacing:100})" class="uc-preset-btn">Pythagorean (r=5)</button>
+                        <button onclick="ucPreset({mod:50,colmode:'spectral',spokes:true,chords:false,polygon:false,label:'none',mode:'both',ringscale:'sqrt',spacing:100})" class="uc-preset-btn">Gauss Circle (r=50)</button>
+                        <button onclick="ucPreset({mod:30,colmode:'coprime-frac',spokes:false,chords:false,polygon:true,polyFilter:'gcd1',polyRings:'all',label:'none',mode:'coprime',ringscale:'natural',spacing:100})" class="uc-preset-btn">Integer Shells (30)</button>
+                      </div>
+                    </div>
+                  </div>
+                </div><!-- /uc-presets-dropdown -->
 
                 <!-- GCD = 1 Legend dropdown -->
                 <div style="background:var(--parchment-dark);border:1px solid rgba(74,144,217,0.5);border-radius:4px;margin-bottom:6px;">
@@ -2493,6 +2803,193 @@
             </div>
 </div><!-- /farey-canvas-col -->
 </div><!-- /farey-shell -->
+
+        <!-- ══ UNIT CIRCLE THEORY PANEL ══ -->
+        <div class="uc-theory-panel">
+          <div class="uc-theory-toggle" onclick="(function(el){var body=el.parentElement.querySelector('.uc-theory-body');var chev=el.querySelector('.uc-theory-chevron');var open=body.classList.toggle('uc-open');chev.classList.toggle('uc-open',open);})(this)">
+            <h3>
+              <span style="opacity:0.85">◈</span>
+              The Unit Circle &amp; Its Many Faces
+            </h3>
+            <span class="uc-theory-chevron">▼</span>
+          </div>
+          <div class="uc-theory-body">
+
+            <p class="uc-lead">
+A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 —
+              but the same parameters (radius = 1, circumference = 2π, rotation θ ∈ [0, 2π))
+              manifest in many different geometric shapes and coordinate systems.
+              Think of it as the same mathematical object viewed through different lenses.
+              The Farey modular residue rings visualized here are precisely one such lens:
+              the classical circle becomes a discrete, modular shell system — and the structures below
+              illuminate why this connection is so deep.
+            </p>
+
+            <div class="uc-grid">
+
+              <!-- 1 -->
+              <div class="uc-card">
+                <div class="uc-card-num">§ 1</div>
+                <div class="uc-card-title">Square / Wave Strip (Fourier View)</div>
+                <div class="uc-card-body">
+                  Unwrapping the angle parameter θ maps the circle into a rectangular strip.
+                  Plotting cos θ and sin θ against θ transforms the closed curve into two
+                  interleaved waves inside a bounded rectangle — exactly how Fourier analysis
+                  encodes periodicity.
+                  <span class="uc-formula">x = cos θ,&ensp; y = sin θ,&ensp; θ ∈ [0, 2π)</span>
+                  Circle → sine/cosine waves in a strip.
+                </div>
+              </div>
+
+              <!-- 2 -->
+              <div class="uc-card">
+                <div class="uc-card-num">§ 2</div>
+                <div class="uc-card-title">Complex Exponential</div>
+                <div class="uc-card-body">
+                  In the complex plane every number of magnitude 1 lies on the unit circle,
+                  forming the multiplicative group |z| = 1. The circle collapses into a
+                  single elegant formula that turns geometry into rotation algebra.
+                  <span class="uc-formula">z = e<sup>iθ</sup></span>
+                  Circle → complex exponential rotation.
+                </div>
+              </div>
+
+              <!-- 3 -->
+              <div class="uc-card">
+                <div class="uc-card-num">§ 3</div>
+                <div class="uc-card-title">Polygon Approximation</div>
+                <div class="uc-card-body">
+                  A circle is the limiting case of regular <em>n</em>-gons as <em>n</em> → ∞.
+                  Triangle, square, hexagon, 1000-gon — all with vertices on radius 1.
+                  This is a direct bridge to the discrete shells in the Farey residue visualizer.
+                  <span class="uc-formula">lim<sub>n → ∞</sub> regular n-gon = circle</span>
+                </div>
+              </div>
+
+              <!-- 4 -->
+              <div class="uc-card">
+                <div class="uc-card-num">§ 4</div>
+                <div class="uc-card-title">Diamond (L¹ / Manhattan Metric)</div>
+                <div class="uc-card-body">
+                  Changing the distance rule changes the shape of the unit "circle."
+                  Under the Manhattan (L¹) metric the locus of points at distance 1 from the
+                  origin is a square rotated 45° — a diamond.
+                  <span class="uc-formula">|x| + |y| = 1</span>
+                </div>
+              </div>
+
+              <!-- 5 -->
+              <div class="uc-card">
+                <div class="uc-card-num">§ 5</div>
+                <div class="uc-card-title">Square (L∞ / Chebyshev Metric)</div>
+                <div class="uc-card-body">
+                  Under the Chebyshev (L∞) metric — where distance is the maximum of the
+                  coordinate differences — the unit circle becomes an axis-aligned square.
+                  The geometry of distance determines the shape of roundness.
+                  <span class="uc-formula">max(|x|, |y|) = 1</span>
+                </div>
+              </div>
+
+              <!-- 6 -->
+              <div class="uc-card">
+                <div class="uc-card-num">§ 6</div>
+                <div class="uc-card-title">Cylinder / Rectangle (Unwrapped)</div>
+                <div class="uc-card-body">
+                  Cutting the circle at θ = 0 and unrolling it produces a line segment of
+                  length 2π. Adding a height dimension yields a cylinder. This is precisely
+                  the π × 2π rectangle picture — a circle with wrapped edges.
+                  <span class="uc-formula">Circle ↔ rectangle with identified edges</span>
+                </div>
+              </div>
+
+              <!-- 7 -->
+              <div class="uc-card">
+                <div class="uc-card-num">§ 7</div>
+                <div class="uc-card-title">Modular Number Line (ℝ/ℤ)</div>
+                <div class="uc-card-body">
+                  The real numbers modulo 1 wrap the number line into a circle: 0 and 1 become
+                  the same point, and every real number maps to an angle θ = 2πx.
+                  This is the algebraic foundation of the modular residue geometry shown here.
+                  <span class="uc-formula">ℝ/ℤ → unit circle,&ensp; θ = 2πx</span>
+                </div>
+              </div>
+
+              <!-- 8 -->
+              <div class="uc-card">
+                <div class="uc-card-num">§ 8</div>
+                <div class="uc-card-title">Real Line via Stereographic Projection</div>
+                <div class="uc-card-body">
+                  Stereographic projection from the north pole maps every point on the circle
+                  to a unique real number — except the pole itself, which corresponds to
+                  a "point at infinity." Used extensively in complex analysis.
+                  <span class="uc-formula">Circle ↔ ℝ ∪ {∞}</span>
+                </div>
+              </div>
+
+              <!-- 9 -->
+              <div class="uc-card">
+                <div class="uc-card-num">§ 9</div>
+                <div class="uc-card-title">Lattice Shell View</div>
+                <div class="uc-card-body">
+                  Scaling the unit circle by integer radii produces concentric shells of
+                  integer lattice solutions to x² + y² = r². Counting such representations
+                  connects to the Gauss circle problem and Dirichlet's divisor theory —
+                  and the modular shell work here is a discrete, modular version of exactly this.
+                  <span class="uc-formula">x² + y² = r²,&ensp; r ∈ ℤ</span>
+                </div>
+              </div>
+
+              <!-- 10 -->
+              <div class="uc-card">
+                <div class="uc-card-num">§ 10</div>
+                <div class="uc-card-title">Fourier Frequency Circle</div>
+                <div class="uc-card-body">
+                  In digital signal processing the unit circle in the z-plane represents
+                  all possible frequencies. Stability, filtering, and spectral analysis all
+                  read off the circle — connecting time-domain signals to circular frequency space.
+                  <span class="uc-formula">z = e<sup>iω</sup>,&ensp; ω ∈ [0, 2π)</span>
+                </div>
+              </div>
+
+            </div><!-- /uc-grid -->
+
+            <!-- Summary table -->
+            <table class="uc-summary-table">
+              <thead>
+                <tr>
+                  <th>Geometry / System</th>
+                  <th>Shape of "Unit Circle"</th>
+                  <th>Key Equation</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>Euclidean</td><td>Circle</td><td>x² + y² = 1</td></tr>
+                <tr><td>Manhattan (L¹)</td><td>Diamond</td><td>|x| + |y| = 1</td></tr>
+                <tr><td>Chebyshev (L∞)</td><td>Square</td><td>max(|x|,|y|) = 1</td></tr>
+                <tr><td>Polygon limit</td><td>Regular n-gon → circle</td><td>n → ∞</td></tr>
+                <tr><td>Complex / Fourier</td><td>Exponential rotation</td><td>z = e<sup>iθ</sup></td></tr>
+                <tr><td>Topology (mod 1)</td><td>Wrapped number line</td><td>ℝ/ℤ</td></tr>
+                <tr><td>Lattice shells</td><td>Integer rings</td><td>x² + y² = r²</td></tr>
+                <tr><td>Modular residues</td><td>Discrete Farey rings</td><td>r/m ∈ Farey(N)</td></tr>
+              </tbody>
+            </table>
+
+            <!-- Deep idea -->
+            <div class="uc-deep-idea">
+              <div class="uc-deep-label">⭐ The Deeper Idea</div>
+              A circle is fundamentally just a <em>periodic parameter</em>.
+              Any mathematical structure with the periodicity θ ~ θ + 2π
+              can be interpreted as — or placed in correspondence with — a unit circle.
+              The Farey modular residue rings explored in this tool are a discrete, arithmetic
+              instantiation of that same periodicity: the angle becomes a reduced fraction r/m,
+              the ring becomes a modular shell, and the Farey sequence organises the shells
+              in exactly the way that uniform angle spacing organises the classical circle.
+              <span class="uc-formula-center">θ ~ θ + 2π &ensp;⟺&ensp; r/m ~ r/m + 1</span>
+            </div>
+
+          </div><!-- /uc-theory-body -->
+        </div><!-- /uc-theory-panel -->
+
     </div><!-- /introduction farey -->
 
 
@@ -2607,7 +3104,118 @@
 
     if(el)  el.innerHTML  = html;
     if(el2) el2.innerHTML = html;
+    // Ring radii table — written into its own collapsible body
+    var el3 = document.getElementById('farey-ring-radii-body');
+    if(el3) el3.innerHTML = _buildRingRadiusTable(modN, fracs);
     fareyUpdateLegendPanels(modN, fracs);
+  }
+
+  // ── Ring radius / area table ─────────────────────────────────────────────
+  function _buildRingRadiusTable(modN, fracs) {
+    // Normalise radii so that mod-1 always has area = π (r=1 → area=π).
+    // In the canvas, linear spacing: radius(m) = rMin + (rMax-rMin)*(m-1)/(N-1)
+    // We express everything normalised so the outermost ring (m=N) has radius = 1.
+    // Then mod-1 radius = 1/(N-1) · (fractional), giving area = π·r².
+    // For display we use: r_norm(m) = m/N (natural scale, clean numbers).
+    // Area = π · r_norm² .  We show both the linear and natural scale columns.
+
+    function eulerPhiFn(n){ var r=n,orig=n; for(var p=2;p*p<=orig;p++){if(orig%p===0){r-=r/p;while(orig%p===0)orig/=p;}}if(orig>1)r-=r/orig;return Math.round(r);}
+    function gcdFn(a,b){while(b){var t=b;b=a%b;a=t;}return a;}
+
+    // Build per-ring coprime count from fracs
+    var copPerRing = {};
+    fracs.cop.forEach(function(p){ copPerRing[p.m] = (copPerRing[p.m]||0)+1; });
+    var ncpPerRing = {};
+    fracs.ncp.forEach(function(p){ ncpPerRing[p.m] = (ncpPerRing[p.m]||0)+1; });
+
+    // Limit rows shown by default; user can expand
+    var maxRows = modN;
+    var showAll = false; // always build full table, use CSS scroll
+
+    // For radius: use linear spacing (matches default canvas)
+    // r_linear(m) normalised so r_linear(N) = 1
+    // r_linear(m) = (m-1)/(N-1)  for N>1, else 1
+    var denom = Math.max(modN-1, 1);
+
+    var rows = '';
+    for (var m = 1; m <= modN; m++) {
+      var rLin   = (modN === 1) ? 1 : (m - 1) / denom;          // 0…1, linear
+      var rNat   = m / modN;                                       // 1/N…1, natural (r∝m)
+      var aLin   = Math.PI * rLin * rLin;                         // area of disc of radius rLin
+      var aNat   = Math.PI * rNat * rNat;
+      var annLin = (m > 1) ? Math.PI*(rLin*rLin - ((m-2)/denom)*((m-2)/denom)) : aLin; // annular area
+      var phiM   = eulerPhiFn(m);
+      var copM   = copPerRing[m] || 0;
+      var ncpM   = ncpPerRing[m] || 0;
+      var isOdd  = m % 2 === 1;
+
+      rows += '<tr style="background:' + (isOdd ? 'rgba(196,155,56,0.04)' : 'transparent') + ';">'
+        + '<td style="padding:3px 8px;color:var(--gold);font-weight:600;">' + m + '</td>'
+        + '<td style="padding:3px 8px;color:#4ecdc4;">' + rLin.toFixed(4) + '</td>'
+        + '<td style="padding:3px 8px;color:#4ecdc4;">' + aLin.toFixed(4) + '</td>'
+        + '<td style="padding:3px 8px;color:rgba(78,205,196,0.6);font-size:0.55rem;">' + annLin.toFixed(4) + '</td>'
+        + '<td style="padding:3px 8px;color:#f97316;">' + rNat.toFixed(4) + '</td>'
+        + '<td style="padding:3px 8px;color:#f97316;">' + aNat.toFixed(4) + '</td>'
+        + '<td style="padding:3px 8px;color:#e8d9b0;">' + phiM + '</td>'
+        + '<td style="padding:3px 8px;color:#4a90d9;">' + copM + '</td>'
+        + '<td style="padding:3px 8px;color:#c94040;">' + ncpM + '</td>'
+        + '</tr>';
+    }
+
+    // Mod-1 anchor note
+    var r1Lin = (modN===1)?1:0;
+    var a1Nat = Math.PI * (1/modN) * (1/modN);
+
+    return ''
+        // Summary cards — always shown when ring radii section is open
+        + '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-bottom:10px;">'
+          + _rrCard('Mod 1 r (linear)', r1Lin.toFixed(4), '#4ecdc4', 'r(1) = 0  — inner origin')
+          + _rrCard('Mod 1 r (natural)', (1/modN).toFixed(4), '#f97316', 'r(1) = 1/N')
+          + _rrCard('Mod 1 area (nat)', 'π/' + modN + '² = ' + a1Nat.toFixed(4), '#f97316', 'π·(1/N)²')
+          + _rrCard('Mod N radius', '1.0000', '#4ecdc4', 'outer ring normalised to 1')
+          + _rrCard('Mod N area (disc)', 'π = ' + Math.PI.toFixed(4), '#4ecdc4', 'π·1² — unit circle')
+          + _rrCard('Annular step Δr', modN>1?(1/denom).toFixed(4):'—', '#e8a840', 'uniform Δr per ring')
+        + '</div>'
+
+        // Per-ring table — collapsible
+        + '<div style="display:flex;justify-content:space-between;align-items:center;cursor:pointer;padding:5px 0;border-top:1px solid rgba(196,155,56,0.15);margin-bottom:4px;" onclick="(function(el){var t=el.nextElementSibling;var a=el.querySelector(\'.rr-arr\');var open=t.style.display===\'none\';t.style.display=open?\'block\':\'none\';a.textContent=open?\'▼\':\'▶\';})(this)">'
+        +   '<span style="font-family:\'Cinzel\',serif;font-size:0.56rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold);">Per-Ring Table  (m = 1 … ' + modN + ')</span>'
+        +   '<span class="rr-arr" style="color:var(--gold);font-size:0.65rem;">▶</span>'
+        + '</div>'
+        + '<div style="display:none;">'
+          + '<div style="font-family:\'Cinzel\',serif;font-size:0.52rem;color:#9a8060;margin-bottom:4px;letter-spacing:0.06em;">'
+          +   'LINEAR: r(N)=1 normalised &nbsp;·&nbsp; NATURAL: r(m)=m/N &nbsp;·&nbsp; Areas = π·r²'
+          + '</div>'
+          + '<div style="overflow-x:auto;max-height:320px;overflow-y:auto;">'
+          + '<table style="width:100%;border-collapse:collapse;font-family:\'Cinzel\',serif;font-size:0.56rem;">'
+          + '<thead style="position:sticky;top:0;background:var(--parchment-dark);z-index:1;">'
+          + '<tr>'
+            + '<th style="padding:4px 8px;text-align:left;color:var(--gold);border-bottom:1px solid var(--border);">m</th>'
+            + '<th style="padding:4px 8px;text-align:left;color:#4ecdc4;border-bottom:1px solid var(--border);">r<sub>lin</sub></th>'
+            + '<th style="padding:4px 8px;text-align:left;color:#4ecdc4;border-bottom:1px solid var(--border);">Area<sub>lin</sub></th>'
+            + '<th style="padding:4px 8px;text-align:left;color:rgba(78,205,196,0.6);border-bottom:1px solid var(--border);">Ann<sub>lin</sub></th>'
+            + '<th style="padding:4px 8px;text-align:left;color:#f97316;border-bottom:1px solid var(--border);">r<sub>nat</sub></th>'
+            + '<th style="padding:4px 8px;text-align:left;color:#f97316;border-bottom:1px solid var(--border);">Area<sub>nat</sub></th>'
+            + '<th style="padding:4px 8px;text-align:left;color:#e8d9b0;border-bottom:1px solid var(--border);">φ(m)</th>'
+            + '<th style="padding:4px 8px;text-align:left;color:#4a90d9;border-bottom:1px solid var(--border);">gcd=1</th>'
+            + '<th style="padding:4px 8px;text-align:left;color:#c94040;border-bottom:1px solid var(--border);">gcd&gt;1</th>'
+          + '</tr>'
+          + '</thead>'
+          + '<tbody>' + rows + '</tbody>'
+          + '</table>'
+          + '</div>'
+          + '<div style="margin-top:6px;font-family:\'Cinzel\',serif;font-size:0.5rem;color:#9a8060;line-height:1.7;">'
+          +   'm = ring · r<sub>lin</sub> = (m−1)/(N−1) · r<sub>nat</sub> = m/N · Area = π·r² · Ann = annular band area · φ(m) = Euler totient'
+          + '</div>'
+        + '</div>';
+  }
+
+  function _rrCard(label, value, col, sub) {
+    return '<div style="background:var(--parchment-dark);border:1px solid var(--panel-border);border-left:3px solid ' + col + ';padding:8px 10px;">'
+      + '<div style="font-family:\'Cinzel\',serif;font-size:0.52rem;letter-spacing:0.1em;text-transform:uppercase;color:' + col + ';margin-bottom:3px;">' + label + '</div>'
+      + '<div style="font-family:\'EB Garamond\',serif;font-size:1.05rem;color:var(--ink);font-weight:600;">' + value + '</div>'
+      + (sub ? '<div style="font-size:0.5rem;color:#9a8060;margin-top:2px;">' + sub + '</div>' : '')
+      + '</div>';
   }
 
   // ── Legend panels: GCD=1 and GCD>1 details matching triangle export ────────
@@ -3224,10 +3832,15 @@
     if (sv) sv.style.display = open ? 'none'  : 'flex';
     if (cv) cv.style.display = open ? 'block' : 'none';
     if (open) {
-      // Set size to 800px on open
+      // Unlock sliders, set canvas to 2K, enable fluid mode (4K available via slider)
+      var _lockEl2k = document.getElementById('f-size-x-lock');
+      if (_lockEl2k && _lockEl2k.checked) { _lockEl2k.checked = false; fareyCanvasScrollLock(false); }
+      var _advSize = 2000;
       ['f-size-x','f-size-x-num','f-size-y','f-size-y-num','f-size','f-size-num'].forEach(function(id){
-        var el = document.getElementById(id); if (el) el.value = 800;
+        var el = document.getElementById(id); if (el) el.value = _advSize;
       });
+      // Enable fluid display so the 2K buffer scales to fill the container
+      if (!window._canvasFluid) { fareyCanvasFluidToggle(); }
       // Point size to 25%
       var pts = document.getElementById('f-ptsize');     if (pts) pts.value = 100;
       var ptn = document.getElementById('f-ptsize-num'); if (ptn) ptn.value = 100;
@@ -7436,6 +8049,7 @@
     var panel = document.getElementById('farey-mirror-panel');
     if (panel) panel.style.display = _showMirror ? 'block' : 'none';
     if (_showMirror) fareyUpdateMirrorPanel();
+    if (window._showDipole && typeof window.fareyUpdateDipoleDetails === 'function') window.fareyUpdateDipoleDetails();
     if (typeof window.fareyRedraw === 'function') window.fareyRedraw();
   };
 
@@ -7540,12 +8154,118 @@
     window._showDipole = !window._showDipole;
     var btn = document.getElementById('fcm-dipole');
     var panel = document.getElementById('farey-dipole-panel');
+    var detailsPanel = document.getElementById('farey-dipole-details-panel');
     if (btn) {
       btn.style.background = window._showDipole ? '#e879f9' : 'var(--parchment-dark)';
       btn.style.color      = window._showDipole ? '#000'    : '#e879f9';
     }
     if (panel) panel.style.display = window._showDipole ? 'flex' : 'none';
+    if (detailsPanel) detailsPanel.style.display = window._showDipole ? 'block' : 'none';
     if (typeof window.fareyRedraw === 'function') window.fareyRedraw();
+    if (window._showDipole) window.fareyUpdateDipoleDetails();
+  };
+
+  // ── Dipole details dropdown population ────────────────────────────────
+  window.fareyUpdateDipoleDetails = function() {
+    var body = document.getElementById('farey-dipole-detail-body');
+    if (!body) return;
+
+    var modN   = parseInt((document.getElementById('f-mod-num')||{value:'12'}).value)||12;
+    var dBase  = parseInt((document.getElementById('f-dipole-base')||{value:'30'}).value)||30;
+    var dNmax  = parseInt((document.getElementById('f-dipole-nmax')||{value:'3'}).value)||3;
+
+    function gcdD(a,b){ while(b){var t=b;b=a%b;a=t;} return a; }
+
+    // Build tower rings
+    var rings = [];
+    for (var n=0; n<=dNmax; n++) {
+      var m = dBase * Math.pow(2, n);
+      if (m > modN) break;
+      rings.push(Math.round(m));
+    }
+
+    if (rings.length === 0) {
+      body.innerHTML = '<span style="color:#9a8060;">No tower rings fit within Mod N = ' + modN + '. Increase N or lower base.</span>';
+      return;
+    }
+
+    var html = '';
+
+    // ── Summary cards row ──────────────────────────────────────────────
+    var totalPairs = 0, totalFixed = 0, allRingData = [];
+    rings.forEach(function(dm) {
+      var copR = [];
+      for (var r=1; r<dm; r++) { if (gcdD(r,dm)===1) copR.push(r); }
+      var pairs = [], fixed = [], unmatched = [];
+      var seen = {};
+      copR.forEach(function(r) {
+        var mirror = dm - r;
+        if (mirror <= 0 || mirror >= dm) { unmatched.push(r); return; }
+        if (gcdD(mirror, dm) !== 1) { unmatched.push(r); return; }
+        if (r === mirror) { fixed.push(r); return; }
+        var key = Math.min(r,mirror)+':'+Math.max(r,mirror);
+        if (!seen[key]) { seen[key]=true; pairs.push([r, mirror]); }
+      });
+      totalPairs += pairs.length;
+      totalFixed += fixed.length;
+      allRingData.push({ m: dm, phi: copR.length, pairs: pairs, fixed: fixed, unmatched: unmatched });
+    });
+
+    // Card helper
+    function card(label, val, col, sub) {
+      return '<div style="background:rgba(0,0,0,0.2);border-left:3px solid '+col+';padding:7px 10px;">'
+        + '<div style="font-size:0.5rem;letter-spacing:0.1em;text-transform:uppercase;color:'+col+';margin-bottom:2px;">'+label+'</div>'
+        + '<div style="font-family:\'EB Garamond\',serif;font-size:1.05rem;color:#e8d9b0;font-weight:600;">'+val+'</div>'
+        + (sub ? '<div style="font-size:0.48rem;color:#9a8060;margin-top:1px;">'+sub+'</div>' : '')
+        + '</div>';
+    }
+
+    html += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:6px;margin-bottom:12px;">'
+      + card('Tower Rings', rings.length, '#e879f9', 'base × 2ⁿ within mod N')
+      + card('Ring levels', rings.join(', '), '#4ecdc4', 'm = base × 2⁰ … 2ⁿ')
+      + card('Total ⊕⊖ Pairs', totalPairs, '#e879f9', 'across all tower rings')
+      + card('Fixed Points', totalFixed, '#fbbf24', 'r = m/2 (only when m even)')
+      + card('Mod N', modN, '#9a8060', 'current canvas modulus')
+      + card('Coverage', rings.length > 0 ? Math.round(100*rings[rings.length-1]/modN)+'%' : '—', '#4ecdc4', 'outermost ring / mod N')
+      + '</div>';
+
+    // ── Per-ring table ─────────────────────────────────────────────────
+    html += '<div style="overflow-x:auto;">'
+      + '<table style="width:100%;border-collapse:collapse;font-family:\'Cinzel\',serif;font-size:0.56rem;">'
+      + '<thead><tr style="border-bottom:1px solid rgba(232,121,249,0.3);">'
+      + '<th style="padding:4px 8px;text-align:left;color:#e879f9;">Ring m</th>'
+      + '<th style="padding:4px 8px;text-align:left;color:#4ecdc4;">φ(m)</th>'
+      + '<th style="padding:4px 8px;text-align:left;color:#e879f9;">⊕⊖ Pairs</th>'
+      + '<th style="padding:4px 8px;text-align:left;color:#fbbf24;">Fixed</th>'
+      + '<th style="padding:4px 8px;text-align:left;color:#9a8060;">North ⊕ residues</th>'
+      + '<th style="padding:4px 8px;text-align:left;color:#c084fc;">South ⊖ residues</th>'
+      + '</tr></thead><tbody>';
+
+    allRingData.forEach(function(d, i) {
+      var northRs = d.pairs.map(function(p){ return p[0]; });
+      var southRs = d.pairs.map(function(p){ return p[1]; });
+      var bg = i % 2 === 0 ? 'rgba(232,121,249,0.04)' : 'transparent';
+      html += '<tr style="background:'+bg+';border-bottom:1px solid rgba(232,121,249,0.08);">'
+        + '<td style="padding:4px 8px;color:#e879f9;font-weight:600;">'+d.m+'</td>'
+        + '<td style="padding:4px 8px;color:#4ecdc4;">'+d.phi+'</td>'
+        + '<td style="padding:4px 8px;color:#e879f9;">'+d.pairs.length+'</td>'
+        + '<td style="padding:4px 8px;color:#fbbf24;">'+(d.fixed.length ? d.fixed.join(', ') : '—')+'</td>'
+        + '<td style="padding:4px 8px;color:#9a8060;font-size:0.5rem;">'+northRs.slice(0,12).join(', ')+(northRs.length>12?' …':'')+'</td>'
+        + '<td style="padding:4px 8px;color:#c084fc;font-size:0.5rem;">'+southRs.slice(0,12).join(', ')+(southRs.length>12?' …':'')+'</td>'
+        + '</tr>';
+    });
+
+    html += '</tbody></table></div>';
+
+    // ── Theory note ────────────────────────────────────────────────────
+    html += '<div style="margin-top:10px;padding:8px 12px;background:rgba(232,121,249,0.06);border-left:3px solid rgba(232,121,249,0.4);font-family:\'EB Garamond\',serif;font-size:0.8rem;color:#c4b5fd;line-height:1.7;">'
+      + '<strong style="color:#e879f9;font-family:\'Cinzel\',serif;font-size:0.6rem;letter-spacing:0.1em;">INVOLUTION σ(r) = m − r</strong><br>'
+      + 'Each ⊕ north pole residue r/m pairs with its south mirror (m−r)/m, exactly opposite on the ring. '
+      + 'The field lines (chords inside, arcs outside) connect conjugate residues across the modular tower '
+      + 'm = base × 2⁰, base × 2¹, … tracing how the same rational angle recurs at each harmonic level.'
+      + '</div>';
+
+    body.innerHTML = html;
   };
 
   // ── Lifting tower: select a residue on ring m to see its lifts ──────────
@@ -8322,6 +9042,166 @@
     var open = body.classList.toggle('open');
     if (arrow) arrow.textContent = open ? '▼' : '▶';
   };
+})();
+</script>
+<script>
+// ══ UNIT CIRCLE PRESETS ═══════════════════════════════════════════════════════
+(function(){
+
+  // ── Resolution shortcut ───────────────────────────────────────────────────
+  window.ucSetRes = function(px) {
+    // Unlock sliders first
+    var lk = document.getElementById('f-size-x-lock');
+    if (lk && lk.checked) { lk.checked = false; if(window.fareyCanvasScrollLock) fareyCanvasScrollLock(false); }
+    ['f-size-x','f-size-x-num','f-size-y','f-size-y-num','f-size','f-size-num'].forEach(function(id){
+      var el = document.getElementById(id);
+      if (el) { el.max = Math.max(el.max||4096, px); el.value = px; }
+    });
+    // Bump slider max if needed
+    ['f-size-x','f-size-y'].forEach(function(id){
+      var el=document.getElementById(id); if(el && parseInt(el.max)<px) el.max=px;
+    });
+    if (window.fareyResize) fareyResize();
+    else if (window.drawCombined) { if(typeof syncCombinedSize==='function') syncCombinedSize(); drawCombined(); }
+    // Highlight the active res button
+    document.querySelectorAll('[onclick^="ucSetRes"]').forEach(function(b){
+      var match = b.getAttribute('onclick').indexOf('('+px+')') !== -1;
+      b.style.background = match ? 'var(--gold)' : 'var(--parchment-dark)';
+      b.style.color       = match ? 'var(--parchment)' : 'var(--gold)';
+    });
+  };
+
+  // ── Ensure Advanced panel is open before applying preset ─────────────────
+  function ensureAdvanced() {
+    var p = document.getElementById('farey-panel');
+    if (!p || !p.classList.contains('open')) {
+      if (window.toggleFareyPanel) toggleFareyPanel();
+    }
+  }
+
+  // ── Set a single control safely ───────────────────────────────────────────
+  function setEl(id, val) {
+    var el = document.getElementById(id);
+    if (el) el.value = val;
+  }
+  function setCheck(id, val) {
+    var el = document.getElementById(id);
+    if (el) el.checked = val;
+  }
+
+  // ── Main preset applicator ────────────────────────────────────────────────
+  window.ucPreset = function(cfg) {
+    ensureAdvanced();
+
+    // Mod N
+    if (cfg.mod != null) {
+      var modSlider = document.getElementById('f-mod');
+      var modNum    = document.getElementById('f-mod-num');
+      if (modSlider) { modSlider.max = Math.max(modSlider.max||210, cfg.mod); modSlider.value = cfg.mod; }
+      if (modNum)    { modNum.value  = cfg.mod; }
+    }
+
+    // Start ring
+    if (cfg.start != null) {
+      setEl('f-mod-start-num', cfg.start);
+      setEl('f-mod-start', cfg.start);
+    }
+
+    // Color mode
+    if (cfg.colmode) setEl('f-pt-colmode', cfg.colmode);
+
+    // Ring scale
+    if (cfg.ringscale) setEl('f-ring-scale', cfg.ringscale);
+
+    // Ring spacing
+    if (cfg.spacing != null) { setEl('f-spacing', cfg.spacing); setEl('f-spacing-num', cfg.spacing); }
+
+    // Connections
+    if (cfg.chords   != null) setCheck('f-chords',  cfg.chords);
+    if (cfg.spokes   != null) setCheck('f-spokes',  cfg.spokes);
+    if (cfg.crossmod != null) setCheck('f-crossmod', cfg.crossmod);
+
+    // Polygon
+    if (cfg.polygon != null)   setCheck('f-samemod', cfg.polygon);
+    if (cfg.polyFilter)        setEl('f-samemod-filter', cfg.polyFilter);
+    if (cfg.polyRings)         setEl('f-samemod-rings',  cfg.polyRings);
+
+    // Labels
+    if (cfg.label)      setEl('f-label',       cfg.label);
+    if (cfg.labelScope) setEl('f-label-scope',  cfg.labelScope);
+
+    // Direction
+    if (cfg.dir) setEl('f-dir', cfg.dir);
+
+    // Mode (combined / coprime / noncoprime)
+    if (cfg.mode && window.fareyCombinedMode) fareyCombinedMode(cfg.mode);
+
+    // Close unfold if open
+    if (window._unfoldOn && !cfg._unfold) {
+      if (window.fareyToggleUnfold) fareyToggleUnfold();
+    }
+
+    // Trigger solid-color panel visibility update if available
+    if (window.fareyPtColModeChange) fareyPtColModeChange();
+
+    // Redraw
+    if (window.fareyRedraw) fareyRedraw();
+    else if (window.drawCombined) { if(typeof syncCombinedSize==='function') syncCombinedSize(); drawCombined(); }
+
+    // Flash active state on clicked button
+    _flashActivePreset(event && event.target);
+  };
+
+  // ── Unfold presets (§6 Cylinder) ─────────────────────────────────────────
+  window.ucPresetUnfold = function(view, gcd, cutDeg) {
+    ensureAdvanced();
+
+    // Open unfold if not already on
+    if (!window._unfoldOn) {
+      if (window.fareyToggleUnfold) fareyToggleUnfold();
+    }
+
+    // View mode & GCD filter
+    setEl('f-unfold-view', view);
+    setEl('f-unfold-gcd',  gcd);
+
+    // Cut angle
+    var cutSlider = document.getElementById('f-unfold-cut-slider');
+    var cutLabel  = document.getElementById('f-unfold-deg');
+    if (cutSlider) cutSlider.value = cutDeg;
+    if (cutLabel)  cutLabel.textContent = cutDeg.toFixed(1) + '°';
+    window._unfoldCutAngle = cutDeg;
+
+    // Apply base settings for a clean unfold view
+    setEl('f-pt-colmode', 'rainbow-ring');
+    setCheck('f-chords',  false);
+    setCheck('f-spokes',  false);
+    setCheck('f-samemod', false);
+
+    if (window.fareyRedraw) fareyRedraw();
+    _flashActivePreset(event && event.target);
+  };
+
+  // ── Button flash helper ───────────────────────────────────────────────────
+  function _flashActivePreset(btn) {
+    if (!btn || !btn.classList) return;
+    document.querySelectorAll('.uc-preset-btn').forEach(function(b){ b.classList.remove('active'); });
+    btn.classList.add('active');
+    setTimeout(function(){ if(btn) btn.classList.remove('active'); }, 1800);
+  }
+
+  // ── Sync fluid-ON button label on panel open ──────────────────────────────
+  var _origFareyCanvasFluidToggle = window.fareyCanvasFluidToggle;
+  window.fareyCanvasFluidToggle = function(){
+    if (_origFareyCanvasFluidToggle) _origFareyCanvasFluidToggle();
+    var btn = document.getElementById('uc-fluid-btn');
+    if (btn) {
+      btn.textContent = window._canvasFluid ? 'ON' : 'OFF';
+      btn.style.background = window._canvasFluid ? 'var(--gold)' : 'var(--parchment-dark)';
+      btn.style.color      = window._canvasFluid ? 'var(--parchment)' : 'var(--gold)';
+    }
+  };
+
 })();
 </script>
 </body>
