@@ -2398,9 +2398,12 @@
                     <option value="ncp">gcd&gt;1 only</option>
                   </select>
                   <span style="color:rgba(160,120,48,0.4);">|</span>
-                  <!-- Cut ratio: A/B -->
+                  <!-- Cut ratio: A/B fraction input + slider -->
                   <span style="color:#f97316;">CUT</span>
-                  <input id="f-unfold-cut-slider" type="range" min="0" max="360" step="0.5" value="180" style="width:100px;accent-color:#f97316;" oninput="fareyUnfoldCutSlider(this.value)">
+                  <input id="f-unfold-num" type="number" min="0" max="9999" value="1" title="Cut numerator a  —  cut angle = (a/b)×360°" style="width:36px;background:var(--parchment-deep);color:var(--ink);border:1px solid #f97316;padding:2px 4px;font-family:'Cinzel',serif;font-size:0.58rem;text-align:right;" oninput="fareyUnfoldApplyCut()">
+                  <span style="color:#f97316;font-family:'Cinzel',serif;font-size:0.7rem;">/</span>
+                  <input id="f-unfold-den" type="number" min="1" max="9999" value="2" title="Cut denominator b  —  cut angle = (a/b)×360°" style="width:36px;background:var(--parchment-deep);color:var(--ink);border:1px solid #f97316;padding:2px 4px;font-family:'Cinzel',serif;font-size:0.58rem;text-align:right;" oninput="fareyUnfoldApplyCut()">
+                  <input id="f-unfold-cut-slider" type="range" min="0" max="360" step="0.5" value="180" style="width:80px;accent-color:#f97316;" oninput="fareyUnfoldCutSlider(this.value)">
                   <span id="f-unfold-deg" style="color:#f97316;min-width:48px;font-family:'Cinzel',serif;font-size:0.58rem;">180.0°</span>
                   <span style="color:rgba(160,120,48,0.4);">|</span>
                   <span style="color:#ffd700;font-size:0.52rem;">SNAP:</span>
@@ -2436,9 +2439,17 @@
                   <div id="farey-rz-detail-body" style="font-family:'Cinzel',serif;font-size:0.57rem;line-height:2;color:#c4b5fd;"></div>
                 </div>
 
-<div id="farey-gap-overlay-bar" style="display:none;margin-top:8px;padding:8px 16px;background:rgba(10,30,60,0.85);border:1px solid #4a90d9;border-radius:6px;font-family:'Cinzel',serif;font-size:0.62rem;color:#e8d9b0;text-align:center;">
-                  <span id="farey-gap-overlay-info"></span>
-                  &nbsp;
+<div id="farey-gap-overlay-bar" style="display:none;margin-top:8px;padding:8px 16px;background:rgba(10,30,60,0.85);border:1px solid #4a90d9;border-radius:6px;font-family:'Cinzel',serif;font-size:0.62rem;color:#e8d9b0;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px;">
+                  <span id="farey-gap-overlay-info" style="flex:1;min-width:0;text-align:left;"></span>
+                  <span style="color:#9a8060;">THICK</span>
+                  <input id="f-overlay-thick-bar" type="range" min="1" max="30" value="10" style="width:55px;accent-color:#4a90d9;" oninput="var v=this.value;document.getElementById('f-overlay-thick').value=v;document.getElementById('f-overlay-thick-val').textContent=(v/10).toFixed(1);document.getElementById('f-overlay-thick-bar-val').textContent=(v/10).toFixed(1);if(window._overlayGap!==null)fareyRedraw();">
+                  <span id="f-overlay-thick-bar-val" style="min-width:18px;color:#4a90d9;">1.0</span>
+                  <span style="color:rgba(74,144,217,0.4);">|</span>
+                  <label style="display:flex;align-items:center;gap:4px;cursor:pointer;color:#e879f9;" title="Stop each residue path at ring m=r (the r/r boundary)">
+                    <input type="checkbox" id="f-path-stop-boundary-bar" onchange="document.getElementById('f-path-stop-boundary').checked=this.checked;if(window._overlayGap!==null)fareyRedraw();" style="accent-color:#e879f9;">
+                    <span>Stop r/r</span>
+                  </label>
+                  <span style="color:rgba(74,144,217,0.4);">|</span>
                   <button onclick="fareyGapOverlayClear()" style="font-family:'Cinzel',serif;font-size:0.56rem;text-transform:uppercase;padding:2px 8px;border:1px solid #4a90d9;background:transparent;color:#4a90d9;cursor:pointer;">&#10005; Clear</button>
                 </div>
 
@@ -2473,12 +2484,12 @@
                 <span id="f-overlay-alpha-val" style="min-width:24px;color:#4a90d9;">80%</span>
                 <span style="color:rgba(160,120,48,0.4);">|</span>
                 <span style="color:#9a8060;">THICKNESS</span>
-                <input id="f-overlay-thick" type="range" min="1" max="30" value="10" style="width:60px;accent-color:#4a90d9;" oninput="document.getElementById('f-overlay-thick-val').textContent=(this.value/10).toFixed(1);if(window._overlayGap!==null&&window._overlayGap!==undefined){fareyRedraw();}">
+                <input id="f-overlay-thick" type="range" min="1" max="30" value="10" style="width:60px;accent-color:#4a90d9;" oninput="document.getElementById('f-overlay-thick-val').textContent=(this.value/10).toFixed(1);var bv=document.getElementById('f-overlay-thick-bar');if(bv)bv.value=this.value;var bvv=document.getElementById('f-overlay-thick-bar-val');if(bvv)bvv.textContent=(this.value/10).toFixed(1);if(window._overlayGap!==null&&window._overlayGap!==undefined){fareyRedraw();}">
                 <span id="f-overlay-thick-val" style="min-width:24px;color:#4a90d9;">1.0</span>
                 <span style="color:rgba(160,120,48,0.4);">|</span>
-                <label style="display:flex;align-items:center;gap:5px;cursor:pointer;color:#e879f9;" title="Stop each path when r mod m = m−1 (just before crossing the 0-axis / reduced residue boundary). Reveals how residue channels converge to mod 1.">
-                  <input type="checkbox" id="f-path-stop-boundary" onchange="if(window._overlayGap!==null)fareyRedraw();" style="accent-color:#e879f9;">
-                  <span>Stop at m−1</span>
+                <label style="display:flex;align-items:center;gap:5px;cursor:pointer;color:#e879f9;" title="Stop each residue path at ring m=r — the r/r boundary. Residue 30 stops at ring 30 (r=30/m=30), residue 7 stops at ring 7, etc. Paths from higher mods stop where their residue value equals the ring index.">
+                  <input type="checkbox" id="f-path-stop-boundary" onchange="var b=document.getElementById('f-path-stop-boundary-bar');if(b)b.checked=this.checked;if(window._overlayGap!==null)fareyRedraw();" style="accent-color:#e879f9;">
+                  <span>Stop at r/r</span>
                 </label>
                 <span style="color:rgba(160,120,48,0.4);">|</span>
                 <label style="display:flex;align-items:center;gap:5px;cursor:pointer;color:#ffd700;" title="Show per-residue path table below canvas">
@@ -4161,8 +4172,22 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
     _autoRotateDir = 1;
     _combinedAngle = 90;
     _ringOffsets   = {};
-    fareyRedraw();
-    if(_overlayGap !== null && _overlayPairs.length > 0) drawGapOverlay();
+    // If unfold is active, resync cut angle from a/b inputs so slider + label stay correct
+    if (window._unfoldOn) {
+      var num = parseFloat((document.getElementById('f-unfold-num')||{value:'1'}).value) || 1;
+      var den = parseFloat((document.getElementById('f-unfold-den')||{value:'2'}).value) || 2;
+      var deg = (num / den) * 360;
+      window._unfoldCutAngle = deg;
+      var sl = document.getElementById('f-unfold-cut-slider');
+      var lb = document.getElementById('f-unfold-deg');
+      if (sl) sl.value = deg;
+      if (lb) lb.textContent = deg.toFixed(1) + '°';
+      fareyRedraw();
+      if(_overlayGap !== null && _overlayPairs.length > 0) drawGapOverlay();
+    } else {
+      fareyRedraw();
+      if(_overlayGap !== null && _overlayPairs.length > 0) drawGapOverlay();
+    }
   };
 
   window.fareyToggleInspect = function(){
@@ -4746,15 +4771,19 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
 
   window.fareyCombinedClick = function(){
     if (window._unfoldOn) {
-      // When unfold is active, rotate by the cut fraction angle
+      // Rotate by the current cut angle (a/b x 360deg)
       var nu = parseFloat((document.getElementById('f-unfold-num')||{value:'1'}).value)||1;
       var de = parseFloat((document.getElementById('f-unfold-den')||{value:'2'}).value)||2;
-      var stepDeg = (nu / de) * 360;  // e.g. 1/2→180, 1/3→120, 1/4→90
-      _combinedAngle = (_combinedAngle + stepDeg) % 360;
+      if (de === 0) de = 1;
+      var stepDeg = (nu / de) * 360;
+      _combinedAngle = ((_combinedAngle + stepDeg) % 360 + 360) % 360;
+      if (window.fareyDrawUnfold) window.fareyDrawUnfold();
+      var lbl = document.getElementById('fc-combined-label');
+      if (lbl) lbl.textContent = 'Unfold \u00b7 click rotates ' + stepDeg.toFixed(1) + '\u00b0 (\u00b9\u2044' + de + ' turn)';
     } else {
       _combinedAngle = (_combinedAngle + 90) % 360;
+      drawCombined();
     }
-    drawCombined();
     highlightNavLink();
   };
 
@@ -5386,6 +5415,87 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
           ctx.stroke();
         });
       });
+
+      // ── Pole-proximity highlights: 2 nearest gcd=1 points to each pole ──
+      // North pole axis: r=0/modN (angle=0, top). Nearest gcd=1 on outer ring:
+      //   approaching from below: r = modN-1, modN-2, ... (gcd=1 check)
+      //   approaching from above: r = 1, 2, ... (gcd=1 check)
+      // South equator axis (opposite, r=modN/2). Nearest gcd=1:
+      //   r = floor(modN/2)-1, floor(modN/2)+1, etc.
+      (function() {
+        function _gcdP(a,b){ while(b){var t=b;b=a%b;a=t;} return a; }
+        var _outerM = modN;
+        var _dotR   = Math.max(4, W * 0.009);
+        var _glowR  = _dotR * 2.4;
+
+        // Find up to 2 nearest gcd=1 residues to a target angle on the outer ring
+        function _nearestCoprime(targetR, count) {
+          // targetR is the "ideal" r value (may not be integer or gcd=1)
+          // Search outward from targetR in both directions
+          var found = [];
+          var candidates = [];
+          for (var _rr = 1; _rr < _outerM; _rr++) {
+            if (_gcdP(_rr, _outerM) === 1) {
+              // Angular distance (circular) measured in residue steps
+              var _diff = Math.min(
+                Math.abs(_rr - targetR),
+                _outerM - Math.abs(_rr - targetR)
+              );
+              candidates.push({r: _rr, diff: _diff});
+            }
+          }
+          candidates.sort(function(a,b){ return a.diff - b.diff; });
+          return candidates.slice(0, count);
+        }
+
+        // North pole: closest to r=0 (equivalently r=modN, wrap) — i.e. r=1 and r=modN-1
+        var _northNearest = _nearestCoprime(0, 2);
+        // Also add the top of the other side (r=modN-1 side wraps around)
+        // The two gcd=1 flanking r=0 are r=1 and r=modN-1
+
+        // South equator: closest to r=modN/2
+        var _southTarget = _outerM / 2;
+        var _southNearest = _nearestCoprime(_southTarget, 2);
+
+        function _drawPoleHighlight(rVal, label) {
+          var _pt = ptXY(rVal, _outerM);
+          if (!_pt) return;
+          // Outer glow ring
+          ctx.beginPath();
+          ctx.arc(_pt.x, _pt.y, _glowR, 0, 2*Math.PI);
+          ctx.strokeStyle = '#ffd700';
+          ctx.lineWidth = 1.5;
+          ctx.globalAlpha = 0.55;
+          ctx.stroke();
+          // Filled dot
+          ctx.beginPath();
+          ctx.arc(_pt.x, _pt.y, _dotR, 0, 2*Math.PI);
+          ctx.fillStyle = '#ffd700';
+          ctx.globalAlpha = 0.95;
+          ctx.fill();
+          // Label
+          ctx.font = 'bold ' + Math.max(8, W*0.013) + 'px Cinzel,serif';
+          ctx.fillStyle = '#ffd700';
+          ctx.globalAlpha = 0.9;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          // Offset label radially outward
+          var _ang = dir*2*Math.PI*rVal/_outerM + _angOff3;
+          var _labelR = radius(_outerM) + Math.max(10, W*0.018);
+          ctx.fillText(label, cx + _labelR*Math.sin(_ang), cy - _labelR*Math.cos(_ang));
+        }
+
+        // Draw north-side highlights
+        _northNearest.forEach(function(item) {
+          _drawPoleHighlight(item.r, item.r + '/' + _outerM);
+        });
+        // Draw south-side highlights
+        _southNearest.forEach(function(item) {
+          _drawPoleHighlight(item.r, item.r + '/' + _outerM);
+        });
+
+        ctx.globalAlpha = 1;
+      })();
 
       // ── Pole markers ─────────────────────────────────────────────────────
       var _poleR = radius(modN) + Math.max(12, W*0.025);
@@ -7548,7 +7658,7 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
       var stopM = null;
       for(var m = modN; m >= 1; m--){
         var rem = ((r % m) + m) % m;
-        if(stopAtBoundary && rem === m - 1 && m < modN){ stopM = m + 1; break; }
+        if(stopAtBoundary && m < r){ stopM = r; break; }
         // Show position on ring m
         var g = gcdFn(rem, m);
         var isCoprime = (g === 1 || rem === 0);
@@ -7573,7 +7683,7 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
         if(si < shown.length-1) pathHtml += ' → ';
       });
       if(pathSegs.length > 12) pathHtml += ' <span style="color:#9a8060;">… (m=' + pathSegs[pathSegs.length-1].m + ' =' + pathSegs[pathSegs.length-1].rem + '/' + pathSegs[pathSegs.length-1].m + ')</span>';
-      if(stopM !== null) pathHtml += ' <span style="color:#e879f9;">⊣ m=' + stopM + ' (boundary)</span>';
+      if(stopM !== null) pathHtml += ' <span style="color:#e879f9;">⊣ r/r boundary (m=' + stopM + ')</span>';
 
       var isSelected = _selectedR.has(r);
       var rowBg = isSelected ? 'rgba(255,215,0,0.10)' : 'rgba(255,255,255,0.03)';
@@ -7871,11 +7981,14 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
     if (btnUE) btnUE.style.display = _unfoldOn ? 'inline-block' : 'none';
     var btn  = document.getElementById('fcm-unfold');
     var ctrl = document.getElementById('fc-unfold-controls');
+    var canvasLbl = document.getElementById('fc-combined-label');
     if (btn) { btn.style.background = _unfoldOn ? '#f97316' : 'var(--parchment-dark)'; btn.style.color = _unfoldOn ? '#000' : '#f97316'; }
     if (ctrl) ctrl.style.display = _unfoldOn ? 'flex' : 'none';
     if (!_unfoldOn) {
       if (_unfoldAnimTimer) { cancelAnimationFrame(_unfoldAnimTimer); _unfoldAnimTimer = null; }
       window._unfoldCutAngle = 180; _unfoldInspect = false; window._unfoldInspect = false; window._unfoldMorph = 0;
+      // Restore normal label
+      if (canvasLbl) canvasLbl.textContent = 'Combined \u00b7 click canvas to rotate 90\u00b0';
       if (window.drawCombined) window.drawCombined();
     } else {
       window._unfoldMorph = 0;
@@ -7885,20 +7998,41 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
       _combinedAngle = 0;
       // Cut = 360/modN on first open: first primitive step, r=1 of outermost ring
       if (typeof fareyUnfoldSyncCut === 'function') fareyUnfoldSyncCut();
+      // fareyUnfoldSyncCut calls _unfoldSetCut which updates the label
       fareyDrawUnfold();
       // Auto-start animate so the unfold draws immediately on open
       if (window.fareyUnfoldPlay) window.fareyUnfoldPlay();
     }
   };
 
-  // Shared helper: set cut to any degree value, update slider + label
+  // Shared helper: set cut to any degree value, update slider + label + a/b inputs
   function _unfoldSetCut(deg) {
     deg = ((deg % 360) + 360) % 360;
     window._unfoldCutAngle = deg;
     var sl = document.getElementById('f-unfold-cut-slider');
     var lb = document.getElementById('f-unfold-deg');
     if (sl) sl.value = deg;
-    if (lb) lb.textContent = deg.toFixed(1) + '°';
+    if (lb) lb.textContent = deg.toFixed(1) + '\u00b0';
+    // Back-calculate a/b only if slider was the source (i.e. a/b inputs didn't trigger this)
+    // We do a best-fraction approximation but only update if inputs aren't focused
+    var nEl = document.getElementById('f-unfold-num');
+    var dEl = document.getElementById('f-unfold-den');
+    if (nEl && dEl && document.activeElement !== nEl && document.activeElement !== dEl) {
+      var bestN=1,bestD=1,bestErr=999;
+      for (var d=1;d<=720;d++) {
+        var n=Math.round((deg/360)*d);
+        var err=Math.abs((n/d)*360-deg);
+        if(err<bestErr){bestErr=err;bestN=n;bestD=d;}
+        if(err<0.001) break;
+      }
+      nEl.value = bestN;
+      dEl.value = bestD;
+    }
+    // Update canvas label so user knows what each click will do
+    var canvasLbl = document.getElementById('fc-combined-label');
+    if (canvasLbl && window._unfoldOn) {
+      canvasLbl.textContent = 'Unfold \u00b7 click rotates ' + deg.toFixed(1) + '\u00b0';
+    }
     if (window._unfoldOn && window.fareyDrawUnfold) window.fareyDrawUnfold();
   }
 
@@ -7907,12 +8041,44 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
   };
 
   window.fareyUnfoldCutSnap = function(deg) {
+    // Also back-calculate a/b as a reduced fraction approximation
+    var nEl = document.getElementById('f-unfold-num');
+    var dEl = document.getElementById('f-unfold-den');
+    if (nEl && dEl) {
+      // Find simple fraction: try denominators 1..360, pick best match
+      var bestN=1,bestD=1,bestErr=999;
+      for (var d=1;d<=360;d++) {
+        var n=Math.round((deg/360)*d);
+        var err=Math.abs((n/d)*360-deg);
+        if(err<bestErr){bestErr=err;bestN=n;bestD=d;}
+        if(err<0.01) break;
+      }
+      nEl.value = bestN;
+      dEl.value = bestD;
+    }
     _unfoldSetCut(deg);
   };
 
+  // Apply cut from a/b fraction inputs → compute degree, update slider+label+draw
+  window.fareyUnfoldApplyCut = function() {
+    var num = parseFloat((document.getElementById('f-unfold-num')||{value:'1'}).value) || 1;
+    var den = parseFloat((document.getElementById('f-unfold-den')||{value:'2'}).value) || 2;
+    if (den === 0) return;
+    var deg = (num / den) * 360;
+    _unfoldSetCut(deg);
+  };
+
+  window.fareyUnfoldUpdateCut = function() {
+    window.fareyUnfoldApplyCut();
+  };
+
   window.fareyUnfoldSyncCut = function() {
-    // Set cut = 360/modN (first primitive step: r=1 on outermost ring)
+    // Set cut = 1/N (first primitive step: r=1 on outermost ring)
     var modN = parseInt((document.getElementById('f-mod-num')||{value:'30'}).value) || 30;
+    var nEl = document.getElementById('f-unfold-num');
+    var dEl = document.getElementById('f-unfold-den');
+    if (nEl) nEl.value = 1;
+    if (dEl) dEl.value = modN;
     _unfoldSetCut(360 / modN);
   };
 
@@ -8588,7 +8754,7 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
           } return '';
         })();
 
-    bar.style.display = 'block';
+    bar.style.display = 'flex';
 
     // Update per-r table
     if (typeof window.fareyUpdateRTable === 'function') window.fareyUpdateRTable();
@@ -8782,7 +8948,8 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
       var lineW = (isSelected ? 2.5 : 1.0) * _thickScale;
       // Draw from ring modN down to ring 1 (or until stop condition)
       for(var mk = modN - 1; mk >= 1; mk--){
-        if(stopAtBoundary && (((r % mk) + mk) % mk) === mk - 1) break;
+        // Stop at r/r boundary: stop when ring index mk equals r (the path would be r/r = 1)
+        if(stopAtBoundary && mk < r) break;
         var xyA = ptXY(r, mk);
         var xyB = ptXY(r, mk + 1);
         if (!xyA || !xyB) continue;
