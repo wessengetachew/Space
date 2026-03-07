@@ -4406,33 +4406,30 @@
       var allF2 = buildFractions(modN);
       var copR = {};
       allF2.cop.forEach(function(p){ if(p.m===modN) copR[p.r]=true; });
+      // σ(r) = N - r  (half-turn involution: maps 2πr/N to 2π - 2πr/N)
       var drawn = {};
       Object.keys(copR).forEach(function(rStr){
         var r = parseInt(rStr);
-        var mirror = modN - r - 2;
-        if (mirror < 0) mirror += modN;
-        // Fixed point: r === mirror
-        var isFixed = (r === mirror) || (r === modN - 1);
+        var mirror = (modN - r) % modN;  // σ(r) = N-r mod N
+        var isFixed = (r === mirror);    // only r=0 when N-r≡0, i.e. r=0 or r=N
         var pairKey = Math.min(r, mirror) + ':' + Math.max(r, mirror);
         if (!isFixed && drawn[pairKey]) return;
         drawn[pairKey] = true;
         var xy1 = ptXY(r, modN);
         if (!xy1) return;
         if (isFixed) {
-          // Fixed point: gold star ring
+          // Fixed point (0° position): gold ring
           ctx.beginPath(); ctx.arc(xy1.x, xy1.y, Math.max(5, W*0.011), 0, 2*Math.PI);
           ctx.strokeStyle = '#ffd700'; ctx.lineWidth = 2;
           ctx.globalAlpha = 0.9; ctx.stroke();
           ctx.beginPath(); ctx.arc(xy1.x, xy1.y, Math.max(2, W*0.005), 0, 2*Math.PI);
           ctx.fillStyle = '#ffd700'; ctx.globalAlpha = 0.8; ctx.fill();
-        } else if (copR[mirror]) {
+        } else if (copR[mirror] !== undefined) {
           var xy2 = ptXY(mirror, modN);
           if (!xy2) return;
-          // Mirror chord
           ctx.beginPath(); ctx.moveTo(xy1.x, xy1.y); ctx.lineTo(xy2.x, xy2.y);
           ctx.strokeStyle = '#e879f9'; ctx.lineWidth = 1.0;
           ctx.globalAlpha = 0.45; ctx.stroke();
-          // Small dots at endpoints
           [xy1, xy2].forEach(function(xy){
             ctx.beginPath(); ctx.arc(xy.x, xy.y, Math.max(2, W*0.004), 0, 2*Math.PI);
             ctx.fillStyle = '#e879f9'; ctx.globalAlpha = 0.7; ctx.fill();
@@ -7463,14 +7460,13 @@
     var seen = {};
     copR.forEach(function(r) {
       if (seen[r]) return;
-      var mirror = ((modN - r - 2) % modN + modN) % modN;
+      var mirror = (modN - r) % modN;  // σ(r) = N-r mod N
       var isFixed = (r === mirror);
-      // check mirror is also coprime
-      var mirrorCop = gcdFn(mirror, modN) === 1 || mirror === 0;
+      var mirrorCop = copR.indexOf(mirror) >= 0;
       if (isFixed) {
         seen[r] = true;
         fixed.push(r);
-      } else if (mirrorCop && copR.indexOf(mirror) >= 0) {
+      } else if (mirrorCop) {
         seen[r] = true; seen[mirror] = true;
         pairs.push([r, mirror]);
       } else {
@@ -7493,7 +7489,7 @@
 
     var html = '';
     html += row('Mod N', modN);
-    html += row('Involution', 'σ(r) = N − r − 2  (mod N)', '#e879f9');
+    html += row('Involution', 'σ(r) = N − r  (mod N)  — half-turn reflection', '#e879f9');
     html += row('Coprime residues', copR.length);
     html += row('Mirror pairs', pairs.length, '#e879f9');
     html += row('Fixed points', fixed.length, '#ffd700');
