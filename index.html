@@ -2427,20 +2427,6 @@
                   <div id="farey-rz-detail-body" style="font-family:'Cinzel',serif;font-size:0.57rem;line-height:2;color:#c4b5fd;"></div>
                 </div>
 
-<div id="farey-gap-overlay-bar" style="display:none;margin-top:8px;padding:8px 16px;background:rgba(10,30,60,0.85);border:1px solid #4a90d9;border-radius:6px;font-family:'Cinzel',serif;font-size:0.62rem;color:#e8d9b0;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px;">
-                  <span id="farey-gap-overlay-info" style="flex:1;min-width:0;text-align:left;"></span>
-                  <span style="color:#9a8060;">THICK</span>
-                  <input id="f-overlay-thick-bar" type="range" min="1" max="30" value="10" style="width:55px;accent-color:#4a90d9;" oninput="var v=this.value;document.getElementById('f-overlay-thick').value=v;document.getElementById('f-overlay-thick-val').textContent=(v/10).toFixed(1);document.getElementById('f-overlay-thick-bar-val').textContent=(v/10).toFixed(1);if(window._overlayGap!==null)fareyRedraw();">
-                  <span id="f-overlay-thick-bar-val" style="min-width:18px;color:#4a90d9;">1.0</span>
-                  <span style="color:rgba(74,144,217,0.4);">|</span>
-                  <label style="display:flex;align-items:center;gap:4px;cursor:pointer;color:#e879f9;" title="Stop each residue path at ring m=r (the r/r boundary)">
-                    <input type="checkbox" id="f-path-stop-boundary-bar" onchange="document.getElementById('f-path-stop-boundary').checked=this.checked;if(window._overlayGap!==null)fareyRedraw();" style="accent-color:#e879f9;">
-                    <span>Stop r/r</span>
-                  </label>
-                  <span style="color:rgba(74,144,217,0.4);">|</span>
-                  <button onclick="fareyGapOverlayClear()" style="font-family:'Cinzel',serif;font-size:0.56rem;text-transform:uppercase;padding:2px 8px;border:1px solid #4a90d9;background:transparent;color:#4a90d9;cursor:pointer;">&#10005; Clear</button>
-                </div>
-
                 <!-- Chain panel -->
                 <div id="farey-chain-panel" style="display:none;margin-top:8px;padding:12px 16px;background:var(--parchment-dark);border:1px solid #e879f9;border-radius:6px;font-family:'Cinzel',serif;font-size:0.62rem;color:var(--ink);">
                   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
@@ -2466,45 +2452,42 @@
 
               </div><!-- /farey-canvas-wrap-inner -->
 
-              <div id="farey-gap-overlay-controls" style="display:none;margin-top:6px;align-items:center;gap:10px;font-family:'Cinzel',serif;font-size:0.58rem;color:#4a90d9;flex-wrap:wrap;justify-content:center;">
-                <span style="color:#9a8060;">OPACITY</span>
-                <input id="f-overlay-alpha" type="range" min="10" max="100" value="80" style="width:60px;accent-color:#4a90d9;" oninput="document.getElementById('f-overlay-alpha-val').textContent=this.value+'%';if(window._overlayGap!==null&&window._overlayGap!==undefined){fareyRedraw();}">
-                <span id="f-overlay-alpha-val" style="min-width:24px;color:#4a90d9;">80%</span>
-                <span style="color:rgba(160,120,48,0.4);">|</span>
-                <span style="color:#9a8060;">THICKNESS</span>
-                <input id="f-overlay-thick" type="range" min="1" max="30" value="10" style="width:60px;accent-color:#4a90d9;" oninput="document.getElementById('f-overlay-thick-val').textContent=(this.value/10).toFixed(1);var bv=document.getElementById('f-overlay-thick-bar');if(bv)bv.value=this.value;var bvv=document.getElementById('f-overlay-thick-bar-val');if(bvv)bvv.textContent=(this.value/10).toFixed(1);if(window._overlayGap!==null&&window._overlayGap!==undefined){fareyRedraw();}">
-                <span id="f-overlay-thick-val" style="min-width:24px;color:#4a90d9;">1.0</span>
-                <span style="color:rgba(160,120,48,0.4);">|</span>
-                <label style="display:flex;align-items:center;gap:5px;cursor:pointer;color:#e879f9;" title="Stop each residue path at ring m=r — the r/r boundary. Residue 30 stops at ring 30 (r=30/m=30), residue 7 stops at ring 7, etc. Paths from higher mods stop where their residue value equals the ring index.">
-                  <input type="checkbox" id="f-path-stop-boundary" onchange="var b=document.getElementById('f-path-stop-boundary-bar');if(b)b.checked=this.checked;if(window._overlayGap!==null)fareyRedraw();" style="accent-color:#e879f9;">
-                  <span>Stop at r/r</span>
-                </label>
-                <span style="color:rgba(160,120,48,0.4);">|</span>
-                <label style="display:flex;align-items:center;gap:5px;cursor:pointer;color:#ffd700;" title="Show per-residue path table below canvas">
-                  <input type="checkbox" id="f-show-r-table" checked onchange="fareyUpdateRTable();" style="accent-color:#ffd700;">
-                  <span>r-path table</span>
-                </label>
-                <!-- Hidden inputs kept for animation code compatibility -->
+              <!-- Per-r path table moved outside canvas-wrap (see below) -->
+
+              </div><!-- /farey-canvas-wrap -->
+
+<div id="farey-r-table-wrap" style="display:none;margin-top:8px;padding:10px 14px;background:rgba(6,4,14,0.9);border:1px solid rgba(74,144,217,0.4);border-radius:4px;font-family:'Cinzel',serif;font-size:0.6rem;color:#e8d9b0;max-height:480px;overflow-y:auto;">
+                <!-- Header row 1: title + addressable + r input -->
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;flex-wrap:wrap;gap:6px;">
+                  <span style="color:#4a90d9;letter-spacing:0.1em;text-transform:uppercase;font-size:0.62rem;">Residue Path Details</span>
+                  <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap;">
+                    <span style="color:#9a8060;font-size:0.52rem;">r → (r mod m)/m</span>
+                    <button id="f-r-mode-btn" onclick="window.fareyToggleRMode()" title="Addressable: residues mod N  |  Actual: prime values p" style="font-family:'Cinzel',serif;font-size:0.52rem;padding:2px 6px;border:1px solid #9a8060;background:transparent;color:#9a8060;cursor:pointer;">Addressable</button>
+                    <input id="f-r-jump-input" type="text" placeholder="r or r1,r2…" style="width:90px;background:#0e0b05;color:#ffd700;border:1px solid #4a90d9;padding:2px 5px;font-family:'Cinzel',serif;font-size:0.52rem;" onkeydown="if(event.key==='Enter')window.fareyJumpToR()">
+                    <button onclick="window.fareyJumpToR()" style="font-family:'Cinzel',serif;font-size:0.52rem;padding:2px 6px;border:1px solid #4a90d9;background:transparent;color:#4a90d9;cursor:pointer;">Go</button>
+                  </div>
+                </div>
+                <!-- Header row 2: opacity, thickness, boundary -->
+                <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:6px 0;margin-bottom:8px;border-bottom:1px solid rgba(74,144,217,0.2);border-top:1px solid rgba(74,144,217,0.1);">
+                  <span style="color:#9a8060;font-size:0.56rem;">OPACITY</span>
+                  <input id="f-overlay-alpha" type="range" min="10" max="100" value="80" style="width:55px;accent-color:#4a90d9;" oninput="document.getElementById('f-overlay-alpha-val').textContent=this.value+'%';if(window._overlayGap!==null&&window._overlayGap!==undefined){fareyRedraw();}">
+                  <span id="f-overlay-alpha-val" style="min-width:26px;color:#4a90d9;font-size:0.56rem;">80%</span>
+                  <span style="color:rgba(74,144,217,0.3);">|</span>
+                  <span style="color:#9a8060;font-size:0.56rem;">THICKNESS</span>
+                  <input id="f-overlay-thick" type="range" min="1" max="30" value="10" style="width:55px;accent-color:#4a90d9;" oninput="document.getElementById('f-overlay-thick-val').textContent=(this.value/10).toFixed(1);var bv=document.getElementById('f-overlay-thick-bar');if(bv)bv.value=this.value;var bvv=document.getElementById('f-overlay-thick-bar-val');if(bvv)bvv.textContent=(this.value/10).toFixed(1);if(window._overlayGap!==null&&window._overlayGap!==undefined){fareyRedraw();}">
+                  <span id="f-overlay-thick-val" style="min-width:26px;color:#4a90d9;font-size:0.56rem;">1.0</span>
+                  <span style="color:rgba(74,144,217,0.3);">|</span>
+                  <label style="display:flex;align-items:center;gap:4px;cursor:pointer;color:#e879f9;font-size:0.56rem;" title="Stop each residue path when ring m = r (r/m = 1 boundary)">
+                    <input type="checkbox" id="f-path-stop-boundary" onchange="var b=document.getElementById('f-path-stop-boundary-bar');if(b)b.checked=this.checked;if(window._overlayGap!==null)fareyRedraw();" style="accent-color:#e879f9;">
+                    <span>Stop r/r=1</span>
+                  </label>
+                </div>
+                <!-- Hidden inputs for animation code compatibility -->
                 <input id="f-anim-speed" type="hidden" value="5">
                 <input id="f-anim-loop" type="hidden" value="1">
                 <input id="fcm-gap-play" type="hidden" value="">
-              </div>
-
-              <!-- Per-r path table (shown when gap active and table enabled) -->
-              <div id="farey-r-table-wrap" style="display:none;margin-top:8px;padding:10px 14px;background:rgba(6,4,14,0.9);border:1px solid rgba(74,144,217,0.4);border-radius:4px;font-family:'Cinzel',serif;font-size:0.6rem;color:#e8d9b0;max-height:320px;overflow-y:auto;">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;border-bottom:1px solid rgba(74,144,217,0.2);padding-bottom:6px;">
-                  <span style="color:#4a90d9;letter-spacing:0.1em;text-transform:uppercase;">Residue Path Details</span>
-                    <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap;">
-                      <span style="color:#9a8060;font-size:0.52rem;">r → (r mod m)/m, N→1</span>
-                      <input id="f-r-jump-input" type="text" placeholder="r or r1,r2…" style="width:90px;background:#0e0b05;color:#ffd700;border:1px solid #4a90d9;padding:2px 4px;font-family:'Cinzel',serif;font-size:0.52rem;" onkeydown="if(event.key==='Enter')window.fareyJumpToR()">
-                      <button onclick="window.fareyJumpToR()" style="font-family:'Cinzel',serif;font-size:0.52rem;padding:2px 5px;border:1px solid #4a90d9;background:transparent;color:#4a90d9;cursor:pointer;">Select</button>
-                      <button id="f-r-mode-btn" onclick="window.fareyToggleRMode()" title="Addressable: residues mod N  |  Actual: prime values p" style="font-family:'Cinzel',serif;font-size:0.52rem;padding:2px 5px;border:1px solid #9a8060;background:transparent;color:#9a8060;cursor:pointer;">Addressable</button>
-                    </div>
-                </div>
                 <div id="farey-r-table-body"></div>
               </div>
-
-              </div><!-- /farey-canvas-wrap -->
 
 <div id="farey-panel">
 <div class="farey-cards-grid">
@@ -2814,6 +2797,10 @@
 
 <div id="farey-canvas-col" style="width:100%;">
               <div style="padding:16px;background:var(--parchment-dark);border:1px solid var(--panel-border);border-radius:4px;margin-bottom:8px;">
+              <!-- Collapse toggle -->
+              <div style="display:flex;justify-content:flex-end;margin-bottom:8px;">
+                <button id="farey-collapse-btn" onclick="fareyToggleCollapse()" style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.08em;text-transform:uppercase;padding:4px 12px;border:1px solid var(--gold);background:var(--parchment-dark);color:var(--gold);cursor:pointer;" title="Collapse to single Unit Circle">&#9711; Unit Circle</button>
+              </div>
               <!-- Split view (two small canvases) -->
               <div id="farey-split-view" style="display:flex;justify-content:center;gap:16px;align-items:flex-start;">
                 <div style="text-align:center;flex:1;min-width:0;">
@@ -2825,7 +2812,32 @@
                   <div id="fc-label2" style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:#c94040;margin-top:6px;">gcd(r, m) &gt; 1</div>
                 </div>
               </div>
+              <!-- Collapsed unit circle single view -->
+              <div id="farey-collapsed-view" style="display:none;text-align:center;">
+                <canvas id="fc-collapsed" width="512" height="512" style="cursor:pointer;display:block;width:100%;max-width:512px;height:auto;aspect-ratio:1;margin:0 auto;" onclick="fareyRotate('coprime')" title="Click to rotate 90°"></canvas>
+                <div style="display:flex;justify-content:center;gap:8px;margin-top:8px;">
+                  <button onclick="fareyCollapsedMode('both')"       id="fcc-both"       style="font-family:'Cinzel',serif;font-size:0.56rem;letter-spacing:0.08em;text-transform:uppercase;padding:3px 10px;border:1px solid var(--gold);background:var(--gold);color:var(--parchment);cursor:pointer;">All</button>
+                  <button onclick="fareyCollapsedMode('coprime')"    id="fcc-coprime"    style="font-family:'Cinzel',serif;font-size:0.56rem;letter-spacing:0.08em;text-transform:uppercase;padding:3px 10px;border:1px solid #4a90d9;background:var(--parchment-dark);color:#4a90d9;cursor:pointer;">gcd=1</button>
+                  <button onclick="fareyCollapsedMode('noncoprime')" id="fcc-noncoprime" style="font-family:'Cinzel',serif;font-size:0.56rem;letter-spacing:0.08em;text-transform:uppercase;padding:3px 10px;border:1px solid #c94040;background:var(--parchment-dark);color:#c94040;cursor:pointer;">gcd&gt;1</button>
+                </div>
+                <div id="fc-collapsed-label" style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);margin-top:6px;">Unit Circle · All Points</div>
+              </div>
               </div><!-- /canvas border wrapper -->
+
+              <!-- Gap overlay bar — always visible when gap is active -->
+<div id="farey-gap-overlay-bar" style="display:none;margin-top:8px;padding:8px 16px;background:rgba(10,30,60,0.85);border:1px solid #4a90d9;border-radius:6px;font-family:'Cinzel',serif;font-size:0.62rem;color:#e8d9b0;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px;">
+                  <span id="farey-gap-overlay-info" style="flex:1;min-width:0;text-align:left;"></span>
+                  <span style="color:#9a8060;">THICK</span>
+                  <input id="f-overlay-thick-bar" type="range" min="1" max="30" value="10" style="width:55px;accent-color:#4a90d9;" oninput="var v=this.value;document.getElementById('f-overlay-thick').value=v;document.getElementById('f-overlay-thick-val').textContent=(v/10).toFixed(1);document.getElementById('f-overlay-thick-bar-val').textContent=(v/10).toFixed(1);if(window._overlayGap!==null)fareyRedraw();">
+                  <span id="f-overlay-thick-bar-val" style="min-width:18px;color:#4a90d9;">1.0</span>
+                  <span style="color:rgba(74,144,217,0.4);">|</span>
+                  <label style="display:flex;align-items:center;gap:4px;cursor:pointer;color:#e879f9;" title="Stop each residue path at ring m=r (the r/r boundary)">
+                    <input type="checkbox" id="f-path-stop-boundary-bar" onchange="document.getElementById('f-path-stop-boundary').checked=this.checked;if(window._overlayGap!==null)fareyRedraw();" style="accent-color:#e879f9;">
+                    <span>Stop r/r</span>
+                  </label>
+                  <span style="color:rgba(74,144,217,0.4);">|</span>
+                  <button onclick="fareyGapOverlayClear()" style="font-family:'Cinzel',serif;font-size:0.56rem;text-transform:uppercase;padding:2px 8px;border:1px solid #4a90d9;background:transparent;color:#4a90d9;cursor:pointer;">&#10005; Clear</button>
+                </div>
 
               <!-- ══ STATS / DESCRIPTION DROPDOWN ══ -->
               <div id="farey-stats-section" style="margin-top:10px;">
@@ -3222,6 +3234,7 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
     } else {
       drawFarey('coprime'); drawFarey('noncoprime');
     }
+    if (window._collapsedOn && typeof window.fareyDrawCollapsed === 'function') fareyDrawCollapsed();
     // Keep rz section mod in sync with top Farey tool
     var rzMod  = document.getElementById('rz-mod');
     var topMod = document.getElementById('f-mod-num');
@@ -4010,8 +4023,10 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
     // Switch between split (default) and combined (Advanced)
     var sv = document.getElementById('farey-split-view');
     var cv = document.getElementById('farey-combined-view');
-    if (sv) sv.style.display = open ? 'none'  : 'flex';
+    if (sv) sv.style.display = open ? 'none' : (window._collapsedOn ? 'none' : 'flex');
     if (cv) cv.style.display = open ? 'block' : 'none';
+    var collV = document.getElementById('farey-collapsed-view');
+    if (collV) collV.style.display = (!open && window._collapsedOn) ? 'block' : (open ? 'none' : 'none');
     if (open) {
       // Unlock sliders, set canvas to 2K, enable fluid mode (4K available via slider)
       var _lockEl2k = document.getElementById('f-size-x-lock');
@@ -4029,10 +4044,10 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
       // Match split-view look: no connecting lines, just dots
       var ch  = document.getElementById('f-chords');        if (ch)  ch.checked  = false;
       var sp  = document.getElementById('f-spokes');        if (sp)  sp.checked  = false;
-      var sm  = document.getElementById('f-samemod');       if (sm)  sm.checked  = false;
-      var cx2 = document.getElementById('f-crossmod');      if (cx2) cx2.checked = false;
-      var cmt = document.getElementById('f-crossmod-thick'); if (cmt) cmt.value  = 0;
-      var cmv = document.getElementById('f-crossmod-thick-val'); if (cmv) cmv.textContent = '0.0';
+      var sm  = document.getElementById('f-samemod');       if (sm)  sm.checked  = true;
+      var cx2 = document.getElementById('f-crossmod');      if (cx2) cx2.checked = true;
+      var cmt = document.getElementById('f-crossmod-thick'); if (cmt) cmt.value  = 30;
+      var cmv = document.getElementById('f-crossmod-thick-val'); if (cmv) cmv.textContent = '3.0';
       syncCombinedSize();
       drawCombined();
       var _advBtn = document.getElementById('f-adv-btn');
@@ -5439,17 +5454,17 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
           ctx.textBaseline = 'middle';
           // Offset label radially outward
           var _ang = dir*2*Math.PI*rVal/_outerM + _angOff3;
-          var _labelR = radius(_outerM) + Math.max(10, W*0.018);
+          var _labelR = radius(_outerM) + Math.max(18, W*0.028);
           ctx.fillText(label, cx + _labelR*Math.sin(_ang), cy - _labelR*Math.cos(_ang));
         }
 
         // Draw north-side highlights
         _northNearest.forEach(function(item) {
-          _drawPoleHighlight(item.r, item.r + '/' + _outerM);
+          _drawPoleHighlight(item.r, '' + item.r);
         });
         // Draw south-side highlights
         _southNearest.forEach(function(item) {
-          _drawPoleHighlight(item.r, item.r + '/' + _outerM);
+          _drawPoleHighlight(item.r, '' + item.r);
         });
 
         ctx.globalAlpha = 1;
@@ -7568,9 +7583,8 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
   window.fareyUpdateRTable = function() {
     var wrap = document.getElementById('farey-r-table-wrap');
     var body = document.getElementById('farey-r-table-body');
-    var show = document.getElementById('f-show-r-table');
     if (!wrap || !body) return;
-    if (!show || !show.checked || !_overlayPairs.length) {
+    if (!_overlayPairs.length) {
       wrap.style.display = 'none'; return;
     }
     wrap.style.display = 'block';
@@ -7583,9 +7597,28 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
 
     // Collect unique r values in encounter order
     var rList = [], rSeen = {};
+    var isActualMode = (window._rMode === 'actual');
+
+    function isPrimeVal(n) {
+      if (n < 2) return false;
+      if (n === 2) return true;
+      if (n % 2 === 0) return false;
+      for (var d = 3; d * d <= n; d += 2) { if (n % d === 0) return false; }
+      return true;
+    }
+
     _overlayPairs.forEach(function(pair){
-      if(!rSeen[pair.r1]){ rSeen[pair.r1]=true; rList.push(pair.r1); }
-      if(!rSeen[pair.r2]){ rSeen[pair.r2]=true; rList.push(pair.r2); }
+      // In Actual mode: only include residue r if r itself is prime
+      if (!rSeen[pair.r1]) {
+        if (!isActualMode || isPrimeVal(pair.r1)) {
+          rSeen[pair.r1] = true; rList.push(pair.r1);
+        }
+      }
+      if (!rSeen[pair.r2]) {
+        if (!isActualMode || isPrimeVal(pair.r2)) {
+          rSeen[pair.r2] = true; rList.push(pair.r2);
+        }
+      }
     });
 
     // Build per-r colour map matching the canvas (golden-angle)
@@ -7669,8 +7702,10 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
       btn.style.color = window._rMode === 'actual' ? '#ffd700' : '#9a8060';
       btn.style.borderColor = window._rMode === 'actual' ? '#ffd700' : '#9a8060';
     }
-    // Rebuild table in new mode
+    // Rebuild table and redraw canvas in new mode
     window.fareyUpdateRTable();
+    if (typeof window.fareyRedraw === 'function') window.fareyRedraw();
+    if (typeof drawGapOverlay === 'function' && window._overlayGap !== null && window._overlayPairs.length) drawGapOverlay();
   };
 
   window.fareyJumpToR = function() {
@@ -8484,6 +8519,78 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
   window._showMirrorActive = function() { return _showMirror; };
 
 
+  // ── Collapse to single Unit Circle ────────────────────────────────────
+  window._collapsedOn = false;
+  window._collapsedMode = 'both';
+
+  window.fareyCollapsedMode = function(mode) {
+    window._collapsedMode = mode;
+    var btn_both = document.getElementById('fcc-both');
+    var btn_cop  = document.getElementById('fcc-coprime');
+    var btn_non  = document.getElementById('fcc-noncoprime');
+    var lbl      = document.getElementById('fc-collapsed-label');
+    var labels   = { both: 'Unit Circle · All Points', coprime: 'Unit Circle · gcd(r,m) = 1', noncoprime: 'Unit Circle · gcd(r,m) > 1' };
+    var activeStyle = function(btn, col) { btn.style.background = col; btn.style.color = col === 'var(--parchment-dark)' ? (btn.id==='fcc-both'?'var(--gold)':btn.id==='fcc-coprime'?'#4a90d9':'#c94040') : 'var(--parchment)'; };
+    if (btn_both) { btn_both.style.background = mode==='both' ? 'var(--gold)' : 'var(--parchment-dark)'; btn_both.style.color = mode==='both' ? 'var(--parchment)' : 'var(--gold)'; }
+    if (btn_cop)  { btn_cop.style.background  = mode==='coprime' ? '#4a90d9' : 'var(--parchment-dark)'; btn_cop.style.color  = mode==='coprime' ? 'var(--parchment)' : '#4a90d9'; }
+    if (btn_non)  { btn_non.style.background  = mode==='noncoprime' ? '#c94040' : 'var(--parchment-dark)'; btn_non.style.color  = mode==='noncoprime' ? 'var(--parchment)' : '#c94040'; }
+    if (lbl) lbl.textContent = labels[mode] || labels.both;
+    fareyDrawCollapsed();
+  };
+
+  window.fareyDrawCollapsed = function() {
+    var cc = document.getElementById('fc-collapsed');
+    if (!cc) return;
+    var modN   = parseInt((document.getElementById('f-mod-num')||{value:'30'}).value)||30;
+    var col1   = (document.getElementById('f-col1')||{value:'#4a90d9'}).value;
+    var col2   = (document.getElementById('f-col2')||{value:'#c94040'}).value;
+    var mode   = window._collapsedMode || 'both';
+    var W = cc.width, H = cc.height;
+    var ctx = cc.getContext('2d');
+    ctx.clearRect(0,0,W,H);
+    var cx = W/2, cy = H/2;
+    var radius = Math.min(W,H)*0.42;
+    // Draw unit circle ring
+    ctx.beginPath(); ctx.arc(cx,cy,radius,0,2*Math.PI);
+    ctx.strokeStyle = 'rgba(160,120,48,0.35)'; ctx.lineWidth = 1; ctx.stroke();
+    function gcd(a,b){ while(b){var t=b;b=a%b;a=t;} return a; }
+    var ptR = Math.max(2, W*0.005);
+    for (var m=1; m<=modN; m++) {
+      for (var r=0; r<m; r++) {
+        var g = gcd(r,m);
+        if (mode==='coprime' && g!==1) continue;
+        if (mode==='noncoprime' && g===1) continue;
+        var ang = 2*Math.PI*r/m;
+        var x = cx + radius*Math.cos(ang);
+        var y = cy + radius*Math.sin(ang);
+        ctx.beginPath(); ctx.arc(x,y,ptR,0,2*Math.PI);
+        ctx.fillStyle = g===1 ? col1 : col2;
+        ctx.globalAlpha = 0.85;
+        ctx.fill();
+      }
+    }
+    ctx.globalAlpha = 1;
+  };
+
+  window.fareyToggleCollapse = function() {
+    window._collapsedOn = !window._collapsedOn;
+    var advOpen = document.getElementById('farey-root') && document.getElementById('farey-root').classList.contains('advanced-open');
+    var sv  = document.getElementById('farey-split-view');
+    var cv  = document.getElementById('farey-collapsed-view');
+    var btn = document.getElementById('farey-collapse-btn');
+    // Only swap split/collapsed if Advanced panel is not open (Advanced uses its own combined view)
+    if (!advOpen) {
+      if (sv) sv.style.display = window._collapsedOn ? 'none' : 'flex';
+      if (cv) cv.style.display = window._collapsedOn ? 'block' : 'none';
+    }
+    if (btn) {
+      btn.style.background = window._collapsedOn ? 'var(--gold)' : 'var(--parchment-dark)';
+      btn.style.color      = window._collapsedOn ? 'var(--parchment)' : 'var(--gold)';
+      btn.textContent      = window._collapsedOn ? '⊙ Split View' : '○ Unit Circle';
+    }
+    if (window._collapsedOn) fareyDrawCollapsed();
+  };
+
   // ── Dipole field toggle ────────────────────────────────────────────────
   window._showDipole = false;
   window.fareyToggleDipole = function() {
@@ -8677,8 +8784,6 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
     ghostFadeTo(0);
     var bar = document.getElementById('farey-gap-overlay-bar');
     if (bar) bar.style.display = 'none';
-    var ctrl = document.getElementById('farey-gap-overlay-controls');
-    if (ctrl) ctrl.style.display = 'none';
     var rWrap = document.getElementById('farey-r-table-wrap');
     if (rWrap) rWrap.style.display = 'none';
     if (typeof window.fareyRedraw === 'function') window.fareyRedraw();
@@ -8686,9 +8791,10 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
 
   // ── Stats bar ─────────────────────────────────────────────────────────────
   function updateOverlayBar(gap, gapData, modN, shownPairs, inRange) {
-    var ctrl = document.getElementById('farey-gap-overlay-controls');
-    if(ctrl) ctrl.style.display = 'flex';
+    var rWrap = document.getElementById('farey-r-table-wrap');
+    if (rWrap) rWrap.style.display = 'block';
     var bar  = document.getElementById('farey-gap-overlay-bar');
+    if (bar) bar.style.display = 'flex';
     var info = document.getElementById('farey-gap-overlay-info');
     if (!bar || !info) return;
 
@@ -8854,11 +8960,13 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
 
     // ── Highlighted inward cross-mod paths for each gap pair ─────────────
     // Collect unique residues from all pairs, in encounter order
+    var _isActual = (window._rMode === 'actual');
+    function _isPrimeG(n){ if(n<2)return false; if(n===2)return true; if(n%2===0)return false; for(var d=3;d*d<=n;d+=2){if(n%d===0)return false;} return true; }
     var highlightRList = [];
     var highlightRSeen = {};
     pairs.forEach(function(pair){
-      if(!highlightRSeen[pair.r1]){ highlightRSeen[pair.r1]=true; highlightRList.push(pair.r1); }
-      if(!highlightRSeen[pair.r2]){ highlightRSeen[pair.r2]=true; highlightRList.push(pair.r2); }
+      if(!highlightRSeen[pair.r1] && (!_isActual || _isPrimeG(pair.r1))){ highlightRSeen[pair.r1]=true; highlightRList.push(pair.r1); }
+      if(!highlightRSeen[pair.r2] && (!_isActual || _isPrimeG(pair.r2))){ highlightRSeen[pair.r2]=true; highlightRList.push(pair.r2); }
     });
 
     // When inspect mode is active, give each r its own hue (golden-angle spread)
@@ -8873,12 +8981,13 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
     }
     var hasSelection = (_selectedR.size > 0);
     function rColor(rVal){ 
-      if (rVal === _selectedR) return '#ffd700';  // gold for selected
+      if (_selectedR.has(rVal)) return '#ffe033';  // bright yellow for selected path
       if(!inspectActive) return _overlayColor;
       var idx = highlightRList.indexOf(rVal);
       return idx >= 0 ? R_PALETTE[idx] : _overlayColor;
     }
     function rAlphaScale(rVal) {
+      if (_isActual && !_isPrimeG(rVal)) return 0; // hide non-prime residues in Actual mode
       if (!hasSelection) return 1.0;
       return _selectedR.has(rVal) ? 1.0 : 0.15;
     }
@@ -8903,7 +9012,7 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
       var aScale = rAlphaScale(r);
       var isSelected = _selectedR.has(r);
       var _thickScale = parseInt((document.getElementById('f-overlay-thick')||{value:'10'}).value) / 10;
-      var lineW = (isSelected ? 2.5 : 1.0) * _thickScale;
+      var lineW = (isSelected ? 3.5 : 1.0) * _thickScale;
       // Draw from ring modN down to ring 1 (or until stop condition)
       for(var mk = modN - 1; mk >= 1; mk--){
         // Stop at r/r boundary: stop when ring index mk equals r (the path would be r/r = 1)
@@ -8917,7 +9026,7 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
         ctx.lineTo(xyB.x, xyB.y);
         ctx.strokeStyle = col;
         ctx.lineWidth   = Math.max(0.8, W * 0.003 * t) * lineW;
-        ctx.globalAlpha = (0.25 + 0.55 * t) * overlayAlpha * aScale;
+        ctx.globalAlpha = (isSelected ? (0.6 + 0.4 * t) : (0.25 + 0.55 * t)) * overlayAlpha * aScale;
         ctx.stroke();
       }
       // Outer dot — larger + glow ring for selected
