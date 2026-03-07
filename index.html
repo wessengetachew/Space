@@ -2449,6 +2449,17 @@
                   </div>
                 </div>
 
+                <!-- Mirror Involution dropdown (shown when mirror active) -->
+                <div id="farey-mirror-panel" style="display:none;background:var(--parchment-dark);border:1px solid rgba(232,121,249,0.5);border-radius:4px;margin-bottom:6px;">
+                  <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 14px;cursor:pointer;" onclick="var b=this.nextElementSibling;var a=this.querySelector('.farey-arrow');b.style.display=b.style.display==='none'?'block':'none';a.textContent=b.style.display==='none'?'▶':'▼';">
+                    <span style="font-family:'Cinzel',serif;font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:#e879f9;">&#9632; Mirror Involution &nbsp;·&nbsp; <span id="farey-mirror-title-count"></span></span>
+                    <span class="farey-arrow" style="color:#e879f9;font-size:0.7rem;">▶</span>
+                  </div>
+                  <div style="display:none;padding:12px 16px;">
+                    <div id="farey-mirror-body" style="font-family:'Cinzel',serif;font-size:0.62rem;line-height:1.9;color:var(--ink-mid);"></div>
+                  </div>
+                </div>
+
                 <!-- Gap Overlay Data dropdown -->
                 <div id="farey-gap-stats-panel" style="display:none;background:var(--parchment-dark);border:1px solid rgba(74,144,217,0.4);border-radius:4px;margin-bottom:6px;">
                   <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 14px;cursor:pointer;" onclick="var b=this.nextElementSibling;var a=this.querySelector('.farey-arrow');b.style.display=b.style.display==='none'?'block':'none';a.textContent=b.style.display==='none'?'▶':'▼';">
@@ -7425,8 +7436,105 @@
       btn.style.background = _showMirror ? 'var(--gold)' : 'var(--parchment-dark)';
       btn.style.color      = _showMirror ? 'var(--parchment)' : 'var(--gold)';
     }
+    var panel = document.getElementById('farey-mirror-panel');
+    if (panel) panel.style.display = _showMirror ? 'block' : 'none';
+    if (_showMirror) fareyUpdateMirrorPanel();
     if (typeof window.fareyRedraw === 'function') window.fareyRedraw();
   };
+
+  function fareyUpdateMirrorPanel() {
+    var panel  = document.getElementById('farey-mirror-panel');
+    var body   = document.getElementById('farey-mirror-body');
+    var tcnt   = document.getElementById('farey-mirror-title-count');
+    if (!panel || !body || !_showMirror) return;
+
+    var modN = parseInt((document.getElementById('f-mod-num')||{value:'49'}).value) || 49;
+    function gcdFn(a,b){ while(b){var t=b;b=a%b;a=t;} return a; }
+
+    // Build coprime residues on outer ring
+    var copR = [];
+    for (var r = 0; r <= modN; r++) {
+      if (r === 0 || r === modN) { if (modN === 1) copR.push(r); continue; }
+      if (gcdFn(r, modN) === 1) copR.push(r);
+    }
+
+    // Compute mirror for each: σ(r) = N - r - 2  (mod N, if < 0 add N)
+    var pairs = [], fixed = [], unmatched = [];
+    var seen = {};
+    copR.forEach(function(r) {
+      if (seen[r]) return;
+      var mirror = ((modN - r - 2) % modN + modN) % modN;
+      var isFixed = (r === mirror);
+      // check mirror is also coprime
+      var mirrorCop = gcdFn(mirror, modN) === 1 || mirror === 0;
+      if (isFixed) {
+        seen[r] = true;
+        fixed.push(r);
+      } else if (mirrorCop && copR.indexOf(mirror) >= 0) {
+        seen[r] = true; seen[mirror] = true;
+        pairs.push([r, mirror]);
+      } else {
+        seen[r] = true;
+        unmatched.push(r);
+      }
+    });
+
+    if (tcnt) tcnt.textContent = pairs.length + ' pairs · ' + fixed.length + ' fixed';
+
+    function row(label, val, col) {
+      return '<div style="display:flex;justify-content:space-between;border-bottom:1px solid rgba(196,155,56,0.07);padding:1px 0;">'
+        + '<span style="color:#9a8060;">' + label + '</span>'
+        + '<span style="color:' + (col||'#e8e0c8') + ';font-weight:600;">' + val + '</span></div>';
+    }
+    function divider() { return '<div style="border-top:1px solid rgba(232,121,249,0.2);margin:5px 0;"></div>'; }
+    function sHead(t) {
+      return '<div style="color:#e879f9;font-weight:700;font-size:0.58rem;margin:6px 0 3px;text-transform:uppercase;letter-spacing:0.08em;">' + t + '</div>';
+    }
+
+    var html = '';
+    html += row('Mod N', modN);
+    html += row('Involution', 'σ(r) = N − r − 2  (mod N)', '#e879f9');
+    html += row('Coprime residues', copR.length);
+    html += row('Mirror pairs', pairs.length, '#e879f9');
+    html += row('Fixed points', fixed.length, '#ffd700');
+    if (unmatched.length) html += row('Unmatched', unmatched.length, '#c94040');
+    html += divider();
+
+    if (fixed.length) {
+      html += sHead('Fixed Points  (σ(r) = r)');
+      html += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(60px,1fr));gap:2px 6px;font-size:0.56rem;margin-bottom:4px;">';
+      fixed.forEach(function(r) {
+        var deg = (360*r/modN).toFixed(1);
+        html += '<span style="color:#ffd700;">r=' + r + ' <span style="color:#9a8060;">(' + deg + '°)</span></span>';
+      });
+      html += '</div>';
+      html += divider();
+    }
+
+    html += sHead('Mirror Pairs  (' + pairs.length + ')');
+    if (modN <= 300) {
+      html += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:2px 6px;font-size:0.56rem;">';
+      pairs.forEach(function(p) {
+        var d1 = (360*p[0]/modN).toFixed(1), d2 = (360*p[1]/modN).toFixed(1);
+        html += '<span style="color:#e879f9;">' + p[0] + ' ↔ ' + p[1]
+          + ' <span style="color:#9a8060;">(' + d1 + '° ↔ ' + d2 + '°)</span></span>';
+      });
+      html += '</div>';
+    } else {
+      html += '<div style="color:#9a8060;font-size:0.55rem;">' + pairs.length + ' pairs — list hidden for N > 300</div>';
+    }
+
+    if (unmatched.length) {
+      html += divider();
+      html += sHead('Unmatched  (mirror not coprime)');
+      html += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(46px,1fr));gap:1px 4px;font-size:0.52rem;color:#c94040;">';
+      unmatched.forEach(function(r){ html += '<span>r=' + r + '</span>'; });
+      html += '</div>';
+    }
+
+    body.innerHTML = html;
+  }
+  window.fareyUpdateMirrorPanel = fareyUpdateMirrorPanel;
   window._showMirrorActive = function() { return _showMirror; };
 
 
@@ -7604,6 +7712,10 @@
     var origRedraw = window.fareyRedraw;
     window.fareyRedraw = function () {
       origRedraw.apply(this, arguments);
+      // Update mirror panel when active
+      if (window._showMirrorActive && window._showMirrorActive()) {
+        if (typeof fareyUpdateMirrorPanel === 'function') fareyUpdateMirrorPanel();
+      }
       // After the main draw, overlay gap chords if active
       if (_overlayGap !== null && _overlayPairs.length > 0) {
         drawGapOverlay();
