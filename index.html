@@ -2193,18 +2193,6 @@
     <header class="header">
         <h1>Farey Modular Residue Rings</h1>
         <div class="subtitle">An Interactive Visualization of Modular Arithmetic, Prime Structure, and the Farey Sequence</div>
-        <div class="author">Wessen Getachew &nbsp;·&nbsp; 2026</div>
-        <div class="tool-nav">
-            <a class="tool-nav-link" href="https://wessengetachew.github.io/G/" target="_blank">Audio</a>
-            &nbsp;·&nbsp;
-            <a class="tool-nav-link" href="https://wessengetachew.github.io/Primes/" target="_blank">Modular Sieve</a>
-            &nbsp;·&nbsp;
-            <a class="tool-nav-link" href="https://wessengetachew.github.io/Composite/" target="_blank">Composite</a>
-            &nbsp;·&nbsp;
-            <a class="tool-nav-link" href="https://wessengetachew.github.io/Transform/" target="_blank">Transform</a>
-            &nbsp;·&nbsp;
-            <a class="tool-nav-link" href="https://wessengetachew.github.io/Zeta/" target="_blank">Decomposition / Zeta²</a>
-        </div>
     </header>
 
     <!-- KaTeX for theory panel math -->
@@ -2860,11 +2848,11 @@
 
                 <!-- ══ DIPOLE FIELD DETAILS DROPDOWN ══ -->
                 <div id="farey-dipole-details-panel" style="display:none;background:var(--parchment-dark);border:1px solid rgba(232,121,249,0.5);border-radius:4px;margin-bottom:6px;">
-                  <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 14px;cursor:pointer;" onclick="var b=this.nextElementSibling;var a=this.querySelector('.farey-arrow');b.style.display=b.style.display==='none'?'block':'none';a.textContent=b.style.display==='none'?'▶':'▼';">
+                  <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 14px;cursor:pointer;" onclick="var b=this.nextElementSibling;var a=this.querySelector('.farey-arrow');var open=b.style.display==='none';b.style.display=open?'block':'none';a.textContent=open?'▼':'▶';if(open&&window.fareyUpdateDipoleDetails)fareyUpdateDipoleDetails();">
                     <span style="font-family:'Cinzel',serif;font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:#e879f9;">&#8853;&#8854; Dipole Field Details</span>
-                    <span class="farey-arrow" style="color:#e879f9;font-size:0.7rem;">▼</span>
+                    <span class="farey-arrow" style="color:#e879f9;font-size:0.7rem;">▶</span>
                   </div>
-                  <div style="display:block;padding:12px 16px;">
+                  <div style="display:none;padding:12px 16px;">
                     <div id="farey-dipole-detail-body" style="font-family:'Cinzel',serif;font-size:0.62rem;line-height:1.9;color:var(--ink-mid);"></div>
                   </div>
                 </div>
@@ -2876,27 +2864,7 @@
                     <span class="uc-presets-arrow" style="color:#c084fc;font-size:0.7rem;">▶</span>
                   </div>
                   <div class="uc-presets-body" style="display:none;padding:12px 16px;">
-                    <div style="font-family:'Cinzel',serif;font-size:0.56rem;color:#9a8060;letter-spacing:0.08em;margin-bottom:10px;">Each preset opens Advanced view and maps a unit-circle representation onto the Farey canvas.</div>
-
-                    <!-- §1 Wave / Fourier -->
-                    <div style="margin-bottom:10px;">
-                      <div style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.1em;color:#f97316;margin-bottom:4px;text-transform:uppercase;">§1 · Wave / Fourier</div>
-                      <div style="display:flex;gap:5px;flex-wrap:wrap;">
-                        <button onclick="ucPreset({mod:60,colmode:'rainbow-angle',spokes:true,chords:false,polygon:false,label:'angle',labelScope:'outer',mode:'coprime',ringscale:'linear',spacing:100})" class="uc-preset-btn">Frequency Bands</button>
-                        <button onclick="ucPreset({mod:30,colmode:'spectral',spokes:true,chords:false,polygon:false,label:'radian',labelScope:'outer',mode:'coprime',ringscale:'log',spacing:100})" class="uc-preset-btn">Harmonic Spokes</button>
-                        <button onclick="ucPreset({mod:48,colmode:'spectral',spokes:false,chords:false,polygon:false,label:'none',mode:'both',ringscale:'linear',spacing:100,crossmod:false})" class="uc-preset-btn">Spectral Rings</button>
-                      </div>
-                    </div>
-
-                    <!-- §2/§10 Complex / Frequency -->
-                    <div style="margin-bottom:10px;">
-                      <div style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.1em;color:#4ecdc4;margin-bottom:4px;text-transform:uppercase;">§2 / §10 · Complex Exponential</div>
-                      <div style="display:flex;gap:5px;flex-wrap:wrap;">
-                        <button onclick="ucPreset({mod:12,colmode:'rainbow-angle',spokes:true,chords:false,polygon:false,label:'radian',labelScope:'all',mode:'coprime',ringscale:'linear',spacing:100})" class="uc-preset-btn">z = e^iθ Spokes</button>
-                        <button onclick="ucPreset({mod:24,colmode:'per-modulus',spokes:true,chords:false,polygon:false,label:'angle',labelScope:'outer',mode:'both',ringscale:'log',spacing:100})" class="uc-preset-btn">Phase Portrait</button>
-                        <button onclick="ucPreset({mod:60,colmode:'rainbow-angle',spokes:true,chords:false,polygon:false,label:'none',mode:'coprime',ringscale:'sqrt',spacing:100})" class="uc-preset-btn">Frequency Circle</button>
-                      </div>
-                    </div>
+                    <div style="font-family:'Cinzel',serif;font-size:0.56rem;color:#9a8060;letter-spacing:0.08em;margin-bottom:10px;">Each preset configures the canvas to a specific geometric or modular representation.</div>
 
                     <!-- §3 Polygon -->
                     <div style="margin-bottom:10px;">
@@ -2939,22 +2907,12 @@
                     </div>
 
                     <!-- §7 Mod Number Line -->
-                    <div style="margin-bottom:10px;">
+                    <div style="margin-bottom:2px;">
                       <div style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.1em;color:#34d399;margin-bottom:4px;text-transform:uppercase;">§7 · Modular Number Line (ℝ/ℤ)</div>
                       <div style="display:flex;gap:5px;flex-wrap:wrap;">
                         <button onclick="ucPreset({mod:7,colmode:'rainbow-residue',spokes:false,chords:false,polygon:false,crossmod:true,label:'fraction',labelScope:'all',mode:'coprime',ringscale:'log',spacing:100})" class="uc-preset-btn">Prime Mod (7)</button>
                         <button onclick="ucPreset({mod:30,colmode:'spectral',spokes:false,chords:false,polygon:false,crossmod:true,label:'decimal',labelScope:'outer',mode:'both',ringscale:'linear',spacing:100})" class="uc-preset-btn">Arithmetic Wrap (30)</button>
                         <button onclick="ucPreset({mod:12,colmode:'per-modulus',spokes:false,chords:true,polygon:false,crossmod:false,label:'radian',labelScope:'all',mode:'both',ringscale:'linear',spacing:100})" class="uc-preset-btn">Residue Chords (12)</button>
-                      </div>
-                    </div>
-
-                    <!-- §9 Lattice Shells -->
-                    <div style="margin-bottom:2px;">
-                      <div style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.1em;color:#60a5fa;margin-bottom:4px;text-transform:uppercase;">§9 · Lattice Shells (x²+y²=r²)</div>
-                      <div style="display:flex;gap:5px;flex-wrap:wrap;">
-                        <button onclick="ucPreset({mod:25,colmode:'rainbow-ring',spokes:false,chords:true,polygon:false,label:'none',mode:'both',ringscale:'natural',spacing:100})" class="uc-preset-btn">Pythagorean (r=5)</button>
-                        <button onclick="ucPreset({mod:50,colmode:'spectral',spokes:true,chords:false,polygon:false,label:'none',mode:'both',ringscale:'sqrt',spacing:100})" class="uc-preset-btn">Gauss Circle (r=50)</button>
-                        <button onclick="ucPreset({mod:30,colmode:'coprime-frac',spokes:false,chords:false,polygon:true,polyFilter:'gcd1',polyRings:'all',label:'none',mode:'coprime',ringscale:'natural',spacing:100})" class="uc-preset-btn">Integer Shells (30)</button>
                       </div>
                     </div>
                   </div>
@@ -3803,7 +3761,7 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
     // dots and labels
     var _labelScope = document.getElementById('f-label-scope') ? document.getElementById('f-label-scope').value : 'all';
     var _ptScale=(parseInt(document.getElementById('f-ptsize')&&document.getElementById('f-ptsize').value)||100)/100;
-    var _noLabels = labelMode==='none';
+    var _noLabels = labelMode==='none' || !!window._showDipole;
 
     if (_noLabels) {
       // ── Fast batch path: group by color, one fill() per color ────────────
@@ -5178,7 +5136,7 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
       var _labelScope = document.getElementById('f-label-scope') ? document.getElementById('f-label-scope').value : 'all';
       var _which = s.color === col1 ? 'coprime' : 'noncoprime';
       var _ptScale=(parseInt(document.getElementById('f-ptsize')&&document.getElementById('f-ptsize').value)||100)/100;
-      var _noLabels = labelMode==='none';
+      var _noLabels = labelMode==='none' || !!window._showDipole;
 
       if (_noLabels && !_activeTooltipPt) {
         // ── Fast batch: group by color, one fill() per bucket ──────────────
@@ -9583,5 +9541,37 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
 
 })();
 </script>
+
+<footer style="margin-top:48px;padding:32px 3vw 40px;background:var(--parchment-dark);border-top:2px double var(--border);position:relative;">
+  <div style="position:absolute;top:5px;left:5px;right:5px;bottom:5px;border:1px solid rgba(160,120,48,0.12);pointer-events:none;"></div>
+  <div style="text-align:center;margin-bottom:24px;">
+    <div style="font-family:'Cinzel',serif;font-size:0.62rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);margin-bottom:6px;">Other Related Work</div>
+    <div style="font-family:'Cinzel Decorative',serif;font-size:0.78rem;letter-spacing:0.12em;color:var(--ink-light);">by The Creator</div>
+    <div style="width:60px;height:1px;background:var(--border);margin:14px auto 0;"></div>
+  </div>
+  <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:12px 20px;max-width:680px;margin:0 auto;">
+    <a href="https://wessengetachew.github.io/G/" target="_blank" style="display:flex;flex-direction:column;align-items:center;gap:5px;padding:14px 22px;background:var(--parchment);border:1px solid var(--panel-border);text-decoration:none;min-width:110px;transition:border-color 0.2s;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--panel-border)'">
+      <span style="font-family:'Cinzel',serif;font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);">Audio</span>
+      <span style="font-family:'EB Garamond',Georgia,serif;font-size:0.72rem;color:var(--ink-light);text-align:center;">Modular Ring Sonification</span>
+    </a>
+    <a href="https://wessengetachew.github.io/Primes/" target="_blank" style="display:flex;flex-direction:column;align-items:center;gap:5px;padding:14px 22px;background:var(--parchment);border:1px solid var(--panel-border);text-decoration:none;min-width:110px;transition:border-color 0.2s;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--panel-border)'">
+      <span style="font-family:'Cinzel',serif;font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);">Modular Sieve</span>
+      <span style="font-family:'EB Garamond',Georgia,serif;font-size:0.72rem;color:var(--ink-light);text-align:center;">Prime Sieve via Euler Products</span>
+    </a>
+    <a href="https://wessengetachew.github.io/Composite/" target="_blank" style="display:flex;flex-direction:column;align-items:center;gap:5px;padding:14px 22px;background:var(--parchment);border:1px solid var(--panel-border);text-decoration:none;min-width:110px;transition:border-color 0.2s;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--panel-border)'">
+      <span style="font-family:'Cinzel',serif;font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);">Composite</span>
+      <span style="font-family:'EB Garamond',Georgia,serif;font-size:0.72rem;color:var(--ink-light);text-align:center;">Composite Residue Explorer</span>
+    </a>
+    <a href="https://wessengetachew.github.io/Transform/" target="_blank" style="display:flex;flex-direction:column;align-items:center;gap:5px;padding:14px 22px;background:var(--parchment);border:1px solid var(--panel-border);text-decoration:none;min-width:110px;transition:border-color 0.2s;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--panel-border)'">
+      <span style="font-family:'Cinzel',serif;font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);">Transform</span>
+      <span style="font-family:'EB Garamond',Georgia,serif;font-size:0.72rem;color:var(--ink-light);text-align:center;">Modular Transform Visualizer</span>
+    </a>
+    <a href="https://wessengetachew.github.io/Zeta/" target="_blank" style="display:flex;flex-direction:column;align-items:center;gap:5px;padding:14px 22px;background:var(--parchment);border:1px solid var(--panel-border);text-decoration:none;min-width:110px;transition:border-color 0.2s;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--panel-border)'">
+      <span style="font-family:'Cinzel',serif;font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);">Decomposition / Zeta²</span>
+      <span style="font-family:'EB Garamond',Georgia,serif;font-size:0.72rem;color:var(--ink-light);text-align:center;">Gap-Class ζ(2) Decomposition</span>
+    </a>
+  </div>
+</footer>
+
 </body>
 </html>
