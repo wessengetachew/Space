@@ -2303,7 +2303,7 @@
                 <div id="f-gap-input-status" style="font-family:'Cinzel',serif;font-size:0.55rem;color:#9a8060;min-width:0;"></div>
                 <span style="color:var(--border);margin:0 2px;">|</span>
                 <button id="f-adv-btn" onclick="toggleFareyPanel()" title="Open combined canvas with full controls" style="font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.08em;text-transform:uppercase;background:var(--parchment-dark);color:var(--gold);border:1px solid var(--gold);padding:3px 10px;cursor:pointer;">&#9660; Advanced</button>
-
+              </div><!-- /control row -->
 
               <!-- ══ CANVAS (top of advanced panel) ══ -->
               <div id="farey-canvas-wrap" style="display:none;">
@@ -2449,8 +2449,6 @@
                   <button onclick="fareyExportCSV()"      style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.08em;text-transform:uppercase;background:linear-gradient(135deg,#22c55e,#15803d);color:#fff;border:1px solid #22c55e;padding:5px 14px;cursor:pointer;">&#8681; Export CSV</button>
                 </div>
               </div>
-
-              </div><!-- /farey-canvas-wrap-inner -->
 
               <!-- Per-r path table moved outside canvas-wrap (see below) -->
 
@@ -2657,7 +2655,7 @@
                     </div>
                   </div>
 
-    </div></div><!-- /card2 -->
+    </div><!-- /card2 -->
   <div class="f-card">
     <div class="f-card-head" onclick="fCardToggle(this)">
       <span class="f-card-title">&#9632; Connections</span>
@@ -2993,9 +2991,9 @@
 
               </div>
 
-            </div>
 </div><!-- /farey-canvas-col -->
 </div><!-- /farey-shell -->
+            </div><!-- /farey-root -->
 
         <!-- ══ UNIT CIRCLE THEORY PANEL ══ -->
         <div class="uc-theory-panel">
@@ -3183,7 +3181,8 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
           </div><!-- /uc-theory-body -->
         </div><!-- /uc-theory-panel -->
 
-    </div><!-- /introduction farey -->
+    </div><!-- /intro-section -->
+    </div><!-- /introduction -->
 
 
 
@@ -4061,6 +4060,8 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
       if (window._autoRotateTimerIn)  { clearInterval(window._autoRotateTimerIn);  window._autoRotateTimerIn  = null; }
       window._inspectMode = false;
       if (typeof hideTooltip === 'function') hideTooltip();
+      var _rWrapClose = document.getElementById('farey-r-table-wrap');
+      if (_rWrapClose) _rWrapClose.style.display = 'none';
       fareyRedraw();
     }
   };
@@ -7584,7 +7585,8 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
     var wrap = document.getElementById('farey-r-table-wrap');
     var body = document.getElementById('farey-r-table-body');
     if (!wrap || !body) return;
-    if (!_overlayPairs.length) {
+    var advOpen = document.getElementById('farey-root') && document.getElementById('farey-root').classList.contains('advanced-open');
+    if (!advOpen || !_overlayPairs.length) {
       wrap.style.display = 'none'; return;
     }
     wrap.style.display = 'block';
@@ -8791,8 +8793,9 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
 
   // ── Stats bar ─────────────────────────────────────────────────────────────
   function updateOverlayBar(gap, gapData, modN, shownPairs, inRange) {
+    var advOpen = document.getElementById('farey-root') && document.getElementById('farey-root').classList.contains('advanced-open');
     var rWrap = document.getElementById('farey-r-table-wrap');
-    if (rWrap) rWrap.style.display = 'block';
+    if (rWrap) rWrap.style.display = advOpen ? 'block' : 'none';
     var bar  = document.getElementById('farey-gap-overlay-bar');
     if (bar) bar.style.display = 'flex';
     var info = document.getElementById('farey-gap-overlay-info');
