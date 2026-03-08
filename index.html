@@ -3182,6 +3182,166 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
         </div><!-- /uc-theory-panel -->
 
     </div><!-- /intro-section -->
+
+    <!-- ══ OPEN SOURCE CHALLENGE ══ -->
+    <div class="introduction" style="margin-top:0;">
+      <div class="intro-section" style="border-top:1px solid rgba(196,155,56,0.15);">
+
+        <div style="margin-bottom:18px;">
+          <h3 style="font-family:'Cinzel',serif;font-size:1rem;letter-spacing:0.12em;color:var(--gold);margin:0 0 6px 0;">&#9670; Open Challenge: Optimise the Renderer</h3>
+          <p style="font-size:0.78rem;color:var(--ink-mid);line-height:1.7;margin:0;">
+            The visualiser above plots every rational <em>r/m</em> for all rings 1 ≤ m ≤ N on a canvas.
+            At N = 2000 that is <strong>∑<sub>m=1</sub><sup>2000</sup> (m+1) ≈ 2 million points</strong> — it lags.
+            If you are a better programmer or have ideas for a faster algorithm (WebGL, OffscreenCanvas, worker threads, Path2D batching, level-of-detail culling…) the reference code is below.
+            Fork it, improve it, share it.
+          </p>
+        </div>
+
+        <!-- Tab bar -->
+        <div style="display:flex;gap:0;border-bottom:1px solid rgba(196,155,56,0.3);margin-bottom:0;">
+          <button onclick="codeTab('js')"   id="ctab-js"   style="font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.08em;padding:5px 14px;background:var(--gold);color:#0e0b05;border:1px solid var(--gold);border-bottom:none;cursor:pointer;">JavaScript</button>
+          <button onclick="codeTab('py')"   id="ctab-py"   style="font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.08em;padding:5px 14px;background:var(--parchment-dark);color:#9a8060;border:1px solid rgba(196,155,56,0.3);border-bottom:none;cursor:pointer;">Python</button>
+          <button onclick="codeTab('info')" id="ctab-info" style="font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.08em;padding:5px 14px;background:var(--parchment-dark);color:#9a8060;border:1px solid rgba(196,155,56,0.3);border-bottom:none;cursor:pointer;">How It Works</button>
+        </div>
+
+        <!-- JS panel -->
+        <div id="cpanel-js" style="background:#0a0806;border:1px solid rgba(196,155,56,0.25);border-top:none;padding:0;">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 12px;border-bottom:1px solid rgba(196,155,56,0.12);">
+            <span style="font-family:'Cinzel',serif;font-size:0.55rem;color:#9a8060;letter-spacing:0.1em;">REFERENCE · Canvas 2D · vanilla JS · no dependencies</span>
+            <button onclick="copyCode('js')" style="font-family:'Cinzel',serif;font-size:0.52rem;padding:2px 8px;border:1px solid #9a8060;background:transparent;color:#9a8060;cursor:pointer;">Copy</button>
+          </div>
+          <pre id="ccode-js" style="margin:0;padding:16px;overflow-x:auto;font-family:'Courier New',monospace;font-size:0.68rem;line-height:1.65;color:#e8d9b0;tab-size:2;white-space:pre;"><code style="font-family:inherit;"><span style="color:#9a8060;">// ── Rational Unit Circle  ·  reference renderer ──────────────────
+// Each rational r/m is placed at angle 2π·r/m on ring radius ∝ m.
+// Blue → gcd(r,m)=1 (Farey/coprime)   Red → gcd(r,m)>1 (composite)
+//
+// BOTTLENECK: O(N²) points. For N>500 the inner loop dominates.
+// Ideas: WebGL instancing, OffscreenCanvas+Worker, Path2D batching,
+//        level-of-detail (skip inner rings when zoomed out),
+//        Stern–Brocot enumeration (coprime pairs only, O(N log N)).
+// ─────────────────────────────────────────────────────────────────</span>
+
+<span style="color:#c49b38;">function</span> <span style="color:#4ecdc4;">gcd</span>(a, b) {
+  <span style="color:#c49b38;">while</span> (b) { <span style="color:#c49b38;">let</span> t = b; b = a % b; a = t; }
+  <span style="color:#c49b38;">return</span> a;
+}
+
+<span style="color:#c49b38;">function</span> <span style="color:#4ecdc4;">drawRationalUnitCircle</span>(canvas, N) {
+  <span style="color:#c49b38;">const</span> ctx  = canvas.getContext(<span style="color:#a8e6a3;">'2d'</span>);
+  <span style="color:#c49b38;">const</span> W = canvas.width, H = canvas.height;
+  <span style="color:#c49b38;">const</span> cx = W / 2, cy = H / 2;
+  <span style="color:#c49b38;">const</span> Rmax = Math.min(cx, cy) * 0.9;
+
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = <span style="color:#a8e6a3;">'#08060e'</span>;
+  ctx.fillRect(0, 0, W, H);
+
+  <span style="color:#9a8060;">// guide circles</span>
+  <span style="color:#c49b38;">for</span> (<span style="color:#c49b38;">let</span> m = 1; m &lt;= N; m++) {
+    ctx.beginPath();
+    ctx.arc(cx, cy, (m / N) * Rmax, 0, 2 * Math.PI);
+    ctx.strokeStyle = <span style="color:#a8e6a3;">'rgba(196,155,56,0.06)'</span>;
+    ctx.lineWidth = 0.4;
+    ctx.stroke();
+  }
+
+  <span style="color:#9a8060;">// ── points  O(N²) ←── optimise here ──────────────────────────</span>
+  <span style="color:#c49b38;">const</span> ptR = Math.max(1, Rmax / (N * 1.8));
+
+  <span style="color:#c49b38;">for</span> (<span style="color:#c49b38;">let</span> m = 1; m &lt;= N; m++) {
+    <span style="color:#c49b38;">const</span> ringR = (m / N) * Rmax;
+    <span style="color:#c49b38;">for</span> (<span style="color:#c49b38;">let</span> r = 0; r &lt;= m; r++) {
+      <span style="color:#c49b38;">const</span> θ = (2 * Math.PI * r) / m;
+      <span style="color:#c49b38;">const</span> x = cx + ringR * Math.cos(θ);
+      <span style="color:#c49b38;">const</span> y = cy - ringR * Math.sin(θ); <span style="color:#9a8060;">// canvas y flipped</span>
+      ctx.beginPath();
+      ctx.arc(x, y, ptR, 0, 2 * Math.PI);
+      ctx.fillStyle = gcd(r, m) === 1
+        ? <span style="color:#a8e6a3;">'rgba(74,144,217,0.85)'</span>
+        : <span style="color:#a8e6a3;">'rgba(201,64,64,0.7)'</span>;
+      ctx.fill();
+    }
+  }
+}
+
+<span style="color:#9a8060;">// ── wire up a slider ─────────────────────────────────────────────</span>
+<span style="color:#c49b38;">const</span> canvas = document.getElementById(<span style="color:#a8e6a3;">'myCanvas'</span>);
+canvas.width = canvas.height = 800;
+drawRationalUnitCircle(canvas, 60);
+
+document.getElementById(<span style="color:#a8e6a3;">'nSlider'</span>).oninput = <span style="color:#c49b38;">function</span>() {
+  drawRationalUnitCircle(canvas, +<span style="color:#c49b38;">this</span>.value);
+};
+
+<span style="color:#9a8060;">// &lt;canvas id="myCanvas"&gt;&lt;/canvas&gt;
+// &lt;input type="range" id="nSlider" min="2" max="500" value="60"&gt;</span></code></pre>
+        </div>
+
+        <!-- Python panel -->
+        <div id="cpanel-py" style="display:none;background:#0a0806;border:1px solid rgba(196,155,56,0.25);border-top:none;padding:0;">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 12px;border-bottom:1px solid rgba(196,155,56,0.12);">
+            <span style="font-family:'Cinzel',serif;font-size:0.55rem;color:#9a8060;letter-spacing:0.1em;">REFERENCE · matplotlib · Python 3 · pip install matplotlib numpy</span>
+            <button onclick="copyCode('py')" style="font-family:'Cinzel',serif;font-size:0.52rem;padding:2px 8px;border:1px solid #9a8060;background:transparent;color:#9a8060;cursor:pointer;">Copy</button>
+          </div>
+          <pre id="ccode-py" style="margin:0;padding:16px;overflow-x:auto;font-family:'Courier New',monospace;font-size:0.68rem;line-height:1.65;color:#e8d9b0;tab-size:2;white-space:pre;"><code style="font-family:inherit;"><span style="color:#9a8060;"># ── Rational Unit Circle  ·  reference renderer ──────────────────
+# pip install matplotlib numpy
+# Blue → gcd(r,m)=1   Red → gcd(r,m)>1
+# ─────────────────────────────────────────────────────────────────</span>
+
+<span style="color:#c49b38;">import</span> matplotlib.pyplot <span style="color:#c49b38;">as</span> plt
+<span style="color:#c49b38;">import</span> numpy <span style="color:#c49b38;">as</span> np
+<span style="color:#c49b38;">from</span> math <span style="color:#c49b38;">import</span> gcd
+
+<span style="color:#c49b38;">def</span> <span style="color:#4ecdc4;">rational_unit_circle</span>(N: int, figsize: int = 8):
+    fig, ax = plt.subplots(figsize=(figsize, figsize),
+                           facecolor=<span style="color:#a8e6a3;">'#08060e'</span>)
+    ax.set_facecolor(<span style="color:#a8e6a3;">'#08060e'</span>)
+    ax.set_aspect(<span style="color:#a8e6a3;">'equal'</span>)
+    ax.axis(<span style="color:#a8e6a3;">'off'</span>)
+
+    cx, cy = [], []   <span style="color:#9a8060;"># coprime</span>
+    rx, ry = [], []   <span style="color:#9a8060;"># composite</span>
+
+    <span style="color:#9a8060;"># O(N²) ←── optimise here</span>
+    <span style="color:#c49b38;">for</span> m <span style="color:#c49b38;">in</span> range(1, N + 1):
+        R = m / N
+        <span style="color:#c49b38;">for</span> r <span style="color:#c49b38;">in</span> range(0, m + 1):
+            θ = 2 * np.pi * r / m
+            x, y = R * np.cos(θ), R * np.sin(θ)
+            <span style="color:#c49b38;">if</span> gcd(r, m) == 1:
+                cx.append(x); cy.append(y)
+            <span style="color:#c49b38;">else</span>:
+                rx.append(x); ry.append(y)
+
+    pt = max(0.4, 30 / N)
+    ax.scatter(rx, ry, s=pt, c=<span style="color:#a8e6a3;">'#c94040'</span>, alpha=0.7,  linewidths=0)
+    ax.scatter(cx, cy, s=pt, c=<span style="color:#a8e6a3;">'#4a90d9'</span>, alpha=0.85, linewidths=0)
+    ax.set_title(<span style="color:#a8e6a3;">f'Rational Unit Circle  N={N}'</span>,
+                 color=<span style="color:#a8e6a3;">'#c49b38'</span>, fontsize=10, pad=10)
+    plt.tight_layout()
+    plt.show()
+
+rational_unit_circle(N=<span style="color:#e879f9;">60</span>)
+<span style="color:#9a8060;"># try N = 12, 30, 60, 210, 2310 …</span></code></pre>
+        </div>
+
+        <!-- How It Works panel -->
+        <div id="cpanel-info" style="display:none;background:#0a0806;border:1px solid rgba(196,155,56,0.25);border-top:none;padding:20px 22px;font-family:Georgia,serif;font-size:0.78rem;color:var(--ink-mid);line-height:1.8;">
+          <p style="margin:0 0 12px 0;"><strong style="color:var(--gold);">Point placement.</strong> Every rational r/m with 0 ≤ r ≤ m and 1 ≤ m ≤ N maps to polar coordinates θ = 2π·r/m, ρ = m/N. The outermost ring is m = N; the innermost is m = 1.</p>
+          <p style="margin:0 0 12px 0;"><strong style="color:var(--gold);">Colour.</strong> Blue when gcd(r, m) = 1 — a Farey fraction in lowest terms, a unit in ℤ/mℤ. Red when gcd(r, m) &gt; 1 — a reducible or composite residue.</p>
+          <p style="margin:0 0 12px 0;"><strong style="color:var(--gold);">Point count.</strong> Total points = ∑<sub>m=1</sub><sup>N</sup> (m+1) ≈ N²/2. At N=100: ~5k. At N=1000: ~500k. At N=2000: ~2 million — past what Canvas 2D can paint in one frame at interactive speed.</p>
+          <p style="margin:0 0 12px 0;"><strong style="color:var(--gold);">Where the lag is.</strong> Each point calls <code style="color:#4ecdc4;font-family:monospace;">ctx.arc()</code> + <code style="color:#4ecdc4;font-family:monospace;">ctx.fill()</code> — a separate GPU draw call. Batching all same-colour points into two <code style="color:#4ecdc4;font-family:monospace;">Path2D</code> objects reduces GPU calls from O(N²) to 2, giving a large speedup with zero architectural change. WebGL point sprites or a compute shader can push to N = 10 000+.</p>
+          <p style="margin:0 0 0 0;"><strong style="color:var(--gold);">Challenge ideas.</strong> <em>Path2D batching</em> (easiest win), <em>OffscreenCanvas + Worker</em> (non-blocking), <em>WebGL instancing</em>, <em>level-of-detail</em> (skip rings m &lt; N/k when zoomed out), <em>Stern–Brocot / Farey sequence generator</em> for coprime-only rendering in O(N log N). A interactive slider at N = 5000 at 30 fps is the benchmark to beat.</p>
+        </div>
+
+        <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+          <a href="https://wessengetachew.github.io/Farey/" target="_blank" style="font-family:'Cinzel',serif;font-size:0.58rem;color:var(--gold);border:1px solid rgba(196,155,56,0.4);padding:4px 12px;text-decoration:none;letter-spacing:0.08em;">&#8599; Live Tool</a>
+          <span style="font-family:'Cinzel',serif;font-size:0.55rem;color:#9a8060;">Wessen Getachew · wessengetachew.github.io · 2026</span>
+        </div>
+
+      </div>
+    </div>
+    <!-- ══ END OPEN SOURCE CHALLENGE ══ -->
+
     </div><!-- /introduction -->
 
 
@@ -4040,13 +4200,11 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
       var pts = document.getElementById('f-ptsize');     if (pts) pts.value = 100;
       var ptn = document.getElementById('f-ptsize-num'); if (ptn) ptn.value = 100;
       var ptv = document.getElementById('f-ptsize-val'); if (ptv) ptv.textContent = '100%';
-      // Match split-view look: no connecting lines, just dots
+      // Default: dots only — user enables connections manually
       var ch  = document.getElementById('f-chords');        if (ch)  ch.checked  = false;
       var sp  = document.getElementById('f-spokes');        if (sp)  sp.checked  = false;
-      var sm  = document.getElementById('f-samemod');       if (sm)  sm.checked  = true;
-      var cx2 = document.getElementById('f-crossmod');      if (cx2) cx2.checked = true;
-      var cmt = document.getElementById('f-crossmod-thick'); if (cmt) cmt.value  = 30;
-      var cmv = document.getElementById('f-crossmod-thick-val'); if (cmv) cmv.textContent = '3.0';
+      var sm  = document.getElementById('f-samemod');       if (sm)  sm.checked  = false;
+      var cx2 = document.getElementById('f-crossmod');      if (cx2) cx2.checked = false;
       syncCombinedSize();
       drawCombined();
       var _advBtn = document.getElementById('f-adv-btn');
@@ -9684,6 +9842,31 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
     </a>
   </div>
 </footer>
+
+<script>
+function codeTab(tab) {
+  ['js','py','info'].forEach(function(t) {
+    var panel = document.getElementById('cpanel-' + t);
+    var btn   = document.getElementById('ctab-' + t);
+    if (!panel || !btn) return;
+    var active = (t === tab);
+    panel.style.display   = active ? 'block' : 'none';
+    btn.style.background  = active ? 'var(--gold)' : 'var(--parchment-dark)';
+    btn.style.color       = active ? '#0e0b05'     : '#9a8060';
+    btn.style.borderColor = active ? 'var(--gold)' : 'rgba(196,155,56,0.3)';
+  });
+}
+function copyCode(tab) {
+  var el = document.getElementById('ccode-' + tab);
+  if (!el) return;
+  navigator.clipboard.writeText(el.innerText).then(function() {
+    var btn = event.target;
+    var orig = btn.textContent;
+    btn.textContent = 'Copied';
+    setTimeout(function(){ btn.textContent = orig; }, 1500);
+  });
+}
+</script>
 
 </body>
 </html>
