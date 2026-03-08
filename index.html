@@ -2719,9 +2719,20 @@
                       <div>
                         <div style="margin-bottom:4px;color:#9a8060;font-size:0.6rem;">AUTO-ROTATE SPEED</div>
                         <div style="display:flex;align-items:center;gap:6px;">
-                          <input id="f-ringspeed" type="range" min="1" max="100" value="20" style="flex:1;accent-color:var(--gold);" oninput="document.getElementById('f-ringspeed-val').textContent=this.value;">
-                          <span id="f-ringspeed-val" style="color:var(--ink);min-width:24px;font-size:0.6rem;">20</span>
+                          <input id="f-ringspeed" type="range" min="1" max="150" value="100" style="flex:1;accent-color:var(--gold);" oninput="document.getElementById('f-ringspeed-val').textContent=this.value;">
+                          <span id="f-ringspeed-val" style="color:var(--ink);min-width:24px;font-size:0.6rem;">100</span>
                         </div>
+                      </div>
+                      <div>
+                        <div style="margin-bottom:4px;color:#9a8060;font-size:0.6rem;">DYNAMICS</div>
+                        <select id="f-ringdyn" onchange="" style="background:var(--parchment-deep);color:var(--ink);border:1px solid var(--border);padding:3px 6px;font-family:'Cinzel',serif;font-size:0.62rem;width:100%;">
+                          <option value="linear">Linear (m/N)</option>
+                          <option value="quadratic">Quadratic (m²/N²)</option>
+                          <option value="sqrt">Square Root (√m/N)</option>
+                          <option value="log">Logarithmic</option>
+                          <option value="sine">Sine Wave</option>
+                          <option value="step">Step a/b Only</option>
+                        </select>
                       </div>
                       <div>
                         <div style="margin-bottom:4px;color:#9a8060;font-size:0.6rem;">CONTROLS</div>
@@ -2837,6 +2848,12 @@
                   <button onclick="fareyGapOverlayClear()" style="font-family:'Cinzel',serif;font-size:0.56rem;text-transform:uppercase;padding:2px 8px;border:1px solid #4a90d9;background:transparent;color:#4a90d9;cursor:pointer;">&#10005; Clear</button>
                 </div>
 
+
+
+</div><!-- /farey-canvas-col -->
+</div><!-- /farey-shell -->
+
+<!-- ══ STATS / DESCRIPTION DROPDOWN (always visible) ══ -->
               <!-- ══ STATS / DESCRIPTION DROPDOWN ══ -->
               <div id="farey-stats-section" style="margin-top:10px;">
 
@@ -2916,7 +2933,30 @@
                       </div>
                     </div>
 
-                    <!-- §7 Mod Number Line -->
+                    <!-- §8 Cyclotomic / Lattice -->
+                    <div style="margin-bottom:10px;">
+                      <div style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.1em;color:#67e8f9;margin-bottom:4px;text-transform:uppercase;">§8 · Cyclotomic &amp; Lattice Structure</div>
+                      <div style="font-family:'Cinzel',serif;font-size:0.52rem;color:#9a8060;margin-bottom:6px;">Step a/b = 1/n generates the n-th root of unity orbit. Coprime residues = (ℤ/nℤ)* generators.</div>
+                      <div style="display:flex;gap:5px;flex-wrap:wrap;">
+                        <button onclick="ucPreset({mod:3,stepa:1,stepb:3,ringdyn:'linear',ringspeed:80,colmode:'rainbow-residue',polygon:true,polyFilter:'gcd1',polyRings:'all',spokes:false,chords:false,label:'fraction',labelScope:'outer',mode:'coprime',ringscale:'linear',spacing:100})" class="uc-preset-btn" title="ζ₃ = e^(2πi/3) — Eisenstein integers ℤ[ω], triangular lattice">Eisenstein ℤ[ω] (n=3)</button>
+                        <button onclick="ucPreset({mod:4,stepa:1,stepb:4,ringdyn:'linear',ringspeed:80,colmode:'rainbow-residue',polygon:true,polyFilter:'gcd1',polyRings:'all',spokes:false,chords:false,label:'fraction',labelScope:'outer',mode:'coprime',ringscale:'linear',spacing:100})" class="uc-preset-btn" title="ζ₄ = i — Gaussian integers ℤ[i], square lattice">Gaussian ℤ[i] (n=4)</button>
+                        <button onclick="ucPreset({mod:6,stepa:1,stepb:6,ringdyn:'linear',ringspeed:80,colmode:'per-residue',polygon:true,polyFilter:'gcd1',polyRings:'all',spokes:false,chords:false,label:'none',mode:'coprime',ringscale:'linear',spacing:100})" class="uc-preset-btn" title="ζ₆ — hexagonal sub-lattice of Eisenstein">Hexagonal (n=6)</button>
+                        <button onclick="ucPreset({mod:5,stepa:1,stepb:5,ringdyn:'linear',ringspeed:80,colmode:'rainbow-residue',polygon:true,polyFilter:'gcd1',polyRings:'outer',spokes:false,chords:false,label:'fraction',labelScope:'outer',mode:'coprime',ringscale:'linear',spacing:100})" class="uc-preset-btn" title="ζ₅ — pentagonal, φ(5)=4 coprime units">Pentagon (n=5)</button>
+                        <button onclick="ucPreset({mod:12,stepa:1,stepb:12,ringdyn:'linear',ringspeed:80,colmode:'per-modulus',polygon:true,polyFilter:'gcd1',polyRings:'all',spokes:false,chords:false,label:'none',mode:'coprime',ringscale:'linear',spacing:100})" class="uc-preset-btn" title="ζ₁₂ — φ(12)=4, highly composite lattice">Dodecagonal (n=12)</button>
+                      </div>
+                    </div>
+
+                    <!-- §9 Residue Tracking -->
+                    <div style="margin-bottom:2px;">
+                      <div style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.1em;color:#86efac;margin-bottom:4px;text-transform:uppercase;">§9 · Residue &amp; Gap Tracking</div>
+                      <div style="font-family:'Cinzel',serif;font-size:0.52rem;color:#9a8060;margin-bottom:6px;">Gap=1 traces r=1 generator orbits. Gap=2 traces twin-prime admissible pairs across primorial rings.</div>
+                      <div style="display:flex;gap:5px;flex-wrap:wrap;">
+                        <button onclick="ucPreset({mod:30,stepa:1,stepb:30,ringdyn:'linear',ringspeed:60,colmode:'prime-composite',polygon:false,crossmod:true,spokes:false,chords:false,label:'none',mode:'coprime',ringscale:'linear',spacing:100,gap:1,residue:1})" class="uc-preset-btn" title="r=1 generator orbit across all rings — traces (ℤ/nℤ)* action on ζ_n">Generator Orbit r=1</button>
+                        <button onclick="ucPreset({mod:30,stepa:1,stepb:30,ringdyn:'step',ringspeed:60,colmode:'twin-prime',polygon:false,crossmod:true,spokes:false,chords:false,label:'none',mode:'coprime',ringscale:'linear',spacing:100,gap:2,residue:1})" class="uc-preset-btn" title="Gap=2 twin-prime admissible pairs on primorial mod 30">Twin Primes (gap=2)</button>
+                        <button onclick="ucPreset({mod:210,stepa:1,stepb:210,ringdyn:'quadratic',ringspeed:40,colmode:'prime-composite',polygon:false,crossmod:false,spokes:false,chords:false,label:'none',mode:'coprime',ringscale:'log',spacing:100,gap:2,residue:1})" class="uc-preset-btn" title="Primorial 2·3·5·7=210, gap=2 — all twin-admissible residues visible">Primorial 210, gap=2</button>
+                        <button onclick="ucPreset({mod:30,stepa:1,stepb:6,ringdyn:'sine',ringspeed:80,colmode:'euler-phi',polygon:true,polyFilter:'gcd1',polyRings:'all',spokes:false,chords:false,label:'none',mode:'coprime',ringscale:'quadratic',spacing:100})" class="uc-preset-btn" title="Euler φ coloring with sine-wave dynamics — reveals φ(m)/m density by ring">φ(m) Density Wave</button>
+                      </div>
+                    </div>
                     <div style="margin-bottom:2px;">
                       <div style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.1em;color:#34d399;margin-bottom:4px;text-transform:uppercase;">§7 · Modular Number Line (ℝ/ℤ)</div>
                       <div style="display:flex;gap:5px;flex-wrap:wrap;">
@@ -2991,8 +3031,6 @@
 
               </div>
 
-</div><!-- /farey-canvas-col -->
-</div><!-- /farey-shell -->
             </div><!-- /farey-root -->
 
         <!-- ══ UNIT CIRCLE THEORY PANEL ══ -->
@@ -4050,17 +4088,35 @@ rational_unit_circle(N=<span style="color:#e879f9;">60</span>)
     if(_ringAnimTimer){
       clearInterval(_ringAnimTimer); _ringAnimTimer=null;
       btn.style.background='var(--parchment-dark)'; btn.style.color='var(--ink-mid)';
-      btn.textContent='▶ Spin';
+      btn.textContent='\u25b6 Spin';
     } else {
       btn.style.background='var(--gold)'; btn.style.color='var(--parchment)';
-      btn.textContent='■ Stop';
+      btn.textContent='\u25a0 Stop';
+      var _animFrame = 0;
       _ringAnimTimer = setInterval(function(){
         var modN  = parseInt(document.getElementById('f-mod-num').value)||49;
-        var speed = parseInt(document.getElementById('f-ringspeed').value)||20;
+        var speed = parseInt(document.getElementById('f-ringspeed').value)||100;
         var rdir  = parseFloat(document.getElementById('f-ringdir').value)||1;
+        var dyn   = (document.getElementById('f-ringdyn')||{value:'linear'}).value;
+        _animFrame++;
         for(var m=1; m<=modN; m++){
-          var t = rdir===1 ? m/modN : (modN-m+1)/modN;
-          _ringOffsets[m] = (_ringOffsets[m]||0) + speed*t*0.04;
+          var t = m/modN;
+          var rate;
+          switch(dyn){
+            case 'quadratic': rate = t*t; break;
+            case 'sqrt':      rate = Math.sqrt(t); break;
+            case 'log':       rate = Math.log(1 + t*(Math.E-1)); break;
+            case 'sine':      rate = 0.5 + 0.5*Math.sin(_animFrame*0.04 + t*Math.PI*2); break;
+            case 'step': {
+              var a = parseFloat((document.getElementById('f-ringstep-a')||{value:'1'}).value)||1;
+              var b = parseFloat((document.getElementById('f-ringstep-b')||{value:'2'}).value)||2;
+              rate = Math.abs(Math.sin((m-1)*(a/b)*Math.PI));
+              break;
+            }
+            default: rate = t;
+          }
+          if(rdir < 0) rate = 1 - rate;
+          _ringOffsets[m] = (_ringOffsets[m]||0) + speed*rate*0.04;
         }
         fareyRedraw();
       }, 16);
@@ -4249,10 +4305,19 @@ rational_unit_circle(N=<span style="color:#e879f9;">60</span>)
         if(_inspectMode) fareyToggleInspect();
         _autoRotateTimerOut = setInterval(function(){
           var modN  = parseInt(document.getElementById('f-mod-num').value)||49;
-          var speed = parseInt(document.getElementById('f-ringspeed').value)||20;
+          var speed = parseInt(document.getElementById('f-ringspeed').value)||100;
+          var dyn   = (document.getElementById('f-ringdyn')||{value:'linear'}).value;
           for(var m=1; m<=modN; m++){
-            var t = m/modN;
-            _ringOffsets[m] = (_ringOffsets[m]||0) + speed * t * 0.04;
+            var t = m/modN, rate;
+            switch(dyn){
+              case 'quadratic': rate=t*t; break;
+              case 'sqrt':      rate=Math.sqrt(t); break;
+              case 'log':       rate=Math.log(1+t*(Math.E-1)); break;
+              case 'sine':      rate=0.5+0.5*Math.sin(Date.now()*0.001+t*Math.PI*2); break;
+              case 'step':{ var a2=parseFloat((document.getElementById('f-ringstep-a')||{value:'1'}).value)||1,b2=parseFloat((document.getElementById('f-ringstep-b')||{value:'2'}).value)||2; rate=Math.abs(Math.sin((m-1)*(a2/b2)*Math.PI)); break; }
+              default: rate=t;
+            }
+            _ringOffsets[m] = (_ringOffsets[m]||0) + speed*rate*0.04;
           }
           redrawWithOverlay();
         }, 16);
@@ -4270,10 +4335,19 @@ rational_unit_circle(N=<span style="color:#e879f9;">60</span>)
         if(_inspectMode) fareyToggleInspect();
         _autoRotateTimerIn = setInterval(function(){
           var modN  = parseInt(document.getElementById('f-mod-num').value)||49;
-          var speed = parseInt(document.getElementById('f-ringspeed').value)||20;
+          var speed = parseInt(document.getElementById('f-ringspeed').value)||100;
+          var dyn   = (document.getElementById('f-ringdyn')||{value:'linear'}).value;
           for(var m=1; m<=modN; m++){
-            var t = (modN-m+1)/modN;
-            _ringOffsets[m] = (_ringOffsets[m]||0) - speed * t * 0.04;
+            var t = (modN-m+1)/modN, rate;
+            switch(dyn){
+              case 'quadratic': rate=t*t; break;
+              case 'sqrt':      rate=Math.sqrt(t); break;
+              case 'log':       rate=Math.log(1+t*(Math.E-1)); break;
+              case 'sine':      rate=0.5+0.5*Math.sin(Date.now()*0.001+t*Math.PI*2); break;
+              case 'step':{ var a2=parseFloat((document.getElementById('f-ringstep-a')||{value:'1'}).value)||1,b2=parseFloat((document.getElementById('f-ringstep-b')||{value:'2'}).value)||2; rate=Math.abs(Math.sin((m-1)*(a2/b2)*Math.PI)); break; }
+              default: rate=t;
+            }
+            _ringOffsets[m] = (_ringOffsets[m]||0) - speed*rate*0.04;
           }
           redrawWithOverlay();
         }, 16);
@@ -6680,17 +6754,35 @@ rational_unit_circle(N=<span style="color:#e879f9;">60</span>)
     if(_ringAnimTimer){
       clearInterval(_ringAnimTimer); _ringAnimTimer=null;
       btn.style.background='var(--parchment-dark)'; btn.style.color='var(--ink-mid)';
-      btn.textContent='▶ Spin';
+      btn.textContent='\u25b6 Spin';
     } else {
       btn.style.background='var(--gold)'; btn.style.color='var(--parchment)';
-      btn.textContent='■ Stop';
+      btn.textContent='\u25a0 Stop';
+      var _animFrame = 0;
       _ringAnimTimer = setInterval(function(){
         var modN  = parseInt(document.getElementById('f-mod-num').value)||49;
-        var speed = parseInt(document.getElementById('f-ringspeed').value)||20;
+        var speed = parseInt(document.getElementById('f-ringspeed').value)||100;
         var rdir  = parseFloat(document.getElementById('f-ringdir').value)||1;
+        var dyn   = (document.getElementById('f-ringdyn')||{value:'linear'}).value;
+        _animFrame++;
         for(var m=1; m<=modN; m++){
-          var t = rdir===1 ? m/modN : (modN-m+1)/modN;
-          _ringOffsets[m] = (_ringOffsets[m]||0) + speed*t*0.04;
+          var t = m/modN;
+          var rate;
+          switch(dyn){
+            case 'quadratic': rate = t*t; break;
+            case 'sqrt':      rate = Math.sqrt(t); break;
+            case 'log':       rate = Math.log(1 + t*(Math.E-1)); break;
+            case 'sine':      rate = 0.5 + 0.5*Math.sin(_animFrame*0.04 + t*Math.PI*2); break;
+            case 'step': {
+              var a = parseFloat((document.getElementById('f-ringstep-a')||{value:'1'}).value)||1;
+              var b = parseFloat((document.getElementById('f-ringstep-b')||{value:'2'}).value)||2;
+              rate = Math.abs(Math.sin((m-1)*(a/b)*Math.PI));
+              break;
+            }
+            default: rate = t;
+          }
+          if(rdir < 0) rate = 1 - rate;
+          _ringOffsets[m] = (_ringOffsets[m]||0) + speed*rate*0.04;
         }
         fareyRedraw();
       }, 16);
@@ -9739,6 +9831,28 @@ rational_unit_circle(N=<span style="color:#e879f9;">60</span>)
 
     // Direction
     if (cfg.dir) setEl('f-dir', cfg.dir);
+
+    // Per-ring rotation
+    if (cfg.stepa  != null) setEl('f-ringstep-a', cfg.stepa);
+    if (cfg.stepb  != null) setEl('f-ringstep-b', cfg.stepb);
+    if (cfg.ringdir != null) setEl('f-ringdir', cfg.ringdir);
+    if (cfg.ringdyn)        setEl('f-ringdyn',  cfg.ringdyn);
+    if (cfg.ringspeed != null) {
+      setEl('f-ringspeed', cfg.ringspeed);
+      var rsv = document.getElementById('f-ringspeed-val');
+      if (rsv) rsv.textContent = cfg.ringspeed;
+    }
+
+    // Gap overlay — set gap value and residue filter
+    if (cfg.gap != null) {
+      setEl('f-gap', cfg.gap);
+      setEl('f-gap-num', cfg.gap);
+      if (window._overlayGap !== undefined) window._overlayGap = cfg.gap;
+    }
+    if (cfg.residue != null) {
+      setEl('f-r-val', cfg.residue);
+      if (window.fareyUpdateRTable) fareyUpdateRTable();
+    }
 
     // Mode (combined / coprime / noncoprime)
     if (cfg.mode && window.fareyCombinedMode) fareyCombinedMode(cfg.mode);
