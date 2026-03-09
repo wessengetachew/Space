@@ -2386,6 +2386,91 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
           </div><!-- /uc-theory-body -->
         </div><!-- /uc-theory-panel -->
 
+                <!-- ══ UNIT CIRCLE PRESETS DROPDOWN ══ -->
+                <div id="uc-presets-dropdown" style="background:var(--parchment-dark);border:1px solid rgba(192,132,252,0.5);border-radius:4px;margin-bottom:6px;">
+                  <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 14px;cursor:pointer;" onclick="(function(el){var b=el.parentElement.querySelector('.uc-presets-body');var a=el.querySelector('.uc-presets-arrow');var open=b.style.display==='none';b.style.display=open?'block':'none';a.textContent=open?'▼':'▶';})(this)">
+                    <span style="font-family:'Cinzel',serif;font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:#c084fc;">&#9670; Unit Circle Presets</span>
+                    <span class="uc-presets-arrow" style="color:#c084fc;font-size:0.7rem;">▶</span>
+                  </div>
+                  <div class="uc-presets-body" style="display:none;padding:12px 16px;">
+                    <div style="font-family:'Cinzel',serif;font-size:0.56rem;color:#9a8060;letter-spacing:0.08em;margin-bottom:10px;">Each preset configures the canvas to a specific geometric or modular representation.</div>
+
+                    <!-- §3 Polygon -->
+                    <div style="margin-bottom:10px;">
+                      <div style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.1em;color:#fbbf24;margin-bottom:4px;text-transform:uppercase;">§3 · Polygon Approximation</div>
+                      <div style="display:flex;gap:5px;flex-wrap:wrap;">
+                        <button onclick="ucPreset({mod:3,colmode:'rainbow-ring',spokes:false,chords:false,polygon:true,polyFilter:'all',polyRings:'outer',label:'fraction',labelScope:'outer',mode:'both',ringscale:'linear',spacing:100})" class="uc-preset-btn">Triangle (n=3)</button>
+                        <button onclick="ucPreset({mod:6,colmode:'rainbow-ring',spokes:false,chords:false,polygon:true,polyFilter:'all',polyRings:'outer',label:'fraction',labelScope:'outer',mode:'both',ringscale:'linear',spacing:100})" class="uc-preset-btn">Hexagon (n=6)</button>
+                        <button onclick="ucPreset({mod:30,colmode:'rainbow-ring',spokes:false,chords:false,polygon:true,polyFilter:'all',polyRings:'all',label:'none',mode:'both',ringscale:'linear',spacing:100})" class="uc-preset-btn">Polygon Evolution</button>
+                      </div>
+                    </div>
+
+                    <!-- §4 Diamond -->
+                    <div style="margin-bottom:10px;">
+                      <div style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.1em;color:#fb923c;margin-bottom:4px;text-transform:uppercase;">§4 · Diamond (L¹ Manhattan)</div>
+                      <div style="display:flex;gap:5px;flex-wrap:wrap;">
+                        <button onclick="ucPreset({mod:8,colmode:'rainbow-residue',spokes:false,chords:false,polygon:true,polyFilter:'gcd1',polyRings:'outer',label:'fraction',labelScope:'outer',mode:'coprime',ringscale:'linear',spacing:100})" class="uc-preset-btn">gcd=1 Diamond</button>
+                        <button onclick="ucPreset({mod:20,colmode:'rainbow-ring',spokes:false,chords:false,polygon:true,polyFilter:'all',polyRings:'all',label:'none',mode:'both',ringscale:'log',spacing:100})" class="uc-preset-btn">L¹ Shells</button>
+                        <button onclick="ucPreset({mod:60,colmode:'coprime-frac',spokes:true,chords:false,polygon:false,label:'none',mode:'coprime',ringscale:'linear',spacing:80})" class="uc-preset-btn">Manhattan Dense</button>
+                      </div>
+                    </div>
+
+                    <!-- §5 Square -->
+                    <div style="margin-bottom:10px;">
+                      <div style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.1em;color:#a78bfa;margin-bottom:4px;text-transform:uppercase;">§5 · Square (L∞ Chebyshev)</div>
+                      <div style="display:flex;gap:5px;flex-wrap:wrap;">
+                        <button onclick="ucPreset({mod:4,colmode:'rainbow-ring',spokes:false,chords:false,polygon:true,polyFilter:'all',polyRings:'outer',label:'fraction',labelScope:'outer',mode:'both',ringscale:'linear',spacing:100})" class="uc-preset-btn">Square (n=4)</button>
+                        <button onclick="ucPreset({mod:24,colmode:'per-modulus',spokes:false,chords:false,polygon:true,polyFilter:'gcd1',polyRings:'all',label:'none',mode:'coprime',ringscale:'quadratic',spacing:100})" class="uc-preset-btn">Chebyshev Shells</button>
+                        <button onclick="ucPreset({mod:60,colmode:'thermal',spokes:false,chords:false,polygon:true,polyFilter:'gcd1',polyRings:'outer5',label:'none',mode:'coprime',ringscale:'log',spacing:100})" class="uc-preset-btn">L∞ Dense</button>
+                      </div>
+                    </div>
+
+                    <!-- §6 Cylinder -->
+                    <div style="margin-bottom:10px;">
+                      <div style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.1em;color:#f97316;margin-bottom:4px;text-transform:uppercase;">§6 · Cylinder / Unwrapped</div>
+                      <div style="display:flex;gap:5px;flex-wrap:wrap;">
+                        <button onclick="ucPresetUnfold('split','both',180)" class="uc-preset-btn">Cylinder Split</button>
+                        <button onclick="ucPresetUnfold('rect','cop',90)" class="uc-preset-btn">Rectangle Strip</button>
+                        <button onclick="ucPresetUnfold('split','both',60)" class="uc-preset-btn">2π Wrap (60°)</button>
+                      </div>
+                    </div>
+
+                    <!-- §8 Cyclotomic / Lattice -->
+                    <div style="margin-bottom:10px;">
+                      <div style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.1em;color:#67e8f9;margin-bottom:4px;text-transform:uppercase;">§8 · Cyclotomic &amp; Lattice Structure</div>
+                      <div style="font-family:'Cinzel',serif;font-size:0.52rem;color:#9a8060;margin-bottom:6px;">Step a/b = 1/n generates the n-th root of unity orbit. Coprime residues = (ℤ/nℤ)* generators.</div>
+                      <div style="display:flex;gap:5px;flex-wrap:wrap;">
+                        <button onclick="ucPreset({mod:3,stepa:1,stepb:3,ringdyn:'linear',ringspeed:80,colmode:'rainbow-residue',polygon:true,polyFilter:'gcd1',polyRings:'all',spokes:false,chords:false,label:'fraction',labelScope:'outer',mode:'coprime',ringscale:'linear',spacing:100})" class="uc-preset-btn" title="ζ₃ = e^(2πi/3) — Eisenstein integers ℤ[ω], triangular lattice">Eisenstein ℤ[ω] (n=3)</button>
+                        <button onclick="ucPreset({mod:4,stepa:1,stepb:4,ringdyn:'linear',ringspeed:80,colmode:'rainbow-residue',polygon:true,polyFilter:'gcd1',polyRings:'all',spokes:false,chords:false,label:'fraction',labelScope:'outer',mode:'coprime',ringscale:'linear',spacing:100})" class="uc-preset-btn" title="ζ₄ = i — Gaussian integers ℤ[i], square lattice">Gaussian ℤ[i] (n=4)</button>
+                        <button onclick="ucPreset({mod:6,stepa:1,stepb:6,ringdyn:'linear',ringspeed:80,colmode:'per-residue',polygon:true,polyFilter:'gcd1',polyRings:'all',spokes:false,chords:false,label:'none',mode:'coprime',ringscale:'linear',spacing:100})" class="uc-preset-btn" title="ζ₆ — hexagonal sub-lattice of Eisenstein">Hexagonal (n=6)</button>
+                        <button onclick="ucPreset({mod:5,stepa:1,stepb:5,ringdyn:'linear',ringspeed:80,colmode:'rainbow-residue',polygon:true,polyFilter:'gcd1',polyRings:'outer',spokes:false,chords:false,label:'fraction',labelScope:'outer',mode:'coprime',ringscale:'linear',spacing:100})" class="uc-preset-btn" title="ζ₅ — pentagonal, φ(5)=4 coprime units">Pentagon (n=5)</button>
+                        <button onclick="ucPreset({mod:12,stepa:1,stepb:12,ringdyn:'linear',ringspeed:80,colmode:'per-modulus',polygon:true,polyFilter:'gcd1',polyRings:'all',spokes:false,chords:false,label:'none',mode:'coprime',ringscale:'linear',spacing:100})" class="uc-preset-btn" title="ζ₁₂ — φ(12)=4, highly composite lattice">Dodecagonal (n=12)</button>
+                      </div>
+                    </div>
+
+                    <!-- §9 Residue Tracking -->
+                    <div style="margin-bottom:2px;">
+                      <div style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.1em;color:#86efac;margin-bottom:4px;text-transform:uppercase;">§9 · Residue &amp; Gap Tracking</div>
+                      <div style="font-family:'Cinzel',serif;font-size:0.52rem;color:#9a8060;margin-bottom:6px;">Gap=1 traces r=1 generator orbits. Gap=2 traces twin-prime admissible pairs across primorial rings.</div>
+                      <div style="display:flex;gap:5px;flex-wrap:wrap;">
+                        <button onclick="ucPreset({mod:30,stepa:1,stepb:30,ringdyn:'linear',ringspeed:60,colmode:'prime-composite',polygon:false,crossmod:true,spokes:false,chords:false,label:'none',mode:'coprime',ringscale:'linear',spacing:100,gap:1,residue:1})" class="uc-preset-btn" title="r=1 generator orbit across all rings — traces (ℤ/nℤ)* action on ζ_n">Generator Orbit r=1</button>
+                        <button onclick="ucPreset({mod:30,stepa:1,stepb:30,ringdyn:'step',ringspeed:60,colmode:'twin-prime',polygon:false,crossmod:true,spokes:false,chords:false,label:'none',mode:'coprime',ringscale:'linear',spacing:100,gap:2,residue:1})" class="uc-preset-btn" title="Gap=2 twin-prime admissible pairs on primorial mod 30">Twin Primes (gap=2)</button>
+                        <button onclick="ucPreset({mod:210,stepa:1,stepb:210,ringdyn:'quadratic',ringspeed:40,colmode:'prime-composite',polygon:false,crossmod:false,spokes:false,chords:false,label:'none',mode:'coprime',ringscale:'log',spacing:100,gap:2,residue:1})" class="uc-preset-btn" title="Primorial 2·3·5·7=210, gap=2 — all twin-admissible residues visible">Primorial 210, gap=2</button>
+                        <button onclick="ucPreset({mod:30,stepa:1,stepb:6,ringdyn:'sine',ringspeed:80,colmode:'euler-phi',polygon:true,polyFilter:'gcd1',polyRings:'all',spokes:false,chords:false,label:'none',mode:'coprime',ringscale:'quadratic',spacing:100})" class="uc-preset-btn" title="Euler φ coloring with sine-wave dynamics — reveals φ(m)/m density by ring">φ(m) Density Wave</button>
+                      </div>
+                    </div>
+                    <div style="margin-bottom:2px;">
+                      <div style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.1em;color:#34d399;margin-bottom:4px;text-transform:uppercase;">§7 · Modular Number Line (ℝ/ℤ)</div>
+                      <div style="display:flex;gap:5px;flex-wrap:wrap;">
+                        <button onclick="ucPreset({mod:7,colmode:'rainbow-residue',spokes:false,chords:false,polygon:false,crossmod:true,label:'fraction',labelScope:'all',mode:'coprime',ringscale:'log',spacing:100})" class="uc-preset-btn">Prime Mod (7)</button>
+                        <button onclick="ucPreset({mod:30,colmode:'spectral',spokes:false,chords:false,polygon:false,crossmod:true,label:'decimal',labelScope:'outer',mode:'both',ringscale:'linear',spacing:100})" class="uc-preset-btn">Arithmetic Wrap (30)</button>
+                        <button onclick="ucPreset({mod:12,colmode:'per-modulus',spokes:false,chords:true,polygon:false,crossmod:false,label:'radian',labelScope:'all',mode:'both',ringscale:'linear',spacing:100})" class="uc-preset-btn">Residue Chords (12)</button>
+                      </div>
+                    </div>
+                  </div>
+                </div><!-- /uc-presets-dropdown -->
+
+
     <div class="introduction">
 
         <div class="intro-section">
@@ -2397,11 +2482,11 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
               <input id="farey-live-stats" type="hidden">
               <input id="f-mod-start" type="hidden" value="1">
               <div style="padding:6px 10px;background:var(--parchment-dark);border:1px solid var(--panel-border);border-radius:4px;margin-bottom:8px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;position:relative;z-index:2;">
-                <input id="f-mod-start-num" type="number" min="1" max="9999" value="1" title="Start ring" style="width:38px;background:var(--parchment-deep);color:#9a8060;border:1px solid var(--border);padding:2px 4px;font-family:'Cinzel',serif;font-size:0.6rem;text-align:right;" oninput="var v=Math.max(1,parseInt(this.value)||1);document.getElementById('f-mod-start').value=v;fareyRedraw()">
+                <input id="f-mod-start-num" type="number" min="0" max="9999" value="0" title="Start ring" style="width:38px;background:var(--parchment-deep);color:#9a8060;border:1px solid var(--border);padding:2px 4px;font-family:'Cinzel',serif;font-size:0.6rem;text-align:right;" oninput="var v=Math.max(1,parseInt(this.value)||1);document.getElementById('f-mod-start').value=v;fareyRedraw()">
                 <span style="font-family:'Cinzel',serif;font-size:0.6rem;color:#9a8060;">:</span>
                 <span style="font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.06em;color:var(--gold);">MOD N</span>
-                <input id="f-mod" type="range" min="2" max="210" value="49" style="flex:1;min-width:60px;accent-color:var(--gold);" oninput="document.getElementById('f-mod-num').value=this.value;fareyRedraw()">
-                <input id="f-mod-num" type="number" min="2" max="9999" value="49" style="width:44px;background:var(--parchment-deep);color:var(--ink);border:1px solid var(--border);padding:2px 4px;font-family:'Cinzel',serif;font-size:0.6rem;text-align:right;" oninput="var v=Math.min(9999,Math.max(2,parseInt(this.value)||2));var sl=document.getElementById('f-mod');sl.max=Math.max(sl.max,v);sl.value=v;fareyRedraw()">
+                <input id="f-mod" type="range" min="1" max="512" value="128" style="flex:1;min-width:60px;accent-color:var(--gold);" oninput="document.getElementById('f-mod-num').value=this.value;fareyRedraw()">
+                <input id="f-mod-num" type="number" min="0" max="9999" value="128" style="width:44px;background:var(--parchment-deep);color:var(--ink);border:1px solid var(--border);padding:2px 4px;font-family:'Cinzel',serif;font-size:0.6rem;text-align:right;" oninput="var v=Math.min(9999,Math.max(1,parseInt(this.value)||1));var sl=document.getElementById('f-mod');sl.max=Math.max(sl.max,v);sl.value=v;fareyRedraw()">
                 <button id="f-mod-play" onclick="fareyModPlay()" title="Animate mod from 2 to current max" style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.06em;text-transform:uppercase;padding:2px 7px;border:1px solid var(--gold);background:var(--parchment-dark);color:var(--gold);cursor:pointer;">&#9654;</button>
                 <span style="color:var(--border);margin:0 1px;">|</span>
                 <span style="font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.06em;color:var(--gold);">GAP</span>
@@ -2992,90 +3077,6 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
                   </div>
                 </div>
 
-                <!-- ══ UNIT CIRCLE PRESETS DROPDOWN ══ -->
-                <div id="uc-presets-dropdown" style="background:var(--parchment-dark);border:1px solid rgba(192,132,252,0.5);border-radius:4px;margin-bottom:6px;">
-                  <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 14px;cursor:pointer;" onclick="(function(el){var b=el.parentElement.querySelector('.uc-presets-body');var a=el.querySelector('.uc-presets-arrow');var open=b.style.display==='none';b.style.display=open?'block':'none';a.textContent=open?'▼':'▶';})(this)">
-                    <span style="font-family:'Cinzel',serif;font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:#c084fc;">&#9670; Unit Circle Presets</span>
-                    <span class="uc-presets-arrow" style="color:#c084fc;font-size:0.7rem;">▶</span>
-                  </div>
-                  <div class="uc-presets-body" style="display:none;padding:12px 16px;">
-                    <div style="font-family:'Cinzel',serif;font-size:0.56rem;color:#9a8060;letter-spacing:0.08em;margin-bottom:10px;">Each preset configures the canvas to a specific geometric or modular representation.</div>
-
-                    <!-- §3 Polygon -->
-                    <div style="margin-bottom:10px;">
-                      <div style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.1em;color:#fbbf24;margin-bottom:4px;text-transform:uppercase;">§3 · Polygon Approximation</div>
-                      <div style="display:flex;gap:5px;flex-wrap:wrap;">
-                        <button onclick="ucPreset({mod:3,colmode:'rainbow-ring',spokes:false,chords:false,polygon:true,polyFilter:'all',polyRings:'outer',label:'fraction',labelScope:'outer',mode:'both',ringscale:'linear',spacing:100})" class="uc-preset-btn">Triangle (n=3)</button>
-                        <button onclick="ucPreset({mod:6,colmode:'rainbow-ring',spokes:false,chords:false,polygon:true,polyFilter:'all',polyRings:'outer',label:'fraction',labelScope:'outer',mode:'both',ringscale:'linear',spacing:100})" class="uc-preset-btn">Hexagon (n=6)</button>
-                        <button onclick="ucPreset({mod:30,colmode:'rainbow-ring',spokes:false,chords:false,polygon:true,polyFilter:'all',polyRings:'all',label:'none',mode:'both',ringscale:'linear',spacing:100})" class="uc-preset-btn">Polygon Evolution</button>
-                      </div>
-                    </div>
-
-                    <!-- §4 Diamond -->
-                    <div style="margin-bottom:10px;">
-                      <div style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.1em;color:#fb923c;margin-bottom:4px;text-transform:uppercase;">§4 · Diamond (L¹ Manhattan)</div>
-                      <div style="display:flex;gap:5px;flex-wrap:wrap;">
-                        <button onclick="ucPreset({mod:8,colmode:'rainbow-residue',spokes:false,chords:false,polygon:true,polyFilter:'gcd1',polyRings:'outer',label:'fraction',labelScope:'outer',mode:'coprime',ringscale:'linear',spacing:100})" class="uc-preset-btn">gcd=1 Diamond</button>
-                        <button onclick="ucPreset({mod:20,colmode:'rainbow-ring',spokes:false,chords:false,polygon:true,polyFilter:'all',polyRings:'all',label:'none',mode:'both',ringscale:'log',spacing:100})" class="uc-preset-btn">L¹ Shells</button>
-                        <button onclick="ucPreset({mod:60,colmode:'coprime-frac',spokes:true,chords:false,polygon:false,label:'none',mode:'coprime',ringscale:'linear',spacing:80})" class="uc-preset-btn">Manhattan Dense</button>
-                      </div>
-                    </div>
-
-                    <!-- §5 Square -->
-                    <div style="margin-bottom:10px;">
-                      <div style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.1em;color:#a78bfa;margin-bottom:4px;text-transform:uppercase;">§5 · Square (L∞ Chebyshev)</div>
-                      <div style="display:flex;gap:5px;flex-wrap:wrap;">
-                        <button onclick="ucPreset({mod:4,colmode:'rainbow-ring',spokes:false,chords:false,polygon:true,polyFilter:'all',polyRings:'outer',label:'fraction',labelScope:'outer',mode:'both',ringscale:'linear',spacing:100})" class="uc-preset-btn">Square (n=4)</button>
-                        <button onclick="ucPreset({mod:24,colmode:'per-modulus',spokes:false,chords:false,polygon:true,polyFilter:'gcd1',polyRings:'all',label:'none',mode:'coprime',ringscale:'quadratic',spacing:100})" class="uc-preset-btn">Chebyshev Shells</button>
-                        <button onclick="ucPreset({mod:60,colmode:'thermal',spokes:false,chords:false,polygon:true,polyFilter:'gcd1',polyRings:'outer5',label:'none',mode:'coprime',ringscale:'log',spacing:100})" class="uc-preset-btn">L∞ Dense</button>
-                      </div>
-                    </div>
-
-                    <!-- §6 Cylinder -->
-                    <div style="margin-bottom:10px;">
-                      <div style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.1em;color:#f97316;margin-bottom:4px;text-transform:uppercase;">§6 · Cylinder / Unwrapped</div>
-                      <div style="display:flex;gap:5px;flex-wrap:wrap;">
-                        <button onclick="ucPresetUnfold('split','both',180)" class="uc-preset-btn">Cylinder Split</button>
-                        <button onclick="ucPresetUnfold('rect','cop',90)" class="uc-preset-btn">Rectangle Strip</button>
-                        <button onclick="ucPresetUnfold('split','both',60)" class="uc-preset-btn">2π Wrap (60°)</button>
-                      </div>
-                    </div>
-
-                    <!-- §8 Cyclotomic / Lattice -->
-                    <div style="margin-bottom:10px;">
-                      <div style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.1em;color:#67e8f9;margin-bottom:4px;text-transform:uppercase;">§8 · Cyclotomic &amp; Lattice Structure</div>
-                      <div style="font-family:'Cinzel',serif;font-size:0.52rem;color:#9a8060;margin-bottom:6px;">Step a/b = 1/n generates the n-th root of unity orbit. Coprime residues = (ℤ/nℤ)* generators.</div>
-                      <div style="display:flex;gap:5px;flex-wrap:wrap;">
-                        <button onclick="ucPreset({mod:3,stepa:1,stepb:3,ringdyn:'linear',ringspeed:80,colmode:'rainbow-residue',polygon:true,polyFilter:'gcd1',polyRings:'all',spokes:false,chords:false,label:'fraction',labelScope:'outer',mode:'coprime',ringscale:'linear',spacing:100})" class="uc-preset-btn" title="ζ₃ = e^(2πi/3) — Eisenstein integers ℤ[ω], triangular lattice">Eisenstein ℤ[ω] (n=3)</button>
-                        <button onclick="ucPreset({mod:4,stepa:1,stepb:4,ringdyn:'linear',ringspeed:80,colmode:'rainbow-residue',polygon:true,polyFilter:'gcd1',polyRings:'all',spokes:false,chords:false,label:'fraction',labelScope:'outer',mode:'coprime',ringscale:'linear',spacing:100})" class="uc-preset-btn" title="ζ₄ = i — Gaussian integers ℤ[i], square lattice">Gaussian ℤ[i] (n=4)</button>
-                        <button onclick="ucPreset({mod:6,stepa:1,stepb:6,ringdyn:'linear',ringspeed:80,colmode:'per-residue',polygon:true,polyFilter:'gcd1',polyRings:'all',spokes:false,chords:false,label:'none',mode:'coprime',ringscale:'linear',spacing:100})" class="uc-preset-btn" title="ζ₆ — hexagonal sub-lattice of Eisenstein">Hexagonal (n=6)</button>
-                        <button onclick="ucPreset({mod:5,stepa:1,stepb:5,ringdyn:'linear',ringspeed:80,colmode:'rainbow-residue',polygon:true,polyFilter:'gcd1',polyRings:'outer',spokes:false,chords:false,label:'fraction',labelScope:'outer',mode:'coprime',ringscale:'linear',spacing:100})" class="uc-preset-btn" title="ζ₅ — pentagonal, φ(5)=4 coprime units">Pentagon (n=5)</button>
-                        <button onclick="ucPreset({mod:12,stepa:1,stepb:12,ringdyn:'linear',ringspeed:80,colmode:'per-modulus',polygon:true,polyFilter:'gcd1',polyRings:'all',spokes:false,chords:false,label:'none',mode:'coprime',ringscale:'linear',spacing:100})" class="uc-preset-btn" title="ζ₁₂ — φ(12)=4, highly composite lattice">Dodecagonal (n=12)</button>
-                      </div>
-                    </div>
-
-                    <!-- §9 Residue Tracking -->
-                    <div style="margin-bottom:2px;">
-                      <div style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.1em;color:#86efac;margin-bottom:4px;text-transform:uppercase;">§9 · Residue &amp; Gap Tracking</div>
-                      <div style="font-family:'Cinzel',serif;font-size:0.52rem;color:#9a8060;margin-bottom:6px;">Gap=1 traces r=1 generator orbits. Gap=2 traces twin-prime admissible pairs across primorial rings.</div>
-                      <div style="display:flex;gap:5px;flex-wrap:wrap;">
-                        <button onclick="ucPreset({mod:30,stepa:1,stepb:30,ringdyn:'linear',ringspeed:60,colmode:'prime-composite',polygon:false,crossmod:true,spokes:false,chords:false,label:'none',mode:'coprime',ringscale:'linear',spacing:100,gap:1,residue:1})" class="uc-preset-btn" title="r=1 generator orbit across all rings — traces (ℤ/nℤ)* action on ζ_n">Generator Orbit r=1</button>
-                        <button onclick="ucPreset({mod:30,stepa:1,stepb:30,ringdyn:'step',ringspeed:60,colmode:'twin-prime',polygon:false,crossmod:true,spokes:false,chords:false,label:'none',mode:'coprime',ringscale:'linear',spacing:100,gap:2,residue:1})" class="uc-preset-btn" title="Gap=2 twin-prime admissible pairs on primorial mod 30">Twin Primes (gap=2)</button>
-                        <button onclick="ucPreset({mod:210,stepa:1,stepb:210,ringdyn:'quadratic',ringspeed:40,colmode:'prime-composite',polygon:false,crossmod:false,spokes:false,chords:false,label:'none',mode:'coprime',ringscale:'log',spacing:100,gap:2,residue:1})" class="uc-preset-btn" title="Primorial 2·3·5·7=210, gap=2 — all twin-admissible residues visible">Primorial 210, gap=2</button>
-                        <button onclick="ucPreset({mod:30,stepa:1,stepb:6,ringdyn:'sine',ringspeed:80,colmode:'euler-phi',polygon:true,polyFilter:'gcd1',polyRings:'all',spokes:false,chords:false,label:'none',mode:'coprime',ringscale:'quadratic',spacing:100})" class="uc-preset-btn" title="Euler φ coloring with sine-wave dynamics — reveals φ(m)/m density by ring">φ(m) Density Wave</button>
-                      </div>
-                    </div>
-                    <div style="margin-bottom:2px;">
-                      <div style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.1em;color:#34d399;margin-bottom:4px;text-transform:uppercase;">§7 · Modular Number Line (ℝ/ℤ)</div>
-                      <div style="display:flex;gap:5px;flex-wrap:wrap;">
-                        <button onclick="ucPreset({mod:7,colmode:'rainbow-residue',spokes:false,chords:false,polygon:false,crossmod:true,label:'fraction',labelScope:'all',mode:'coprime',ringscale:'log',spacing:100})" class="uc-preset-btn">Prime Mod (7)</button>
-                        <button onclick="ucPreset({mod:30,colmode:'spectral',spokes:false,chords:false,polygon:false,crossmod:true,label:'decimal',labelScope:'outer',mode:'both',ringscale:'linear',spacing:100})" class="uc-preset-btn">Arithmetic Wrap (30)</button>
-                        <button onclick="ucPreset({mod:12,colmode:'per-modulus',spokes:false,chords:true,polygon:false,crossmod:false,label:'radian',labelScope:'all',mode:'both',ringscale:'linear',spacing:100})" class="uc-preset-btn">Residue Chords (12)</button>
-                      </div>
-                    </div>
-                  </div>
-                </div><!-- /uc-presets-dropdown -->
-
                 <!-- GCD = 1 Legend dropdown -->
                 <div style="background:var(--parchment-dark);border:1px solid rgba(74,144,217,0.5);border-radius:4px;margin-bottom:6px;">
                   <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 14px;cursor:pointer;" onclick="var b=this.nextElementSibling;var a=this.querySelector('.farey-arrow');b.style.display=b.style.display==='none'?'block':'none';a.textContent=b.style.display==='none'?'▶':'▼';">
@@ -3256,7 +3257,7 @@ ight)"></div>
   // ── helpers ──────────────────────────────────────────────────────────────
   function gcd(a,b){while(b){var t=b;b=a%b;a=t;}return a;}
 
-  var _angles = {coprime:0, noncoprime:0};
+  var _angles = {coprime:90, noncoprime:90};
   var _lastHighlit = -1;
 
   function highlightNavLink(){
@@ -4146,16 +4147,24 @@ ight)"></div>
       });
       // Enable fluid display so the 2K buffer scales to fill the container
       if (!window._canvasFluid) { fareyCanvasFluidToggle(); }
-      // Point size to 25%
-      var pts = document.getElementById('f-ptsize');     if (pts) pts.value = 100;
-      var ptn = document.getElementById('f-ptsize-num'); if (ptn) ptn.value = 100;
-      var ptv = document.getElementById('f-ptsize-val'); if (ptv) ptv.textContent = '100%';
+      // Point size to 75%
+      var pts = document.getElementById('f-ptsize');     if (pts) pts.value = 75;
+      var ptn = document.getElementById('f-ptsize-num'); if (ptn) ptn.value = 75;
+      var ptv = document.getElementById('f-ptsize-val'); if (ptv) ptv.textContent = '75%';
+      // Ring scale to 200
+      var spEl = document.getElementById('f-spacing');     if (spEl) spEl.value = 200;
+      var spNm = document.getElementById('f-spacing-num'); if (spNm) spNm.value = 200;
+      var spVl = document.getElementById('f-spacing-val'); if (spVl) spVl.textContent = '200%';
+      // Inner radius to 0
+      var riEl = document.getElementById('f-rinner');     if (riEl) riEl.value = 0;
+      var riNm = document.getElementById('f-rinner-num'); if (riNm) riNm.value = '0.00';
+      var riVl = document.getElementById('f-rinner-val'); if (riVl) riVl.textContent = '0.00';
       // Default: dots only — user enables connections manually
       var ch  = document.getElementById('f-chords');        if (ch)  ch.checked  = false;
       var sp  = document.getElementById('f-spokes');        if (sp)  sp.checked  = false;
       var sm  = document.getElementById('f-samemod');       if (sm)  sm.checked  = false;
       var cx2 = document.getElementById('f-crossmod');      if (cx2) cx2.checked = false;
-      // Switch to gcd=1 view, restoring the angle the user had before entering Advanced
+      // Switch to gcd=1 view; combined opens to current _combinedAngle unchanged
       if (window.fareyCombinedMode) fareyCombinedMode('coprime');
       _combinedAngle = _savedAngle;
       syncCombinedSize();
@@ -4700,7 +4709,7 @@ ight)"></div>
         break;
       case 'ArrowDown':
         if(!e.ctrlKey&&!e.metaKey){ e.preventDefault();
-          var nv2=Math.max(parseInt((modEl||{}).min)||3,modN-1);
+          var nv2=Math.max(parseInt((modEl||{}).min)||1,modN-1);
           if(modEl) modEl.value=nv2; if(slEl) slEl.value=nv2; fareyRedraw(); }
         break;
       case 'r': case 'R':
@@ -4874,12 +4883,17 @@ ight)"></div>
 
   window.fareyCombinedClick = function(){
     if (window._unfoldOn) {
-      // Circle keeps its own rotation (_combinedAngle unchanged).
-      // Rectangle counter-rotates by a fixed 90° step on each click.
-      window._unfoldRectAngle = ((window._unfoldRectAngle - 90) % 360 + 360) % 360;
-      if (window.fareyDrawUnfold) window.fareyDrawUnfold();
+      var nu = parseFloat((document.getElementById('f-unfold-num')||{value:'1'}).value)||1;
+      var de = parseFloat((document.getElementById('f-unfold-den')||{value:'2'}).value)||2;
+      if (de === 0) de = 1;
+      var stepDeg = (nu / de) * 360;
+      if (stepDeg < 1 || stepDeg > 359) stepDeg = 90;
+      // Circle: clockwise (+step), Rect: counter-clockwise (-step, independent offset)
+      _combinedAngle = (_combinedAngle + stepDeg) % 360;
+      window._unfoldRectAngle = ((window._unfoldRectAngle - stepDeg * 2) % 360 + 360) % 360;
+      drawCombined();
       var lbl = document.getElementById('fc-combined-label');
-      if (lbl) lbl.textContent = 'Unfold \u00b7 rect \u21ba \u221290\u00b0 per click';
+      if (lbl) lbl.textContent = 'Unfold \u00b7 circle \u21bb rect \u21ba +' + stepDeg.toFixed(1) + '\u00b0';
     } else {
       _combinedAngle = (_combinedAngle + 90) % 360;
       drawCombined();
@@ -5045,9 +5059,10 @@ ight)"></div>
         var _mt = window._unfoldMorph !== undefined ? window._unfoldMorph : 1;
         var cpx = cx + rad*Math.sin(theta);
         var cpy = cy - rad*Math.cos(theta);
-        // Use full theta (includes angOff + ringOffset) so rect tracks all rotations
-        var _pureTheta = theta;
-        var th2 = ((_pureTheta%(2*Math.PI))+2*Math.PI)%(2*Math.PI);
+        // Rect uses its own independent angle so circle and rect can rotate separately
+        var rectAngOff = ang * Math.PI / 180 + ((window._unfoldRectAngle || 0) * Math.PI / 180);
+        var rectTheta  = dir*2*Math.PI*r/(m||1) + rectAngOff + ringOffset(m,modN)*Math.PI/180;
+        var th2 = ((rectTheta%(2*Math.PI))+2*Math.PI)%(2*Math.PI);
         var _mt_col = _invert ? (modN-m) : (m-1);
         var rx2 = _rectX + _mt_col/Math.max(modN-1,1)*_rectW;
         var ry2 = _rectCy + ((th2/Math.PI)-1)*(_rectH/2);
@@ -7973,13 +7988,13 @@ ight)"></div>
     }
     var sl  = document.getElementById('f-mod');
     var num = document.getElementById('f-mod-num');
-    var maxV = parseInt(sl.max) || 210;
-    // Start from 2
-    sl.value  = 2; num.value = 2;
+    var maxV = parseInt(sl.max) || 512;
+    // Start from 1
+    sl.value  = 1; num.value = 1;
     fareyRedraw();
     if (btn) { btn.textContent = '■'; btn.style.color = '#c94040'; btn.style.borderColor = '#c94040'; }
     _modPlayTimer = setInterval(function() {
-      var cur = parseInt(sl.value) || 2;
+      var cur = parseInt(sl.value) || 1;
       if (cur >= maxV) {
         clearInterval(_modPlayTimer); _modPlayTimer = null;
         if (btn) { btn.textContent = '▶'; btn.style.color = 'var(--gold)'; btn.style.borderColor = 'var(--gold)'; }
