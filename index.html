@@ -2200,83 +2200,191 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
 
-    <!-- ══ THEORY PANEL ══ -->
-    <div id="theory-toggle-bar" onclick="toggleTheoryPanel()" role="button" aria-expanded="false">
-        <span class="theory-toggle-title">&#9670; Structure of the Rational Unit Circle &mdash; Mathematical Background</span>
-        <span class="theory-toggle-arrow">&#9660;</span>
-    </div>
-    <div id="theory-panel">
-        <div class="theory-header-row">
-            <h3>Rational Unit Circle</h3>
-            <span class="theory-subtitle">Roots of unity, coprimality, and Farey structure</span>
-        </div>
-        <div class="theory-grid">
+        <!-- ══ UNIT CIRCLE THEORY PANEL ══ -->
+        <div class="uc-theory-panel">
+          <div class="uc-theory-toggle" onclick="(function(el){var body=el.parentElement.querySelector('.uc-theory-body');var chev=el.querySelector('.uc-theory-chevron');var open=body.classList.toggle('uc-open');chev.classList.toggle('uc-open',open);})(this)">
+            <h3>
+              <span style="opacity:0.85">◈</span>
+              The Unit Circle &amp; Its Many Faces
+            </h3>
+            <span class="uc-theory-chevron">▼</span>
+          </div>
+          <div class="uc-theory-body">
 
-            <div class="theory-card">
-                <div class="theory-card-num">&#167; 1</div>
-                <h4>Roots of Unity on the Unit Circle</h4>
-                <p>Every pair (r, m) defines a point on the unit circle through the mapping</p>
-                <div class="theory-math" data-math="z_{r,m} = e^{2\pi i \frac{r}{m}}"></div>
-                <p>For fixed m, the set of all such points forms the m-th roots of unity &#956;<sub>m</sub> &mdash; equally spaced vertices of a regular m-gon inscribed in the circle.</p>
+            <p class="uc-lead">
+A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 —
+              but the same parameters (radius = 1, circumference = 2π, rotation θ ∈ [0, 2π))
+              manifest in many different geometric shapes and coordinate systems.
+              Think of it as the same mathematical object viewed through different lenses.
+              The Farey modular residue rings visualized here are precisely one such lens:
+              the classical circle becomes a discrete, modular shell system — and the structures below
+              illuminate why this connection is so deep.
+            </p>
+
+            <div class="uc-grid">
+
+              <!-- 1 -->
+              <div class="uc-card">
+                <div class="uc-card-num">§ 1</div>
+                <div class="uc-card-title">Square / Wave Strip (Fourier View)</div>
+                <div class="uc-card-body">
+                  Unwrapping the angle parameter θ maps the circle into a rectangular strip.
+                  Plotting cos θ and sin θ against θ transforms the closed curve into two
+                  interleaved waves inside a bounded rectangle — exactly how Fourier analysis
+                  encodes periodicity.
+                  <span class="uc-formula">x = cos θ,&ensp; y = sin θ,&ensp; θ ∈ [0, 2π)</span>
+                  Circle → sine/cosine waves in a strip.
+                </div>
+              </div>
+
+              <!-- 2 -->
+              <div class="uc-card">
+                <div class="uc-card-num">§ 2</div>
+                <div class="uc-card-title">Complex Exponential</div>
+                <div class="uc-card-body">
+                  In the complex plane every number of magnitude 1 lies on the unit circle,
+                  forming the multiplicative group |z| = 1. The circle collapses into a
+                  single elegant formula that turns geometry into rotation algebra.
+                  <span class="uc-formula">z = e<sup>iθ</sup></span>
+                  Circle → complex exponential rotation.
+                </div>
+              </div>
+
+              <!-- 3 -->
+              <div class="uc-card">
+                <div class="uc-card-num">§ 3</div>
+                <div class="uc-card-title">Polygon Approximation</div>
+                <div class="uc-card-body">
+                  A circle is the limiting case of regular <em>n</em>-gons as <em>n</em> → ∞.
+                  Triangle, square, hexagon, 1000-gon — all with vertices on radius 1.
+                  This is a direct bridge to the discrete shells in the Farey residue visualizer.
+                  <span class="uc-formula">lim<sub>n → ∞</sub> regular n-gon = circle</span>
+                </div>
+              </div>
+
+              <!-- 4 -->
+              <div class="uc-card">
+                <div class="uc-card-num">§ 4</div>
+                <div class="uc-card-title">Diamond (L¹ / Manhattan Metric)</div>
+                <div class="uc-card-body">
+                  Changing the distance rule changes the shape of the unit "circle."
+                  Under the Manhattan (L¹) metric the locus of points at distance 1 from the
+                  origin is a square rotated 45° — a diamond.
+                  <span class="uc-formula">|x| + |y| = 1</span>
+                </div>
+              </div>
+
+              <!-- 5 -->
+              <div class="uc-card">
+                <div class="uc-card-num">§ 5</div>
+                <div class="uc-card-title">Square (L∞ / Chebyshev Metric)</div>
+                <div class="uc-card-body">
+                  Under the Chebyshev (L∞) metric — where distance is the maximum of the
+                  coordinate differences — the unit circle becomes an axis-aligned square.
+                  The geometry of distance determines the shape of roundness.
+                  <span class="uc-formula">max(|x|, |y|) = 1</span>
+                </div>
+              </div>
+
+              <!-- 6 -->
+              <div class="uc-card">
+                <div class="uc-card-num">§ 6</div>
+                <div class="uc-card-title">Cylinder / Rectangle (Unwrapped)</div>
+                <div class="uc-card-body">
+                  Cutting the circle at θ = 0 and unrolling it produces a line segment of
+                  length 2π. Adding a height dimension yields a cylinder. This is precisely
+                  the π × 2π rectangle picture — a circle with wrapped edges.
+                  <span class="uc-formula">Circle ↔ rectangle with identified edges</span>
+                </div>
+              </div>
+
+              <!-- 7 -->
+              <div class="uc-card">
+                <div class="uc-card-num">§ 7</div>
+                <div class="uc-card-title">Modular Number Line (ℝ/ℤ)</div>
+                <div class="uc-card-body">
+                  The real numbers modulo 1 wrap the number line into a circle: 0 and 1 become
+                  the same point, and every real number maps to an angle θ = 2πx.
+                  This is the algebraic foundation of the modular residue geometry shown here.
+                  <span class="uc-formula">ℝ/ℤ → unit circle,&ensp; θ = 2πx</span>
+                </div>
+              </div>
+
+              <!-- 8 -->
+              <div class="uc-card">
+                <div class="uc-card-num">§ 8</div>
+                <div class="uc-card-title">Real Line via Stereographic Projection</div>
+                <div class="uc-card-body">
+                  Stereographic projection from the north pole maps every point on the circle
+                  to a unique real number — except the pole itself, which corresponds to
+                  a "point at infinity." Used extensively in complex analysis.
+                  <span class="uc-formula">Circle ↔ ℝ ∪ {∞}</span>
+                </div>
+              </div>
+
+              <!-- 9 -->
+              <div class="uc-card">
+                <div class="uc-card-num">§ 9</div>
+                <div class="uc-card-title">Lattice Shell View</div>
+                <div class="uc-card-body">
+                  Scaling the unit circle by integer radii produces concentric shells of
+                  integer lattice solutions to x² + y² = r². Counting such representations
+                  connects to the Gauss circle problem and Dirichlet's divisor theory —
+                  and the modular shell work here is a discrete, modular version of exactly this.
+                  <span class="uc-formula">x² + y² = r²,&ensp; r ∈ ℤ</span>
+                </div>
+              </div>
+
+              <!-- 10 -->
+              <div class="uc-card">
+                <div class="uc-card-num">§ 10</div>
+                <div class="uc-card-title">Fourier Frequency Circle</div>
+                <div class="uc-card-body">
+                  In digital signal processing the unit circle in the z-plane represents
+                  all possible frequencies. Stability, filtering, and spectral analysis all
+                  read off the circle — connecting time-domain signals to circular frequency space.
+                  <span class="uc-formula">z = e<sup>iω</sup>,&ensp; ω ∈ [0, 2π)</span>
+                </div>
+              </div>
+
+            </div><!-- /uc-grid -->
+
+            <!-- Summary table -->
+            <table class="uc-summary-table">
+              <thead>
+                <tr>
+                  <th>Geometry / System</th>
+                  <th>Shape of "Unit Circle"</th>
+                  <th>Key Equation</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>Euclidean</td><td>Circle</td><td>x² + y² = 1</td></tr>
+                <tr><td>Manhattan (L¹)</td><td>Diamond</td><td>|x| + |y| = 1</td></tr>
+                <tr><td>Chebyshev (L∞)</td><td>Square</td><td>max(|x|,|y|) = 1</td></tr>
+                <tr><td>Polygon limit</td><td>Regular n-gon → circle</td><td>n → ∞</td></tr>
+                <tr><td>Complex / Fourier</td><td>Exponential rotation</td><td>z = e<sup>iθ</sup></td></tr>
+                <tr><td>Topology (mod 1)</td><td>Wrapped number line</td><td>ℝ/ℤ</td></tr>
+                <tr><td>Lattice shells</td><td>Integer rings</td><td>x² + y² = r²</td></tr>
+                <tr><td>Modular residues</td><td>Discrete Farey rings</td><td>r/m ∈ Farey(N)</td></tr>
+              </tbody>
+            </table>
+
+            <!-- Deep idea -->
+            <div class="uc-deep-idea">
+              <div class="uc-deep-label">⭐ The Deeper Idea</div>
+              A circle is fundamentally just a <em>periodic parameter</em>.
+              Any mathematical structure with the periodicity θ ~ θ + 2π
+              can be interpreted as — or placed in correspondence with — a unit circle.
+              The Farey modular residue rings explored in this tool are a discrete, arithmetic
+              instantiation of that same periodicity: the angle becomes a reduced fraction r/m,
+              the ring becomes a modular shell, and the Farey sequence organises the shells
+              in exactly the way that uniform angle spacing organises the classical circle.
+              <span class="uc-formula-center">θ ~ θ + 2π &ensp;⟺&ensp; r/m ~ r/m + 1</span>
             </div>
 
-            <div class="theory-card">
-                <div class="theory-card-num">&#167; 2</div>
-                <h4>Primitive and Non-Primitive Roots</h4>
-                <p>A root is <em>primitive</em> when numerator and denominator are coprime: gcd(r, m) = 1. The count of primitive m-th roots equals Euler's totient &#966;(m).</p>
-                <p>When gcd(r, m) = d &gt; 1, the fraction reduces and the point represents a lower-order root. <strong style="color:#4a90d9;">Blue dots</strong> mark primitive residues; <strong style="color:#c94040;">red dots</strong> mark non-primitive.</p>
-            </div>
-
-            <div class="theory-card">
-                <div class="theory-card-num">&#167; 3</div>
-                <h4>Radial Alignment of Rational Angles</h4>
-                <p>All fractions equivalent under reduction share one radial line. For example:</p>
-                <div class="theory-math" data-math="\tfrac{1}{3},\quad \tfrac{2}{6},\quad \tfrac{3}{9},\quad \tfrac{4}{12} \quad\Rightarrow\quad \theta = \tfrac{2\pi}{3}"></div>
-                <p>Each ray corresponds to a unique reduced fraction a/b with gcd(a,b) = 1. Primitive fractions determine the fundamental rays of the diagram.</p>
-            </div>
-
-            <div class="theory-card">
-                <div class="theory-card-num">&#167; 4</div>
-                <h4>Hierarchical Structure of Multiples</h4>
-                <p>Every primitive fraction a/b generates an infinite family</p>
-                <div class="theory-math" data-math="\frac{a}{b},\;\frac{2a}{2b},\;\frac{3a}{3b},\;\frac{4a}{4b},\;\ldots"></div>
-                <p>All members lie on the same ray at different ring depths. Primitive fractions form the angular skeleton; non-primitive fractions collapse onto these primitive directions.</p>
-            </div>
-
-            <div class="theory-card">
-                <div class="theory-card-num">&#167; 5</div>
-                <h4>Density Growth with Denominator</h4>
-                <p>As the maximum denominator M grows, the set of plotted points fills the circle with increasingly dense rational points. In the limit M &#8594; &#8734; the rationals become dense in the unit circle &mdash; linked to the Farey sequence F<sub>M</sub> and the Franel&ndash;Landau criterion for the Riemann Hypothesis.</p>
-            </div>
-
-            <div class="theory-card">
-                <div class="theory-card-num">&#167; 6</div>
-                <h4>Asymptotic Density of Primitive Points</h4>
-                <p>The proportion of primitive residues mod m is &#966;(m)/m. By Euler's product:</p>
-                <div class="theory-math" data-math="\frac{\varphi(m)}{m} = \prod_{p \mid m}\!\Bigl(1 - \tfrac{1}{p}\Bigr)"></div>
-                <p>Averaged over all m &#8804; M, this converges to 6/&#960;&#178; = 1/&#950;(2) &mdash; the asymptotic density of coprime pairs. The coprime/total ratio in the stats panel tracks this convergence live.</p>
-            </div>
-
-        </div>
-    </div>
-    <script>
-    function toggleTheoryPanel() {
-        var bar   = document.getElementById('theory-toggle-bar');
-        var panel = document.getElementById('theory-panel');
-        var open  = panel.classList.toggle('open');
-        bar.classList.toggle('open', open);
-        bar.setAttribute('aria-expanded', String(open));
-        if (open && !panel.dataset.rendered) {
-            panel.dataset.rendered = '1';
-            panel.querySelectorAll('[data-math]').forEach(function(el) {
-                try {
-                    katex.render(el.getAttribute('data-math'), el, {displayMode: true, throwOnError: false});
-                } catch(e) {}
-            });
-        }
-    }
-    </script>
-    <!-- ══ END THEORY PANEL ══ -->
+          </div><!-- /uc-theory-body -->
+        </div><!-- /uc-theory-panel -->
 
     <div class="introduction">
 
@@ -2684,8 +2792,8 @@
                   <div>
                     <div style="margin-bottom:5px;color:var(--gold);">ANGLE DIRECTION</div>
                     <select id="f-dir" onchange="fareyRedraw()" style="background:var(--parchment-deep);color:var(--ink);border:1px solid var(--border);padding:3px 6px;font-family:'Cinzel',serif;font-size:0.62rem;width:100%;">
-                      <option value="1" selected>+2πr/m (counter-clockwise)</option>
-                      <option value="-1">−2πr/m (clockwise)</option>
+                      <option value="1" selected>+2πr/m (clockwise)</option>
+                      <option value="-1">−2πr/m (counter-clockwise)</option>
                     </select>
                   </div>
 
@@ -3033,352 +3141,110 @@
 
             </div><!-- /farey-root -->
 
-        <!-- ══ UNIT CIRCLE THEORY PANEL ══ -->
-        <div class="uc-theory-panel">
-          <div class="uc-theory-toggle" onclick="(function(el){var body=el.parentElement.querySelector('.uc-theory-body');var chev=el.querySelector('.uc-theory-chevron');var open=body.classList.toggle('uc-open');chev.classList.toggle('uc-open',open);})(this)">
-            <h3>
-              <span style="opacity:0.85">◈</span>
-              The Unit Circle &amp; Its Many Faces
-            </h3>
-            <span class="uc-theory-chevron">▼</span>
-          </div>
-          <div class="uc-theory-body">
+    <!-- ══ THEORY PANEL ══ -->
+    <div id="theory-toggle-bar" onclick="toggleTheoryPanel()" role="button" aria-expanded="false">
+        <span class="theory-toggle-title">&#9670; Structure of the Rational Unit Circle &mdash; Mathematical Background</span>
+        <span class="theory-toggle-arrow">&#9660;</span>
+    </div>
+    <div id="theory-panel">
+        <div class="theory-header-row">
+            <h3>Rational Unit Circle</h3>
+            <span class="theory-subtitle">Roots of unity, coprimality, and Farey structure</span>
+        </div>
+        <div class="theory-grid">
 
-            <p class="uc-lead">
-A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 —
-              but the same parameters (radius = 1, circumference = 2π, rotation θ ∈ [0, 2π))
-              manifest in many different geometric shapes and coordinate systems.
-              Think of it as the same mathematical object viewed through different lenses.
-              The Farey modular residue rings visualized here are precisely one such lens:
-              the classical circle becomes a discrete, modular shell system — and the structures below
-              illuminate why this connection is so deep.
-            </p>
-
-            <div class="uc-grid">
-
-              <!-- 1 -->
-              <div class="uc-card">
-                <div class="uc-card-num">§ 1</div>
-                <div class="uc-card-title">Square / Wave Strip (Fourier View)</div>
-                <div class="uc-card-body">
-                  Unwrapping the angle parameter θ maps the circle into a rectangular strip.
-                  Plotting cos θ and sin θ against θ transforms the closed curve into two
-                  interleaved waves inside a bounded rectangle — exactly how Fourier analysis
-                  encodes periodicity.
-                  <span class="uc-formula">x = cos θ,&ensp; y = sin θ,&ensp; θ ∈ [0, 2π)</span>
-                  Circle → sine/cosine waves in a strip.
-                </div>
-              </div>
-
-              <!-- 2 -->
-              <div class="uc-card">
-                <div class="uc-card-num">§ 2</div>
-                <div class="uc-card-title">Complex Exponential</div>
-                <div class="uc-card-body">
-                  In the complex plane every number of magnitude 1 lies on the unit circle,
-                  forming the multiplicative group |z| = 1. The circle collapses into a
-                  single elegant formula that turns geometry into rotation algebra.
-                  <span class="uc-formula">z = e<sup>iθ</sup></span>
-                  Circle → complex exponential rotation.
-                </div>
-              </div>
-
-              <!-- 3 -->
-              <div class="uc-card">
-                <div class="uc-card-num">§ 3</div>
-                <div class="uc-card-title">Polygon Approximation</div>
-                <div class="uc-card-body">
-                  A circle is the limiting case of regular <em>n</em>-gons as <em>n</em> → ∞.
-                  Triangle, square, hexagon, 1000-gon — all with vertices on radius 1.
-                  This is a direct bridge to the discrete shells in the Farey residue visualizer.
-                  <span class="uc-formula">lim<sub>n → ∞</sub> regular n-gon = circle</span>
-                </div>
-              </div>
-
-              <!-- 4 -->
-              <div class="uc-card">
-                <div class="uc-card-num">§ 4</div>
-                <div class="uc-card-title">Diamond (L¹ / Manhattan Metric)</div>
-                <div class="uc-card-body">
-                  Changing the distance rule changes the shape of the unit "circle."
-                  Under the Manhattan (L¹) metric the locus of points at distance 1 from the
-                  origin is a square rotated 45° — a diamond.
-                  <span class="uc-formula">|x| + |y| = 1</span>
-                </div>
-              </div>
-
-              <!-- 5 -->
-              <div class="uc-card">
-                <div class="uc-card-num">§ 5</div>
-                <div class="uc-card-title">Square (L∞ / Chebyshev Metric)</div>
-                <div class="uc-card-body">
-                  Under the Chebyshev (L∞) metric — where distance is the maximum of the
-                  coordinate differences — the unit circle becomes an axis-aligned square.
-                  The geometry of distance determines the shape of roundness.
-                  <span class="uc-formula">max(|x|, |y|) = 1</span>
-                </div>
-              </div>
-
-              <!-- 6 -->
-              <div class="uc-card">
-                <div class="uc-card-num">§ 6</div>
-                <div class="uc-card-title">Cylinder / Rectangle (Unwrapped)</div>
-                <div class="uc-card-body">
-                  Cutting the circle at θ = 0 and unrolling it produces a line segment of
-                  length 2π. Adding a height dimension yields a cylinder. This is precisely
-                  the π × 2π rectangle picture — a circle with wrapped edges.
-                  <span class="uc-formula">Circle ↔ rectangle with identified edges</span>
-                </div>
-              </div>
-
-              <!-- 7 -->
-              <div class="uc-card">
-                <div class="uc-card-num">§ 7</div>
-                <div class="uc-card-title">Modular Number Line (ℝ/ℤ)</div>
-                <div class="uc-card-body">
-                  The real numbers modulo 1 wrap the number line into a circle: 0 and 1 become
-                  the same point, and every real number maps to an angle θ = 2πx.
-                  This is the algebraic foundation of the modular residue geometry shown here.
-                  <span class="uc-formula">ℝ/ℤ → unit circle,&ensp; θ = 2πx</span>
-                </div>
-              </div>
-
-              <!-- 8 -->
-              <div class="uc-card">
-                <div class="uc-card-num">§ 8</div>
-                <div class="uc-card-title">Real Line via Stereographic Projection</div>
-                <div class="uc-card-body">
-                  Stereographic projection from the north pole maps every point on the circle
-                  to a unique real number — except the pole itself, which corresponds to
-                  a "point at infinity." Used extensively in complex analysis.
-                  <span class="uc-formula">Circle ↔ ℝ ∪ {∞}</span>
-                </div>
-              </div>
-
-              <!-- 9 -->
-              <div class="uc-card">
-                <div class="uc-card-num">§ 9</div>
-                <div class="uc-card-title">Lattice Shell View</div>
-                <div class="uc-card-body">
-                  Scaling the unit circle by integer radii produces concentric shells of
-                  integer lattice solutions to x² + y² = r². Counting such representations
-                  connects to the Gauss circle problem and Dirichlet's divisor theory —
-                  and the modular shell work here is a discrete, modular version of exactly this.
-                  <span class="uc-formula">x² + y² = r²,&ensp; r ∈ ℤ</span>
-                </div>
-              </div>
-
-              <!-- 10 -->
-              <div class="uc-card">
-                <div class="uc-card-num">§ 10</div>
-                <div class="uc-card-title">Fourier Frequency Circle</div>
-                <div class="uc-card-body">
-                  In digital signal processing the unit circle in the z-plane represents
-                  all possible frequencies. Stability, filtering, and spectral analysis all
-                  read off the circle — connecting time-domain signals to circular frequency space.
-                  <span class="uc-formula">z = e<sup>iω</sup>,&ensp; ω ∈ [0, 2π)</span>
-                </div>
-              </div>
-
-            </div><!-- /uc-grid -->
-
-            <!-- Summary table -->
-            <table class="uc-summary-table">
-              <thead>
-                <tr>
-                  <th>Geometry / System</th>
-                  <th>Shape of "Unit Circle"</th>
-                  <th>Key Equation</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr><td>Euclidean</td><td>Circle</td><td>x² + y² = 1</td></tr>
-                <tr><td>Manhattan (L¹)</td><td>Diamond</td><td>|x| + |y| = 1</td></tr>
-                <tr><td>Chebyshev (L∞)</td><td>Square</td><td>max(|x|,|y|) = 1</td></tr>
-                <tr><td>Polygon limit</td><td>Regular n-gon → circle</td><td>n → ∞</td></tr>
-                <tr><td>Complex / Fourier</td><td>Exponential rotation</td><td>z = e<sup>iθ</sup></td></tr>
-                <tr><td>Topology (mod 1)</td><td>Wrapped number line</td><td>ℝ/ℤ</td></tr>
-                <tr><td>Lattice shells</td><td>Integer rings</td><td>x² + y² = r²</td></tr>
-                <tr><td>Modular residues</td><td>Discrete Farey rings</td><td>r/m ∈ Farey(N)</td></tr>
-              </tbody>
-            </table>
-
-            <!-- Deep idea -->
-            <div class="uc-deep-idea">
-              <div class="uc-deep-label">⭐ The Deeper Idea</div>
-              A circle is fundamentally just a <em>periodic parameter</em>.
-              Any mathematical structure with the periodicity θ ~ θ + 2π
-              can be interpreted as — or placed in correspondence with — a unit circle.
-              The Farey modular residue rings explored in this tool are a discrete, arithmetic
-              instantiation of that same periodicity: the angle becomes a reduced fraction r/m,
-              the ring becomes a modular shell, and the Farey sequence organises the shells
-              in exactly the way that uniform angle spacing organises the classical circle.
-              <span class="uc-formula-center">θ ~ θ + 2π &ensp;⟺&ensp; r/m ~ r/m + 1</span>
+            <div class="theory-card">
+                <h4>&#167;1 &mdash; Roots of Unity</h4>
+                <p>Each rational r/m is placed on ring m at angle &#952; = 2&#960;r/m, corresponding to the <em>m</em>-th roots of unity</p>
+                <div class="theory-math" data-math="z_k = e^{2\pi i k/m},\quad k=0,1,\ldots,m{-}1"></div>
+                <p>These points form a regular <em>m</em>-gon on the unit circle. The full structure across all rings 1&thinsp;&le;&thinsp;m&thinsp;&le;&thinsp;N is a modular lattice on concentric circles.</p>
             </div>
 
-          </div><!-- /uc-theory-body -->
-        </div><!-- /uc-theory-panel -->
+            <div class="theory-card">
+                <h4>&#167;2 &mdash; The Unit Group</h4>
+                <p>The multiplicative units modulo m are the residues coprime to m:</p>
+                <div class="theory-math" data-math="(\mathbb{Z}/m\mathbb{Z})^	imes = \{r : \gcd(r,m)=1\}"></div>
+                <p>Their count is Euler&rsquo;s totient &#966;(m). These are the Farey fractions &mdash; the <span style="color:#4a90d9">blue points</span> in the visualiser. They define the primitive angular directions not eliminated by the divisibility structure of m.</p>
+            </div>
+
+            <div class="theory-card">
+                <h4>&#167;3 &mdash; Modular Hierarchy</h4>
+                <p>Each modulus generates a regular polygon. The primorial sequence eliminates composite directions one prime at a time:</p>
+                <div class="theory-math" data-math="6	o 30	o 210	o 2310\;\Longrightarrow\;arphi(M)/M	o 0"></div>
+                <p>What remains after each step are exactly the angular rays where primes can occur. Use the hierarchy navigator below to walk through each level interactively.</p>
+            </div>
+
+            <div class="theory-card">
+                <h4>&#167;4 &mdash; Prime Residue Rays</h4>
+                <p>All primes greater than p must lie on the unit-group rays of the primorial modulus M = 2&middot;3&middot;&hellip;&middot;p:</p>
+                <div class="theory-math" data-math="	heta_r = rac{360\,r}{M},\quad \gcd(r,M)=1"></div>
+                <p>For M=30 this gives 8 rays; for M=210, 48 rays. The <strong>gap overlay</strong> marks which pairs carry twin primes (gap=2), cousin primes (gap=4), or sexy primes (gap=6).</p>
+            </div>
+
+            <div class="theory-card">
+                <h4>&#167;5 &mdash; Twin Prime Geometry</h4>
+                <p>Twin prime candidates (p,&thinsp;p+2) correspond to residue pairs (r,&thinsp;r+2) both coprime to M. Their angular separation on ring m is:</p>
+                <div class="theory-math" data-math="\Delta	heta = rac{720}{M}"></div>
+                <p>As M grows through primorial extensions, admissible twin-prime ray pairs lift to the refined lattice. The candidate directions are preserved through sieve refinement &mdash; visible as parallel chord pairs in the gap overlay.</p>
+            </div>
+
+            <div class="theory-card">
+                <h4>&#167;6 &mdash; Farey Discrepancy &amp; RH</h4>
+                <p>By the Franel&ndash;Landau theorem, the Riemann Hypothesis is equivalent to the Farey discrepancy satisfying:</p>
+                <div class="theory-math" data-math="D_N = O\!\left(N^{-	frac{1}{2}}\log N
+ight)"></div>
+                <p>The near-uniform angular distribution visible at finite N is consistent with RH. It is not a proof &mdash; only a geometric shadow of the analytic statement.</p>
+            </div>
+
+            <div class="theory-card">
+                <h4>&#167;7 &mdash; Density &amp; Sieve Thinning</h4>
+                <p>The proportion of primitive residues mod m decays to zero by the Euler product:</p>
+                <div class="theory-math" data-math="rac{arphi(m)}{m} = \prod_{p \mid m}\!\Bigl(1 - 	frac{1}{p}\Bigr) \;\longrightarrow\; 0"></div>
+                <p>The lattice refines as m grows while allowed directions simultaneously thin &mdash; a precise quantification of prime sparsity. Averaged over all m&thinsp;&le;&thinsp;N this density converges to 6/&#960;&sup2; = 1/&#950;(2). The hierarchy navigator tracks &#966;(N)/N live.</p>
+            </div>
+
+        </div>
+
+        <!-- ══ HIERARCHY NAVIGATOR ══ -->
+        <div style="margin-top:24px;padding:16px 20px;background:rgba(0,0,0,0.3);border:1px solid rgba(196,155,56,0.2);border-radius:4px;">
+          <div style="font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;">&#9670; Modular Hierarchy &mdash; click to navigate</div>
+          <div style="display:flex;flex-wrap:wrap;align-items:center;gap:0;font-family:'Cinzel',serif;font-size:0.62rem;">
+            <button onclick="(function(){var sl=document.getElementById('f-mod');var nm=document.getElementById('f-mod-num');if(sl)sl.value=1;if(nm)nm.value=1;if(window._dotCache)window._dotCache={};if(window.fareyRedraw)fareyRedraw();})()" style="background:var(--parchment-dark);border:1px solid rgba(196,155,56,0.3);color:var(--ink-mid);padding:6px 12px;cursor:pointer;font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.06em;" title="mod 1 — degenerate point"><span style="color:var(--gold);display:block;font-size:0.7rem;">1</span><span style="color:#666;font-size:0.52rem;">point</span></button>
+            <span style="color:rgba(196,155,56,0.3);padding:0 4px;font-size:0.8rem;">&#8594;</span>
+            <button onclick="(function(){var sl=document.getElementById('f-mod');var nm=document.getElementById('f-mod-num');if(sl)sl.value=2;if(nm)nm.value=2;if(window._dotCache)window._dotCache={};if(window.fareyRedraw)fareyRedraw();})()" style="background:var(--parchment-dark);border:1px solid rgba(196,155,56,0.3);color:var(--ink-mid);padding:6px 12px;cursor:pointer;font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.06em;" title="mod 2 — line / reflection"><span style="color:var(--gold);display:block;font-size:0.7rem;">2</span><span style="color:#666;font-size:0.52rem;">line</span></button>
+            <span style="color:rgba(196,155,56,0.3);padding:0 4px;font-size:0.8rem;">&#8594;</span>
+            <button onclick="ucPreset({mod:3,stepa:1,stepb:3,colmode:'rainbow-ring',polygon:true,polyFilter:'all',polyRings:'outer',label:'fraction',labelScope:'outer',mode:'both',ringscale:'linear',spacing:100})" style="background:var(--parchment-dark);border:1px solid rgba(196,155,56,0.3);color:var(--ink-mid);padding:6px 12px;cursor:pointer;font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.06em;" title="mod 3 — triangle / Eisenstein"><span style="color:var(--gold);display:block;font-size:0.7rem;">3</span><span style="color:#666;font-size:0.52rem;">triangle</span></button>
+            <span style="color:rgba(196,155,56,0.3);padding:0 4px;font-size:0.8rem;">&#8594;</span>
+            <button onclick="ucPreset({mod:4,stepa:1,stepb:4,colmode:'rainbow-ring',polygon:true,polyFilter:'all',polyRings:'outer',label:'fraction',labelScope:'outer',mode:'both',ringscale:'linear',spacing:100})" style="background:var(--parchment-dark);border:1px solid rgba(196,155,56,0.3);color:var(--ink-mid);padding:6px 12px;cursor:pointer;font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.06em;" title="mod 4 — square / Gaussian"><span style="color:var(--gold);display:block;font-size:0.7rem;">4</span><span style="color:#666;font-size:0.52rem;">square</span></button>
+            <span style="color:rgba(196,155,56,0.3);padding:0 4px;font-size:0.8rem;">&#8594;</span>
+            <button onclick="ucPreset({mod:6,stepa:1,stepb:6,colmode:'per-residue',polygon:true,polyFilter:'gcd1',polyRings:'all',label:'none',mode:'coprime',ringscale:'linear',spacing:100})" style="background:var(--parchment-dark);border:1px solid rgba(196,155,56,0.3);color:var(--ink-mid);padding:6px 12px;cursor:pointer;font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.06em;" title="mod 6 — hexagon, 6k±1 prime rays"><span style="color:var(--gold);display:block;font-size:0.7rem;">6</span><span style="color:#666;font-size:0.52rem;">hexagon</span></button>
+            <span style="color:rgba(196,155,56,0.3);padding:0 4px;font-size:0.8rem;">&#8594;</span>
+            <button onclick="ucPreset({mod:30,stepa:1,stepb:30,colmode:'prime-composite',polygon:false,crossmod:true,label:'none',mode:'coprime',ringscale:'linear',spacing:100,gap:2,residue:1})" style="background:var(--parchment-dark);border:1px solid rgba(196,155,56,0.3);color:var(--ink-mid);padding:6px 12px;cursor:pointer;font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.06em;" title="mod 30 = 2·3·5 — 8 prime rays"><span style="color:var(--gold);display:block;font-size:0.7rem;">30</span><span style="color:#666;font-size:0.52rem;">2&#xB7;3&#xB7;5</span></button>
+            <span style="color:rgba(196,155,56,0.3);padding:0 4px;font-size:0.8rem;">&#8594;</span>
+            <button onclick="ucPreset({mod:210,stepa:1,stepb:210,colmode:'prime-composite',polygon:false,crossmod:false,label:'none',mode:'coprime',ringscale:'log',spacing:100})" style="background:var(--parchment-dark);border:1px solid rgba(196,155,56,0.3);color:var(--ink-mid);padding:6px 12px;cursor:pointer;font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.06em;" title="mod 210 = 2·3·5·7 — 48 prime rays"><span style="color:var(--gold);display:block;font-size:0.7rem;">210</span><span style="color:#666;font-size:0.52rem;">&#xB7;7</span></button>
+            <span style="color:rgba(196,155,56,0.3);padding:0 4px;font-size:0.8rem;">&#8594;</span>
+            <button onclick="ucPreset({mod:2310,stepa:1,stepb:2310,colmode:'prime-composite',polygon:false,crossmod:false,label:'none',mode:'coprime',ringscale:'log',spacing:100})" style="background:var(--parchment-dark);border:1px solid rgba(196,155,56,0.3);color:var(--ink-mid);padding:6px 12px;cursor:pointer;font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.06em;" title="mod 2310 = 2·3·5·7·11 — 480 prime rays"><span style="color:var(--gold);display:block;font-size:0.7rem;">2310</span><span style="color:#666;font-size:0.52rem;">&#xB7;11</span></button>
+            <div id="hier-phi-readout" style="margin-left:16px;padding:6px 14px;border-left:1px solid rgba(196,155,56,0.2);font-family:'Cinzel',serif;font-size:0.6rem;color:var(--ink-mid);">
+              <span style="color:#9a8060;">&#966;(N)/N =</span>
+              <span id="hier-phi-val" style="color:var(--gold);margin-left:4px;">&#8212;</span>
+            </div>
+          </div>
+          <div style="margin-top:10px;display:flex;align-items:center;gap:8px;">
+            <span style="font-family:'Cinzel',serif;font-size:0.52rem;color:#9a8060;white-space:nowrap;">&#966;(N)/N</span>
+            <div style="flex:1;height:4px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden;">
+              <div id="hier-phi-bar" style="height:100%;background:linear-gradient(90deg,var(--gold),#c94040);width:100%;transition:width 0.3s;border-radius:2px;"></div>
+            </div>
+            <span style="font-family:'Cinzel',serif;font-size:0.52rem;color:#9a8060;">0</span>
+          </div>
+        </div>
+        <!-- ══ END HIERARCHY NAVIGATOR ══ -->
+
+    </div>
+    <!-- ══ END THEORY PANEL ══ -->
+
 
     </div><!-- /intro-section -->
 
-    <!-- ══ OPEN SOURCE CHALLENGE ══ -->
-    <div class="introduction" style="margin-top:0;">
-      <div class="intro-section" style="border-top:1px solid rgba(196,155,56,0.15);">
-
-        <div style="margin-bottom:18px;">
-          <h3 style="font-family:'Cinzel',serif;font-size:1rem;letter-spacing:0.12em;color:var(--gold);margin:0 0 6px 0;">&#9670; Open Challenge: Optimise the Renderer</h3>
-          <p style="font-size:0.78rem;color:var(--ink-mid);line-height:1.7;margin:0;">
-            The visualiser above plots every rational <em>r/m</em> for all rings 1 ≤ m ≤ N on a canvas.
-            At N = 2000 that is <strong>∑<sub>m=1</sub><sup>2000</sup> (m+1) ≈ 2 million points</strong> — it lags.
-            If you are a better programmer or have ideas for a faster algorithm (WebGL, OffscreenCanvas, worker threads, Path2D batching, level-of-detail culling…) the reference code is below.
-            Fork it, improve it, share it.
-          </p>
-        </div>
-
-        <!-- Tab bar -->
-        <div style="display:flex;gap:0;border-bottom:1px solid rgba(196,155,56,0.3);margin-bottom:0;">
-          <button onclick="codeTab('js')"   id="ctab-js"   style="font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.08em;padding:5px 14px;background:var(--gold);color:#0e0b05;border:1px solid var(--gold);border-bottom:none;cursor:pointer;">JavaScript</button>
-          <button onclick="codeTab('py')"   id="ctab-py"   style="font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.08em;padding:5px 14px;background:var(--parchment-dark);color:#9a8060;border:1px solid rgba(196,155,56,0.3);border-bottom:none;cursor:pointer;">Python</button>
-          <button onclick="codeTab('info')" id="ctab-info" style="font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.08em;padding:5px 14px;background:var(--parchment-dark);color:#9a8060;border:1px solid rgba(196,155,56,0.3);border-bottom:none;cursor:pointer;">How It Works</button>
-        </div>
-
-        <!-- JS panel -->
-        <div id="cpanel-js" style="background:#0a0806;border:1px solid rgba(196,155,56,0.25);border-top:none;padding:0;">
-          <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 12px;border-bottom:1px solid rgba(196,155,56,0.12);">
-            <span style="font-family:'Cinzel',serif;font-size:0.55rem;color:#9a8060;letter-spacing:0.1em;">REFERENCE · Canvas 2D · vanilla JS · no dependencies</span>
-            <button onclick="copyCode('js')" style="font-family:'Cinzel',serif;font-size:0.52rem;padding:2px 8px;border:1px solid #9a8060;background:transparent;color:#9a8060;cursor:pointer;">Copy</button>
-          </div>
-          <pre id="ccode-js" style="margin:0;padding:16px;overflow-x:auto;font-family:'Courier New',monospace;font-size:0.68rem;line-height:1.65;color:#e8d9b0;tab-size:2;white-space:pre;"><code style="font-family:inherit;"><span style="color:#9a8060;">// ── Rational Unit Circle  ·  reference renderer ──────────────────
-// Each rational r/m is placed at angle 2π·r/m on ring radius ∝ m.
-// Blue → gcd(r,m)=1 (Farey/coprime)   Red → gcd(r,m)>1 (composite)
-//
-// BOTTLENECK: O(N²) points. For N>500 the inner loop dominates.
-// Ideas: WebGL instancing, OffscreenCanvas+Worker, Path2D batching,
-//        level-of-detail (skip inner rings when zoomed out),
-//        Stern–Brocot enumeration (coprime pairs only, O(N log N)).
-// ─────────────────────────────────────────────────────────────────</span>
-
-<span style="color:#c49b38;">function</span> <span style="color:#4ecdc4;">gcd</span>(a, b) {
-  <span style="color:#c49b38;">while</span> (b) { <span style="color:#c49b38;">let</span> t = b; b = a % b; a = t; }
-  <span style="color:#c49b38;">return</span> a;
-}
-
-<span style="color:#c49b38;">function</span> <span style="color:#4ecdc4;">drawRationalUnitCircle</span>(canvas, N) {
-  <span style="color:#c49b38;">const</span> ctx  = canvas.getContext(<span style="color:#a8e6a3;">'2d'</span>);
-  <span style="color:#c49b38;">const</span> W = canvas.width, H = canvas.height;
-  <span style="color:#c49b38;">const</span> cx = W / 2, cy = H / 2;
-  <span style="color:#c49b38;">const</span> Rmax = Math.min(cx, cy) * 0.9;
-
-  ctx.clearRect(0, 0, W, H);
-  ctx.fillStyle = <span style="color:#a8e6a3;">'#08060e'</span>;
-  ctx.fillRect(0, 0, W, H);
-
-  <span style="color:#9a8060;">// guide circles</span>
-  <span style="color:#c49b38;">for</span> (<span style="color:#c49b38;">let</span> m = 1; m &lt;= N; m++) {
-    ctx.beginPath();
-    ctx.arc(cx, cy, (m / N) * Rmax, 0, 2 * Math.PI);
-    ctx.strokeStyle = <span style="color:#a8e6a3;">'rgba(196,155,56,0.06)'</span>;
-    ctx.lineWidth = 0.4;
-    ctx.stroke();
-  }
-
-  <span style="color:#9a8060;">// ── points  O(N²) ←── optimise here ──────────────────────────</span>
-  <span style="color:#c49b38;">const</span> ptR = Math.max(1, Rmax / (N * 1.8));
-
-  <span style="color:#c49b38;">for</span> (<span style="color:#c49b38;">let</span> m = 1; m &lt;= N; m++) {
-    <span style="color:#c49b38;">const</span> ringR = (m / N) * Rmax;
-    <span style="color:#c49b38;">for</span> (<span style="color:#c49b38;">let</span> r = 0; r &lt;= m; r++) {
-      <span style="color:#c49b38;">const</span> θ = (2 * Math.PI * r) / m;
-      <span style="color:#c49b38;">const</span> x = cx + ringR * Math.cos(θ);
-      <span style="color:#c49b38;">const</span> y = cy - ringR * Math.sin(θ); <span style="color:#9a8060;">// canvas y flipped</span>
-      ctx.beginPath();
-      ctx.arc(x, y, ptR, 0, 2 * Math.PI);
-      ctx.fillStyle = gcd(r, m) === 1
-        ? <span style="color:#a8e6a3;">'rgba(74,144,217,0.85)'</span>
-        : <span style="color:#a8e6a3;">'rgba(201,64,64,0.7)'</span>;
-      ctx.fill();
-    }
-  }
-}
-
-<span style="color:#9a8060;">// ── wire up a slider ─────────────────────────────────────────────</span>
-<span style="color:#c49b38;">const</span> canvas = document.getElementById(<span style="color:#a8e6a3;">'myCanvas'</span>);
-canvas.width = canvas.height = 800;
-drawRationalUnitCircle(canvas, 60);
-
-document.getElementById(<span style="color:#a8e6a3;">'nSlider'</span>).oninput = <span style="color:#c49b38;">function</span>() {
-  drawRationalUnitCircle(canvas, +<span style="color:#c49b38;">this</span>.value);
-};
-
-<span style="color:#9a8060;">// &lt;canvas id="myCanvas"&gt;&lt;/canvas&gt;
-// &lt;input type="range" id="nSlider" min="2" max="500" value="60"&gt;</span></code></pre>
-        </div>
-
-        <!-- Python panel -->
-        <div id="cpanel-py" style="display:none;background:#0a0806;border:1px solid rgba(196,155,56,0.25);border-top:none;padding:0;">
-          <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 12px;border-bottom:1px solid rgba(196,155,56,0.12);">
-            <span style="font-family:'Cinzel',serif;font-size:0.55rem;color:#9a8060;letter-spacing:0.1em;">REFERENCE · matplotlib · Python 3 · pip install matplotlib numpy</span>
-            <button onclick="copyCode('py')" style="font-family:'Cinzel',serif;font-size:0.52rem;padding:2px 8px;border:1px solid #9a8060;background:transparent;color:#9a8060;cursor:pointer;">Copy</button>
-          </div>
-          <pre id="ccode-py" style="margin:0;padding:16px;overflow-x:auto;font-family:'Courier New',monospace;font-size:0.68rem;line-height:1.65;color:#e8d9b0;tab-size:2;white-space:pre;"><code style="font-family:inherit;"><span style="color:#9a8060;"># ── Rational Unit Circle  ·  reference renderer ──────────────────
-# pip install matplotlib numpy
-# Blue → gcd(r,m)=1   Red → gcd(r,m)>1
-# ─────────────────────────────────────────────────────────────────</span>
-
-<span style="color:#c49b38;">import</span> matplotlib.pyplot <span style="color:#c49b38;">as</span> plt
-<span style="color:#c49b38;">import</span> numpy <span style="color:#c49b38;">as</span> np
-<span style="color:#c49b38;">from</span> math <span style="color:#c49b38;">import</span> gcd
-
-<span style="color:#c49b38;">def</span> <span style="color:#4ecdc4;">rational_unit_circle</span>(N: int, figsize: int = 8):
-    fig, ax = plt.subplots(figsize=(figsize, figsize),
-                           facecolor=<span style="color:#a8e6a3;">'#08060e'</span>)
-    ax.set_facecolor(<span style="color:#a8e6a3;">'#08060e'</span>)
-    ax.set_aspect(<span style="color:#a8e6a3;">'equal'</span>)
-    ax.axis(<span style="color:#a8e6a3;">'off'</span>)
-
-    cx, cy = [], []   <span style="color:#9a8060;"># coprime</span>
-    rx, ry = [], []   <span style="color:#9a8060;"># composite</span>
-
-    <span style="color:#9a8060;"># O(N²) ←── optimise here</span>
-    <span style="color:#c49b38;">for</span> m <span style="color:#c49b38;">in</span> range(1, N + 1):
-        R = m / N
-        <span style="color:#c49b38;">for</span> r <span style="color:#c49b38;">in</span> range(0, m + 1):
-            θ = 2 * np.pi * r / m
-            x, y = R * np.cos(θ), R * np.sin(θ)
-            <span style="color:#c49b38;">if</span> gcd(r, m) == 1:
-                cx.append(x); cy.append(y)
-            <span style="color:#c49b38;">else</span>:
-                rx.append(x); ry.append(y)
-
-    pt = max(0.4, 30 / N)
-    ax.scatter(rx, ry, s=pt, c=<span style="color:#a8e6a3;">'#c94040'</span>, alpha=0.7,  linewidths=0)
-    ax.scatter(cx, cy, s=pt, c=<span style="color:#a8e6a3;">'#4a90d9'</span>, alpha=0.85, linewidths=0)
-    ax.set_title(<span style="color:#a8e6a3;">f'Rational Unit Circle  N={N}'</span>,
-                 color=<span style="color:#a8e6a3;">'#c49b38'</span>, fontsize=10, pad=10)
-    plt.tight_layout()
-    plt.show()
-
-rational_unit_circle(N=<span style="color:#e879f9;">60</span>)
-<span style="color:#9a8060;"># try N = 12, 30, 60, 210, 2310 …</span></code></pre>
-        </div>
-
-        <!-- How It Works panel -->
-        <div id="cpanel-info" style="display:none;background:#0a0806;border:1px solid rgba(196,155,56,0.25);border-top:none;padding:20px 22px;font-family:Georgia,serif;font-size:0.78rem;color:var(--ink-mid);line-height:1.8;">
-          <p style="margin:0 0 12px 0;"><strong style="color:var(--gold);">Point placement.</strong> Every rational r/m with 0 ≤ r ≤ m and 1 ≤ m ≤ N maps to polar coordinates θ = 2π·r/m, ρ = m/N. The outermost ring is m = N; the innermost is m = 1.</p>
-          <p style="margin:0 0 12px 0;"><strong style="color:var(--gold);">Colour.</strong> Blue when gcd(r, m) = 1 — a Farey fraction in lowest terms, a unit in ℤ/mℤ. Red when gcd(r, m) &gt; 1 — a reducible or composite residue.</p>
-          <p style="margin:0 0 12px 0;"><strong style="color:var(--gold);">Point count.</strong> Total points = ∑<sub>m=1</sub><sup>N</sup> (m+1) ≈ N²/2. At N=100: ~5k. At N=1000: ~500k. At N=2000: ~2 million — past what Canvas 2D can paint in one frame at interactive speed.</p>
-          <p style="margin:0 0 12px 0;"><strong style="color:var(--gold);">Where the lag is.</strong> Each point calls <code style="color:#4ecdc4;font-family:monospace;">ctx.arc()</code> + <code style="color:#4ecdc4;font-family:monospace;">ctx.fill()</code> — a separate GPU draw call. Batching all same-colour points into two <code style="color:#4ecdc4;font-family:monospace;">Path2D</code> objects reduces GPU calls from O(N²) to 2, giving a large speedup with zero architectural change. WebGL point sprites or a compute shader can push to N = 10 000+.</p>
-          <p style="margin:0 0 0 0;"><strong style="color:var(--gold);">Challenge ideas.</strong> <em>Path2D batching</em> (easiest win), <em>OffscreenCanvas + Worker</em> (non-blocking), <em>WebGL instancing</em>, <em>level-of-detail</em> (skip rings m &lt; N/k when zoomed out), <em>Stern–Brocot / Farey sequence generator</em> for coprime-only rendering in O(N log N). A interactive slider at N = 5000 at 30 fps is the benchmark to beat.</p>
-        </div>
-
-        <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
-          <a href="https://wessengetachew.github.io/Farey/" target="_blank" style="font-family:'Cinzel',serif;font-size:0.58rem;color:var(--gold);border:1px solid rgba(196,155,56,0.4);padding:4px 12px;text-decoration:none;letter-spacing:0.08em;">&#8599; Live Tool</a>
-          <span style="font-family:'Cinzel',serif;font-size:0.55rem;color:#9a8060;">Wessen Getachew · wessengetachew.github.io · 2026</span>
-        </div>
-
-      </div>
-    </div>
-    <!-- ══ END OPEN SOURCE CHALLENGE ══ -->
 
     </div><!-- /introduction -->
 
@@ -3453,6 +3319,32 @@ rational_unit_circle(N=<span style="color:#e879f9;">60</span>)
     var fracs = buildFractions(modN);
     var cop = fracs.cop.length, ncp = fracs.ncp.length, total = cop + ncp;
     var ratio = total > 0 ? (cop / total) : 0;
+
+    // ── Update hierarchy φ(N)/N readout ─────────────────────────────────────
+    (function(){
+      var phiVal = document.getElementById('hier-phi-val');
+      var phiBar = document.getElementById('hier-phi-bar');
+      if (!phiVal || !phiBar) return;
+      // Compute φ(modN)/modN via Euler product
+      var n = modN, phi = n;
+      var tmp = n;
+      for (var p = 2; p * p <= tmp; p++) {
+        if (tmp % p === 0) {
+          while (tmp % p === 0) tmp = Math.floor(tmp / p);
+          phi -= Math.floor(phi / p);
+        }
+      }
+      if (tmp > 1) phi -= Math.floor(phi / tmp);
+      var phiRatio = phi / n;
+      phiVal.textContent = phiRatio.toFixed(4);
+      // Bar width: φ(N)/N ranges from ~1 (small N) down toward 0
+      phiBar.style.width = Math.max(2, Math.round(phiRatio * 100)) + '%';
+      // Colour shifts gold→red as it thins
+      var r = Math.round(196 + (201-196)*( 1 - phiRatio));
+      var g = Math.round(155 * phiRatio);
+      var b = Math.round(56  * phiRatio);
+      phiBar.style.background = 'linear-gradient(90deg,rgb('+r+','+g+','+b+'),#c94040)';
+    })();
 
     // 1/ζ(2) = 6/π² — asymptotic density of gcd=1 pairs
     var zetaRatio = 6 / (Math.PI * Math.PI);
@@ -4243,6 +4135,8 @@ rational_unit_circle(N=<span style="color:#e879f9;">60</span>)
     var collV = document.getElementById('farey-collapsed-view');
     if (collV) collV.style.display = (!open && window._collapsedOn) ? 'block' : (open ? 'none' : 'none');
     if (open) {
+      // Preserve current angle before any mode switch
+      var _savedAngle = _combinedAngle;
       // Unlock sliders, set canvas to 2K, enable fluid mode (4K available via slider)
       var _lockEl2k = document.getElementById('f-size-x-lock');
       if (_lockEl2k && _lockEl2k.checked) { _lockEl2k.checked = false; fareyCanvasScrollLock(false); }
@@ -4261,6 +4155,9 @@ rational_unit_circle(N=<span style="color:#e879f9;">60</span>)
       var sp  = document.getElementById('f-spokes');        if (sp)  sp.checked  = false;
       var sm  = document.getElementById('f-samemod');       if (sm)  sm.checked  = false;
       var cx2 = document.getElementById('f-crossmod');      if (cx2) cx2.checked = false;
+      // Switch to gcd=1 view, restoring the angle the user had before entering Advanced
+      if (window.fareyCombinedMode) fareyCombinedMode('coprime');
+      _combinedAngle = _savedAngle;
       syncCombinedSize();
       drawCombined();
       var _advBtn = document.getElementById('f-adv-btn');
@@ -4977,15 +4874,12 @@ rational_unit_circle(N=<span style="color:#e879f9;">60</span>)
 
   window.fareyCombinedClick = function(){
     if (window._unfoldOn) {
-      // Rotate by the current cut angle (a/b x 360deg)
-      var nu = parseFloat((document.getElementById('f-unfold-num')||{value:'1'}).value)||1;
-      var de = parseFloat((document.getElementById('f-unfold-den')||{value:'2'}).value)||2;
-      if (de === 0) de = 1;
-      var stepDeg = (nu / de) * 360;
-      _combinedAngle = ((_combinedAngle + stepDeg) % 360 + 360) % 360;
+      // Circle keeps its own rotation (_combinedAngle unchanged).
+      // Rectangle counter-rotates by a fixed 90° step on each click.
+      window._unfoldRectAngle = ((window._unfoldRectAngle - 90) % 360 + 360) % 360;
       if (window.fareyDrawUnfold) window.fareyDrawUnfold();
       var lbl = document.getElementById('fc-combined-label');
-      if (lbl) lbl.textContent = 'Unfold \u00b7 click rotates ' + stepDeg.toFixed(1) + '\u00b0 (\u00b9\u2044' + de + ' turn)';
+      if (lbl) lbl.textContent = 'Unfold \u00b7 rect \u21ba \u221290\u00b0 per click';
     } else {
       _combinedAngle = (_combinedAngle + 90) % 360;
       drawCombined();
@@ -8214,6 +8108,7 @@ rational_unit_circle(N=<span style="color:#e879f9;">60</span>)
   window._unfoldInspect  = false;
   window._unfoldPtCache  = [];
   window._unfoldMorph    = 1;
+  window._unfoldRectAngle= 0;   // separate angle for rectangle, counter-rotates on click
   // Local aliases for this block
   var _unfoldOn       = false;
   var _unfoldAnimTimer= null;
@@ -8232,6 +8127,7 @@ rational_unit_circle(N=<span style="color:#e879f9;">60</span>)
     if (!_unfoldOn) {
       if (_unfoldAnimTimer) { cancelAnimationFrame(_unfoldAnimTimer); _unfoldAnimTimer = null; }
       window._unfoldCutAngle = 180; _unfoldInspect = false; window._unfoldInspect = false; window._unfoldMorph = 0;
+      window._unfoldRectAngle = 0;
       // Restore normal label
       if (canvasLbl) canvasLbl.textContent = 'Combined \u00b7 click canvas to rotate 90\u00b0';
       if (window.drawCombined) window.drawCombined();
@@ -8239,6 +8135,9 @@ rational_unit_circle(N=<span style="color:#e879f9;">60</span>)
       window._unfoldMorph = 0;
       var _vSel = document.getElementById('f-unfold-view');
       if (_vSel && _vSel.value !== 'split') _vSel.value = 'split';
+      // Default to gcd=1 only on open
+      var _gcdSel = document.getElementById('f-unfold-gcd');
+      if (_gcdSel) _gcdSel.value = 'cop';
       // Default orientation: 0/1 at top, scale flows top→bottom
       _combinedAngle = 0;
       // Cut = 360/modN on first open: first primitive step, r=1 of outermost ring
@@ -8466,7 +8365,10 @@ rational_unit_circle(N=<span style="color:#e879f9;">60</span>)
     }
     var angBase = ((cutDeg % 360) + 360) % 360;
     var angOff  = angBase * Math.PI / 180;
-    var cutAngle= angOff + Math.PI;  // cut is always at the 'left' of the rotated frame
+    var cutAngle= angOff + Math.PI;  // semicircle window centre: opposite side of cut
+    var cutDrawAngle = angOff;       // the actual cut line is at the user's angle
+    // Rectangle uses its own counter-rotating offset (set independently on click)
+    var rectAngOff = ((window._unfoldRectAngle || 0) % 360) * Math.PI / 180;
 
     ctx.clearRect(0, 0, W, H);
     ctx.fillStyle = '#06040e'; ctx.fillRect(0, 0, W, H);
@@ -8533,8 +8435,8 @@ rational_unit_circle(N=<span style="color:#e879f9;">60</span>)
         ctx.strokeStyle = m===modN ? 'rgba(255,215,0,0.35)' : 'rgba(255,255,255,0.06)';
         ctx.lineWidth   = m===modN ? 0.9 : 0.3; ctx.stroke();
       }
-      // Cut line from center to edge
-      var cx2 = ccx + rMax * Math.sin(cutAngle), cy2 = ccy - rMax * Math.cos(cutAngle);
+      // Cut line from center to edge — drawn at the user's cut angle
+      var cx2 = ccx + rMax * Math.sin(cutDrawAngle), cy2 = ccy - rMax * Math.cos(cutDrawAngle);
       ctx.beginPath(); ctx.moveTo(ccx, ccy); ctx.lineTo(cx2, cy2);
       ctx.strokeStyle = '#f97316'; ctx.lineWidth = 1.5;
       ctx.setLineDash([4,4]); ctx.stroke(); ctx.setLineDash([]);
@@ -8544,7 +8446,7 @@ rational_unit_circle(N=<span style="color:#e879f9;">60</span>)
       ctx.font = Math.max(8,W*0.011)+'px Cinzel,serif';
       ctx.fillStyle = '#f97316'; ctx.globalAlpha = 0.75;
       ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      ctx.fillText(num2+'/'+den2+' · '+cutDeg.toFixed(1)+'°', cx2 + Math.sin(cutAngle)*14, cy2 - Math.cos(cutAngle)*14);
+      ctx.fillText(num2+'/'+den2+' · '+cutDeg.toFixed(1)+'°', cx2 + Math.sin(cutDrawAngle)*14, cy2 - Math.cos(cutDrawAngle)*14);
       ctx.globalAlpha = 1;
       // Points
       var ptR = Math.max(0.8, cW*0.007*ptScale);
@@ -8588,12 +8490,13 @@ rational_unit_circle(N=<span style="color:#e879f9;">60</span>)
         }
       }
       // Points (ncp below gcd1 so gcd1 renders on top)
+      var rectCutAngle = rectAngOff + Math.PI;
       [false, true].forEach(function(showG1) {
         allPts.forEach(function(p) {
           var g1 = isGcd1(p);
           if (g1 !== showG1) return;
-          var theta = dir*2*Math.PI*p.r/p.m + angOff;
-          var dT = theta - cutAngle;
+          var theta = dir*2*Math.PI*p.r/p.m + rectAngOff;
+          var dT = theta - rectCutAngle;
           dT = ((dT+Math.PI)%(2*Math.PI)+2*Math.PI)%(2*Math.PI)-Math.PI;
           if (Math.abs(dT) > Math.PI/2) return;  // not in the unfolded semicircle
           var rx2 = rX + (p.m-1)/Math.max(modN-1,1)*rW;
@@ -9928,57 +9831,93 @@ rational_unit_circle(N=<span style="color:#e879f9;">60</span>)
 
 <footer style="margin-top:48px;padding:32px 3vw 40px;background:var(--parchment-dark);border-top:2px double var(--border);position:relative;">
   <div style="position:absolute;top:5px;left:5px;right:5px;bottom:5px;border:1px solid rgba(160,120,48,0.12);pointer-events:none;"></div>
-  <div style="text-align:center;margin-bottom:24px;">
-    <div style="font-family:'Cinzel',serif;font-size:0.62rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);margin-bottom:6px;">Other Related Work</div>
-    <div style="font-family:'Cinzel Decorative',serif;font-size:0.78rem;letter-spacing:0.12em;color:var(--ink-light);">by The Creator</div>
-    <div style="width:60px;height:1px;background:var(--border);margin:14px auto 0;"></div>
+  <div style="text-align:center;margin-bottom:20px;">
+    <div style="font-family:'Cinzel',serif;font-size:0.62rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);margin-bottom:4px;">Other Work</div>
+    <div style="font-family:'Cinzel Decorative',serif;font-size:0.72rem;letter-spacing:0.1em;color:var(--ink-light);">by The Creator</div>
+
+    <div style="width:60px;height:1px;background:var(--border);margin:12px auto 0;"></div>
   </div>
-  <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:12px 20px;max-width:680px;margin:0 auto;">
-    <a href="https://wessengetachew.github.io/G/" target="_blank" style="display:flex;flex-direction:column;align-items:center;gap:5px;padding:14px 22px;background:var(--parchment);border:1px solid var(--panel-border);text-decoration:none;min-width:110px;transition:border-color 0.2s;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--panel-border)'">
-      <span style="font-family:'Cinzel',serif;font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);">Audio</span>
-      <span style="font-family:'EB Garamond',Georgia,serif;font-size:0.72rem;color:var(--ink-light);text-align:center;">Modular Ring Sonification</span>
-    </a>
-    <a href="https://wessengetachew.github.io/Primes/" target="_blank" style="display:flex;flex-direction:column;align-items:center;gap:5px;padding:14px 22px;background:var(--parchment);border:1px solid var(--panel-border);text-decoration:none;min-width:110px;transition:border-color 0.2s;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--panel-border)'">
-      <span style="font-family:'Cinzel',serif;font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);">Modular Sieve</span>
-      <span style="font-family:'EB Garamond',Georgia,serif;font-size:0.72rem;color:var(--ink-light);text-align:center;">Prime Sieve via Euler Products</span>
-    </a>
-    <a href="https://wessengetachew.github.io/Composite/" target="_blank" style="display:flex;flex-direction:column;align-items:center;gap:5px;padding:14px 22px;background:var(--parchment);border:1px solid var(--panel-border);text-decoration:none;min-width:110px;transition:border-color 0.2s;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--panel-border)'">
-      <span style="font-family:'Cinzel',serif;font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);">Composite</span>
-      <span style="font-family:'EB Garamond',Georgia,serif;font-size:0.72rem;color:var(--ink-light);text-align:center;">Composite Residue Explorer</span>
-    </a>
-    <a href="https://wessengetachew.github.io/Transform/" target="_blank" style="display:flex;flex-direction:column;align-items:center;gap:5px;padding:14px 22px;background:var(--parchment);border:1px solid var(--panel-border);text-decoration:none;min-width:110px;transition:border-color 0.2s;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--panel-border)'">
-      <span style="font-family:'Cinzel',serif;font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);">Transform</span>
-      <span style="font-family:'EB Garamond',Georgia,serif;font-size:0.72rem;color:var(--ink-light);text-align:center;">Modular Transform Visualizer</span>
-    </a>
-    <a href="https://wessengetachew.github.io/Zeta/" target="_blank" style="display:flex;flex-direction:column;align-items:center;gap:5px;padding:14px 22px;background:var(--parchment);border:1px solid var(--panel-border);text-decoration:none;min-width:110px;transition:border-color 0.2s;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--panel-border)'">
-      <span style="font-family:'Cinzel',serif;font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);">Decomposition / Zeta²</span>
-      <span style="font-family:'EB Garamond',Georgia,serif;font-size:0.72rem;color:var(--ink-light);text-align:center;">Gap-Class ζ(2) Decomposition</span>
-    </a>
+  <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:8px 14px;max-width:860px;margin:0 auto;font-family:'Cinzel',serif;font-size:0.64rem;letter-spacing:0.06em;">
+    <a href="https://wessengetachew.github.io/Zeta/" target="_blank" style="color:#4a90d9;text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">Zeta</a>
+    <span style="color:var(--border);">·</span>
+    <a href="https://wessengetachew.github.io/PI/" target="_blank" style="color:#4a90d9;text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">PI</a>
+    <span style="color:var(--border);">·</span>
+    <a href="https://wessengetachew.github.io/Wave/" target="_blank" style="color:#4a90d9;text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">Wave</a>
+    <span style="color:var(--border);">·</span>
+    <a href="https://wessengetachew.github.io/Quant/" target="_blank" style="color:#4a90d9;text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">Quant</a>
+    <span style="color:var(--border);">·</span>
+    <a href="https://wessengetachew.github.io/G/" target="_blank" style="color:#4a90d9;text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">G</a>
+    <span style="color:var(--border);">·</span>
+    <a href="https://wessengetachew.github.io/Transform/" target="_blank" style="color:#4a90d9;text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">Transform</a>
+    <span style="color:var(--border);">·</span>
+    <a href="https://wessengetachew.github.io/GCD/" target="_blank" style="color:#4a90d9;text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">GCD</a>
+    <span style="color:var(--border);">·</span>
+    <a href="https://wessengetachew.github.io/2025/" target="_blank" style="color:#4a90d9;text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">2025</a>
+    <span style="color:var(--border);">·</span>
+    <a href="https://wessengetachew.github.io/Shell/" target="_blank" style="color:#4a90d9;text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">Shell</a>
+    <span style="color:var(--border);">·</span>
+    <a href="https://wessengetachew.github.io/D/" target="_blank" style="color:#4a90d9;text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">D</a>
+    <span style="color:var(--border);">·</span>
+    <a href="https://wessengetachew.github.io/R/" target="_blank" style="color:#4a90d9;text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">R</a>
+    <span style="color:var(--border);">·</span>
+    <a href="https://wessengetachew.github.io/Sierpi-ski/" target="_blank" style="color:#4a90d9;text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">Sierpi-ski</a>
+    <span style="color:var(--border);">·</span>
+    <a href="https://wessengetachew.github.io/Reduced/" target="_blank" style="color:#4a90d9;text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">Reduced</a>
+    <span style="color:var(--border);">·</span>
+    <a href="https://wessengetachew.github.io/Unified/" target="_blank" style="color:#4a90d9;text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">Unified</a>
+    <span style="color:var(--border);">·</span>
+    <a href="https://wessengetachew.github.io/1-2/" target="_blank" style="color:#4a90d9;text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">1-2</a>
+    <span style="color:var(--border);">·</span>
+    <a href="https://wessengetachew.github.io/Rational-/" target="_blank" style="color:#4a90d9;text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">Rational-</a>
+    <span style="color:var(--border);">·</span>
+    <a href="https://wessengetachew.github.io/Infinitemoduli/" target="_blank" style="color:#4a90d9;text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">Infinitemoduli</a>
+    <span style="color:var(--border);">·</span>
+    <a href="https://wessengetachew.github.io/finite/" target="_blank" style="color:#4a90d9;text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">finite</a>
+    <span style="color:var(--border);">·</span>
+    <a href="https://wessengetachew.github.io/Goldbach/" target="_blank" style="color:#4a90d9;text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">Goldbach</a>
+    <span style="color:var(--border);">·</span>
+    <a href="https://wessengetachew.github.io/Composite/" target="_blank" style="color:#4a90d9;text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">Composite</a>
+    <span style="color:var(--border);">·</span>
+    <a href="https://wessengetachew.github.io/Phase/" target="_blank" style="color:#4a90d9;text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">Phase</a>
+    <span style="color:var(--border);">·</span>
+    <a href="https://wessengetachew.github.io/Gemini/" target="_blank" style="color:#4a90d9;text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">Gemini</a>
+    <span style="color:var(--border);">·</span>
+    <a href="https://wessengetachew.github.io/Rebuild/" target="_blank" style="color:#4a90d9;text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">Rebuild</a>
+    <span style="color:var(--border);">·</span>
+    <a href="https://wessengetachew.github.io/Farey/" target="_blank" style="color:#4a90d9;text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">Farey</a>
+    <span style="color:var(--border);">·</span>
+    <a href="https://wessengetachew.github.io/Ethiopian/" target="_blank" style="color:#4a90d9;text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">Ethiopian</a>
+    <span style="color:var(--border);">·</span>
+    <a href="https://wessengetachew.github.io/2pir/" target="_blank" style="color:#4a90d9;text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">2pir</a>
+    <span style="color:var(--border);">·</span>
+    <a href="https://wessengetachew.github.io/6-pi-2/" target="_blank" style="color:#4a90d9;text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">6-pi-2</a>
+    <span style="color:var(--border);">·</span>
+    <a href="https://wessengetachew.github.io/Primes/" target="_blank" style="color:#4a90d9;text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">Primes</a>
   </div>
+  <div style="text-align:center;margin-top:20px;font-family:'Cinzel',serif;font-size:0.52rem;letter-spacing:0.1em;color:#9a8060;">Wessen Getachew · wessengetachew.github.io · 2026</div>
 </footer>
 
 <script>
-function codeTab(tab) {
-  ['js','py','info'].forEach(function(t) {
-    var panel = document.getElementById('cpanel-' + t);
-    var btn   = document.getElementById('ctab-' + t);
-    if (!panel || !btn) return;
-    var active = (t === tab);
-    panel.style.display   = active ? 'block' : 'none';
-    btn.style.background  = active ? 'var(--gold)' : 'var(--parchment-dark)';
-    btn.style.color       = active ? '#0e0b05'     : '#9a8060';
-    btn.style.borderColor = active ? 'var(--gold)' : 'rgba(196,155,56,0.3)';
-  });
-}
-function copyCode(tab) {
-  var el = document.getElementById('ccode-' + tab);
-  if (!el) return;
-  navigator.clipboard.writeText(el.innerText).then(function() {
-    var btn = event.target;
-    var orig = btn.textContent;
-    btn.textContent = 'Copied';
-    setTimeout(function(){ btn.textContent = orig; }, 1500);
-  });
+function toggleTheoryPanel() {
+    var bar   = document.getElementById('theory-toggle-bar');
+    var panel = document.getElementById('theory-panel');
+    if (!bar || !panel) return;
+    var open = panel.classList.toggle('open');
+    bar.classList.toggle('open', open);
+    bar.setAttribute('aria-expanded', open);
+    if (open && window.renderMathInElement) {
+        renderMathInElement(panel, {
+            delimiters: [],
+            throwOnError: false
+        });
+        panel.querySelectorAll('.theory-math[data-math]').forEach(function(el) {
+            if (el.dataset.rendered) return;
+            try {
+                katex.render(el.getAttribute('data-math'), el, { throwOnError: false, displayMode: true });
+                el.dataset.rendered = '1';
+            } catch(e) {}
+        });
+    }
 }
 </script>
 
