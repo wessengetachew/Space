@@ -2584,8 +2584,9 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
                   <input id="f-unfold-num" type="number" min="0" max="9999" value="1" title="Cut numerator a  —  cut angle = (a/b)×360°" style="width:36px;background:var(--parchment-deep);color:var(--ink);border:1px solid #f97316;padding:2px 4px;font-family:'Cinzel',serif;font-size:0.58rem;text-align:right;" oninput="fareyUnfoldApplyCut()">
                   <span style="color:#f97316;font-family:'Cinzel',serif;font-size:0.7rem;">/</span>
                   <input id="f-unfold-den" type="number" min="1" max="9999" value="2" title="Cut denominator b  —  cut angle = (a/b)×360°" style="width:36px;background:var(--parchment-deep);color:var(--ink);border:1px solid #f97316;padding:2px 4px;font-family:'Cinzel',serif;font-size:0.58rem;text-align:right;" oninput="fareyUnfoldApplyCut()">
-                  <input id="f-unfold-cut-slider" type="range" min="0" max="360" step="0.5" value="180" style="width:80px;accent-color:#f97316;" oninput="fareyUnfoldCutSlider(this.value)">
+                  <input id="f-unfold-cut-slider" type="range" min="0" max="360" step="0.5" value="180" style="width:80px;accent-color:#f97316;" oninput="fareyUnfoldCutSlider(this.value);if(window.drawCombined)drawCombined();">
                   <span id="f-unfold-deg" style="color:#f97316;min-width:48px;font-family:'Cinzel',serif;font-size:0.58rem;">180.0°</span>
+                  <button onclick="if(window._unfoldAnimTimer){cancelAnimationFrame(window._unfoldAnimTimer);window._unfoldAnimTimer=null;}if(window.drawCombined)drawCombined();" style="font-family:'Cinzel',serif;font-size:0.52rem;padding:2px 8px;border:1px solid #f97316;background:#f97316;color:#000;cursor:pointer;font-weight:bold;">&#9654; Apply</button>
                   <span style="color:rgba(160,120,48,0.4);">|</span>
                   <span style="color:#ffd700;font-size:0.52rem;">SNAP:</span>
                   <button onclick="fareyUnfoldCutSnap(30)"  style="font-family:'Cinzel',serif;font-size:0.52rem;padding:2px 6px;border:1px solid #f97316;background:var(--parchment-dark);color:#f97316;cursor:pointer;">30°</button>
@@ -4164,9 +4165,14 @@ ight)"></div>
       var sp  = document.getElementById('f-spokes');        if (sp)  sp.checked  = false;
       var sm  = document.getElementById('f-samemod');       if (sm)  sm.checked  = false;
       var cx2 = document.getElementById('f-crossmod');      if (cx2) cx2.checked = false;
-      // Switch to gcd=1 view; combined opens to current _combinedAngle unchanged
+      // Switch to gcd=1 view; combined rotates 90° CW on first open only
       if (window.fareyCombinedMode) fareyCombinedMode('coprime');
-      _combinedAngle = _savedAngle;
+      if (!window._advancedEverOpened) {
+        _combinedAngle = (_savedAngle + 90) % 360;
+        window._advancedEverOpened = true;
+      } else {
+        _combinedAngle = _savedAngle;
+      }
       syncCombinedSize();
       drawCombined();
       var _advBtn = document.getElementById('f-adv-btn');
@@ -8155,8 +8161,8 @@ ight)"></div>
       if (_gcdSel) _gcdSel.value = 'cop';
       // Default orientation: 0/1 at top, scale flows top→bottom
       _combinedAngle = 0;
-      // Cut = 360/modN on first open: first primitive step, r=1 of outermost ring
-      if (typeof fareyUnfoldSyncCut === 'function') fareyUnfoldSyncCut();
+      // Default cut = 180° (1/2 turn)
+      _unfoldSetCut(180);
       // fareyUnfoldSyncCut calls _unfoldSetCut which updates the label
       fareyDrawUnfold();
       // Auto-start animate so the unfold draws immediately on open
@@ -8192,7 +8198,9 @@ ight)"></div>
     if (canvasLbl && window._unfoldOn) {
       canvasLbl.textContent = 'Unfold \u00b7 click rotates ' + deg.toFixed(1) + '\u00b0';
     }
-    if (window._unfoldOn && window.fareyDrawUnfold) window.fareyDrawUnfold();
+    // Cancel any running morph animation so slider takes immediate effect
+    if (window._unfoldAnimTimer) { cancelAnimationFrame(window._unfoldAnimTimer); window._unfoldAnimTimer = null; }
+    if (window._unfoldOn && window.drawCombined) window.drawCombined();
   }
 
   window.fareyUnfoldCutSlider = function(val) {
