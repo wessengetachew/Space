@@ -1,4 +1,4 @@
-
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -2774,6 +2774,7 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
                       </div>
                     </div>
                     <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:6px;">
+                      <button onclick="(function(){var v=512;var xl=document.getElementById('f-size-x-lock');if(xl&&xl.checked)return;document.getElementById('f-size-x').value=v;document.getElementById('f-size-x-num').value=v;document.getElementById('f-size-y').value=v;document.getElementById('f-size-y-num').value=v;fareyResize();})()" style="font-family:'Cinzel',serif;font-size:0.56rem;padding:3px 8px;border:1px solid var(--gold);background:var(--gold);color:var(--parchment);cursor:pointer;">512</button>
                       <button onclick="(function(){var v=1000;var xl=document.getElementById('f-size-x-lock');if(xl&&xl.checked)return;document.getElementById('f-size-x').value=v;document.getElementById('f-size-x-num').value=v;document.getElementById('f-size-y').value=v;document.getElementById('f-size-y-num').value=v;fareyResize();})()" style="font-family:'Cinzel',serif;font-size:0.56rem;padding:3px 8px;border:1px solid var(--border);background:var(--parchment-dark);color:var(--gold);cursor:pointer;">1K</button>
                       <button onclick="(function(){var v=2000;var xl=document.getElementById('f-size-x-lock');if(xl&&xl.checked)return;document.getElementById('f-size-x').value=v;document.getElementById('f-size-x-num').value=v;document.getElementById('f-size-y').value=v;document.getElementById('f-size-y-num').value=v;fareyResize();})()" style="font-family:'Cinzel',serif;font-size:0.56rem;padding:3px 8px;border:1px solid var(--border);background:var(--parchment-dark);color:var(--gold);cursor:pointer;">2K</button>
                       <button onclick="(function(){var v=3000;var xl=document.getElementById('f-size-x-lock');if(xl&&xl.checked)return;document.getElementById('f-size-x').value=v;document.getElementById('f-size-x-num').value=v;document.getElementById('f-size-y').value=v;document.getElementById('f-size-y-num').value=v;fareyResize();})()" style="font-family:'Cinzel',serif;font-size:0.56rem;padding:3px 8px;border:1px solid var(--border);background:var(--parchment-dark);color:var(--gold);cursor:pointer;">3K</button>
@@ -3007,17 +3008,17 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
               <!-- Split view (two small canvases) -->
               <div id="farey-split-view" style="display:flex;justify-content:center;gap:16px;align-items:flex-start;">
                 <div style="text-align:center;flex:1;min-width:0;">
-                  <canvas id="fc-coprime" width="512" height="512" style="cursor:pointer;display:block;width:100%;max-width:512px;height:auto;aspect-ratio:1;" onclick="fareyRotate('coprime')" title="Click to rotate 90°"></canvas>
+                  <canvas id="fc-coprime" width="512" height="512" style="cursor:pointer;display:block;width:100%;height:auto;aspect-ratio:1;" onclick="fareyRotate('coprime')" title="Click to rotate 90°"></canvas>
                   <div id="fc-label1" style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:#4a90d9;margin-top:6px;">gcd(r, m) = 1</div>
                 </div>
                 <div style="text-align:center;flex:1;min-width:0;">
-                  <canvas id="fc-noncoprime" width="512" height="512" style="cursor:pointer;display:block;width:100%;max-width:512px;height:auto;aspect-ratio:1;" onclick="fareyRotate('noncoprime')" title="Click to rotate 90°"></canvas>
+                  <canvas id="fc-noncoprime" width="512" height="512" style="cursor:pointer;display:block;width:100%;height:auto;aspect-ratio:1;" onclick="fareyRotate('noncoprime')" title="Click to rotate 90°"></canvas>
                   <div id="fc-label2" style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:#c94040;margin-top:6px;">gcd(r, m) &gt; 1</div>
                 </div>
               </div>
               <!-- Collapsed unit circle single view -->
               <div id="farey-collapsed-view" style="display:none;text-align:center;">
-                <canvas id="fc-collapsed" width="512" height="512" style="cursor:pointer;display:block;width:100%;max-width:512px;height:auto;aspect-ratio:1;margin:0 auto;" onclick="fareyRotate('coprime')" title="Click to rotate 90°"></canvas>
+                <canvas id="fc-collapsed" width="512" height="512" style="cursor:pointer;display:block;width:100%;height:auto;aspect-ratio:1;margin:0 auto;" onclick="fareyRotate('coprime')" title="Click to rotate 90°"></canvas>
                 <div style="display:flex;justify-content:center;gap:8px;margin-top:8px;">
                   <button onclick="fareyCollapsedMode('both')"       id="fcc-both"       style="font-family:'Cinzel',serif;font-size:0.56rem;letter-spacing:0.08em;text-transform:uppercase;padding:3px 10px;border:1px solid var(--gold);background:var(--gold);color:var(--parchment);cursor:pointer;">All</button>
                   <button onclick="fareyCollapsedMode('coprime')"    id="fcc-coprime"    style="font-family:'Cinzel',serif;font-size:0.56rem;letter-spacing:0.08em;text-transform:uppercase;padding:3px 10px;border:1px solid #4a90d9;background:var(--parchment-dark);color:#4a90d9;cursor:pointer;">gcd=1</button>
@@ -3054,13 +3055,13 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
                 <!-- Global decimal precision control -->
                 <div style="display:flex;align-items:center;gap:6px;padding:4px 10px;margin-bottom:4px;background:var(--parchment-dark);border:1px solid var(--panel-border);border-radius:4px;">
                   <span style="font-family:'Cinzel',serif;font-size:0.55rem;letter-spacing:0.08em;text-transform:uppercase;color:#9a8060;">Decimal Places</span>
-                  <input id="g-decimal-places" type="range" min="2" max="12" value="6" style="width:80px;accent-color:var(--gold);" oninput="document.getElementById('g-decimal-places-val').textContent=this.value;fareyUpdateLiveStats();">
+                  <input id="g-decimal-places" type="range" min="2" max="12" value="6" style="width:80px;accent-color:var(--gold);" oninput="document.getElementById('g-decimal-places-val').textContent=this.value;if(typeof fareyUpdateLiveStats==='function')fareyUpdateLiveStats();">
                   <span id="g-decimal-places-val" style="font-family:'Cinzel',serif;font-size:0.58rem;color:var(--gold);min-width:16px;">6</span>
                   <span style="color:rgba(160,120,48,0.4);">|</span>
-                  <button onclick="document.getElementById('g-decimal-places').value=2;document.getElementById('g-decimal-places-val').textContent=2;fareyUpdateLiveStats();" style="font-family:'Cinzel',serif;font-size:0.5rem;padding:1px 5px;border:1px solid var(--border);background:var(--parchment-deep);color:var(--gold);cursor:pointer;">2</button>
-                  <button onclick="document.getElementById('g-decimal-places').value=6;document.getElementById('g-decimal-places-val').textContent=6;fareyUpdateLiveStats();" style="font-family:'Cinzel',serif;font-size:0.5rem;padding:1px 5px;border:1px solid var(--border);background:var(--parchment-deep);color:var(--gold);cursor:pointer;">6</button>
-                  <button onclick="document.getElementById('g-decimal-places').value=10;document.getElementById('g-decimal-places-val').textContent=10;fareyUpdateLiveStats();" style="font-family:'Cinzel',serif;font-size:0.5rem;padding:1px 5px;border:1px solid var(--border);background:var(--parchment-deep);color:var(--gold);cursor:pointer;">10</button>
-                  <button onclick="document.getElementById('g-decimal-places').value=12;document.getElementById('g-decimal-places-val').textContent=12;fareyUpdateLiveStats();" style="font-family:'Cinzel',serif;font-size:0.5rem;padding:1px 5px;border:1px solid var(--border);background:var(--parchment-deep);color:var(--gold);cursor:pointer;">12</button>
+                  <button onclick="document.getElementById('g-decimal-places').value=2;document.getElementById('g-decimal-places-val').textContent=2;if(typeof fareyUpdateLiveStats==='function')fareyUpdateLiveStats();" style="font-family:'Cinzel',serif;font-size:0.5rem;padding:1px 5px;border:1px solid var(--border);background:var(--parchment-deep);color:var(--gold);cursor:pointer;">2</button>
+                  <button onclick="document.getElementById('g-decimal-places').value=6;document.getElementById('g-decimal-places-val').textContent=6;if(typeof fareyUpdateLiveStats==='function')fareyUpdateLiveStats();" style="font-family:'Cinzel',serif;font-size:0.5rem;padding:1px 5px;border:1px solid var(--border);background:var(--parchment-deep);color:var(--gold);cursor:pointer;">6</button>
+                  <button onclick="document.getElementById('g-decimal-places').value=10;document.getElementById('g-decimal-places-val').textContent=10;if(typeof fareyUpdateLiveStats==='function')fareyUpdateLiveStats();" style="font-family:'Cinzel',serif;font-size:0.5rem;padding:1px 5px;border:1px solid var(--border);background:var(--parchment-deep);color:var(--gold);cursor:pointer;">10</button>
+                  <button onclick="document.getElementById('g-decimal-places').value=12;document.getElementById('g-decimal-places-val').textContent=12;if(typeof fareyUpdateLiveStats==='function')fareyUpdateLiveStats();" style="font-family:'Cinzel',serif;font-size:0.5rem;padding:1px 5px;border:1px solid var(--border);background:var(--parchment-deep);color:var(--gold);cursor:pointer;">12</button>
                 </div>
 
                 <!-- Farey Stats dropdown -->
