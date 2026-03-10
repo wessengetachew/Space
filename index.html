@@ -2505,16 +2505,31 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
               <div id="farey-canvas-wrap" style="display:none;">
               <!-- Combined view -->
               <div id="farey-combined-view" style="display:none;text-align:center;width:100%;">
-                <div style="position:relative;display:block;width:100%;">
-                  <canvas id="fc-combined" width="800" height="800" style="cursor:crosshair;display:block;width:100%;height:auto;margin-bottom:12px;" title="Click a point to inspect it"></canvas>
+                <!-- Single canvas (default) -->
+                <div id="fc-single-wrap" style="position:relative;display:block;width:100%;">
+                  <canvas id="fc-combined" width="800" height="800" style="cursor:crosshair;display:block;width:100%;height:auto;margin-bottom:12px;" title="Click a point to inspect it" onclick="if(window.fareyCombinedClick)window.fareyCombinedClick()"></canvas>
                   <div id="farey-tooltip" style="display:none;position:absolute;pointer-events:none;background:#0e0b05;border:1px solid #c49b38;padding:10px 14px;font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.06em;line-height:1.8;color:#e8d9b0;min-width:160px;z-index:10;box-shadow:0 4px 20px rgba(0,0,0,0.7);"></div>
+                </div>
+                <!-- Split view: two independent canvases side by side -->
+                <div id="fc-split-wrap" style="display:none;width:100%;gap:8px;align-items:flex-start;">
+                  <div style="flex:1;min-width:0;text-align:center;">
+                    <canvas id="fc-split-cop" width="800" height="800" style="display:block;width:100%;height:auto;cursor:crosshair;" onclick="if(window.fareyCombinedClick)window.fareyCombinedClick()"></canvas>
+                    <div style="font-family:'Cinzel',serif;font-size:0.55rem;letter-spacing:0.1em;text-transform:uppercase;color:#4a90d9;margin-top:4px;">gcd(r, m) = 1</div>
+                  </div>
+                  <div style="width:1px;background:rgba(196,155,56,0.25);align-self:stretch;margin:0 4px;"></div>
+                  <div style="flex:1;min-width:0;text-align:center;">
+                    <canvas id="fc-split-ncp" width="800" height="800" style="display:block;width:100%;height:auto;cursor:crosshair;" onclick="if(window.fareyCombinedClick)window.fareyCombinedClick()"></canvas>
+                    <div style="font-family:'Cinzel',serif;font-size:0.55rem;letter-spacing:0.1em;text-transform:uppercase;color:#c94040;margin-top:4px;">gcd(r, m) &gt; 1</div>
+                  </div>
                 </div>
 
                 <!-- Canvas mode buttons -->
                 <div style="margin-top:8px;display:flex;justify-content:center;gap:6px;align-items:center;flex-wrap:wrap;">
-                  <button onclick="fareyCombinedMode('both')"       id="fcm-both"       style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.08em;text-transform:uppercase;padding:4px 12px;border:1px solid var(--border);background:var(--gold);color:var(--parchment);cursor:pointer;">Combined</button>
-                  <button onclick="fareyCombinedMode('coprime')"    id="fcm-coprime"    style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.08em;text-transform:uppercase;padding:4px 12px;border:1px solid #4a90d9;background:var(--parchment-dark);color:#4a90d9;cursor:pointer;">gcd=1</button>
-                  <button onclick="fareyCombinedMode('noncoprime')" id="fcm-noncoprime" style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.08em;text-transform:uppercase;padding:4px 12px;border:1px solid #c94040;background:var(--parchment-dark);color:#c94040;cursor:pointer;">gcd&gt;1</button>
+                  <button onclick="if(window.fareyAdvSplit)window.fareyAdvSplit()"   id="fcm-split"     style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.08em;text-transform:uppercase;padding:4px 12px;border:1px solid #34d399;background:var(--parchment-dark);color:#34d399;cursor:pointer;">&#9616;&#9612; Split</button>
+                  <button onclick="if(window.fareySnapHalf)window.fareySnapHalf()"   id="fcm-snap-half" style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.08em;text-transform:uppercase;padding:4px 12px;border:1px solid #a855f7;background:var(--parchment-dark);color:#a855f7;cursor:pointer;">&#189; Snap</button>
+                  <button onclick="if(window.fareyCombinedMode)window.fareyCombinedMode('both')"       id="fcm-both"      style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.08em;text-transform:uppercase;padding:4px 12px;border:1px solid var(--border);background:var(--gold);color:var(--parchment);cursor:pointer;">Combined</button>
+                  <button onclick="if(window.fareyCombinedMode)window.fareyCombinedMode('coprime')"    id="fcm-coprime"   style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.08em;text-transform:uppercase;padding:4px 12px;border:1px solid #4a90d9;background:var(--parchment-dark);color:#4a90d9;cursor:pointer;">gcd=1</button>
+                  <button onclick="if(window.fareyCombinedMode)window.fareyCombinedMode('noncoprime')" id="fcm-noncoprime" style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.08em;text-transform:uppercase;padding:4px 12px;border:1px solid #c94040;background:var(--parchment-dark);color:#c94040;cursor:pointer;">gcd&gt;1</button>
                   <span style="color:var(--border);">|</span>
                   <button id="fcm-ar-out"    onclick="fareyToggleAutoRotate('out')" style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.08em;text-transform:uppercase;padding:4px 10px;border:1px solid var(--border);background:var(--parchment-dark);color:var(--ink-mid);cursor:pointer;">&#8635; Out→In</button>
                   <button id="fcm-autorotate" onclick="fareyToggleAutoRotate()"     style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.08em;text-transform:uppercase;padding:4px 10px;border:1px solid var(--border);background:var(--parchment-dark);color:var(--ink-mid);cursor:pointer;">&#9654; Rotate</button>
@@ -3272,50 +3287,49 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
             <div class="theory-card">
                 <h4>&#167;2 &mdash; The Unit Group</h4>
                 <p>The multiplicative units modulo m are the residues coprime to m:</p>
-                <div class="theory-math" data-math="(\mathbb{Z}/m\mathbb{Z})^	imes = \{r : \gcd(r,m)=1\}"></div>
+                <div class="theory-math" data-math="(\mathbb{Z}/m\mathbb{Z})^\times = \{r : \gcd(r,m)=1\}"></div>
                 <p>Their count is Euler&rsquo;s totient &#966;(m). These are the Farey fractions &mdash; the <span style="color:#4a90d9">blue points</span> in the visualiser. They define the primitive angular directions not eliminated by the divisibility structure of m.</p>
             </div>
 
             <div class="theory-card">
                 <h4>&#167;3 &mdash; Modular Hierarchy</h4>
                 <p>Each modulus generates a regular polygon. The primorial sequence eliminates composite directions one prime at a time:</p>
-                <div class="theory-math" data-math="6	o 30	o 210	o 2310\;\Longrightarrow\;arphi(M)/M	o 0"></div>
+                <div class="theory-math" data-math="6\to 30\to 210\to 2310\;\Longrightarrow\;\varphi(M)/M\to 0"></div>
                 <p>What remains after each step are exactly the angular rays where primes can occur. Use the hierarchy navigator below to walk through each level interactively.</p>
             </div>
 
             <div class="theory-card">
                 <h4>&#167;4 &mdash; Prime Residue Rays</h4>
                 <p>All primes greater than p must lie on the unit-group rays of the primorial modulus M = 2&middot;3&middot;&hellip;&middot;p:</p>
-                <div class="theory-math" data-math="	heta_r = rac{360\,r}{M},\quad \gcd(r,M)=1"></div>
+                <div class="theory-math" data-math="\theta_r = \frac{360\,r}{M},\quad \gcd(r,M)=1"></div>
                 <p>For M=30 this gives 8 rays; for M=210, 48 rays. The <strong>gap overlay</strong> marks which pairs carry twin primes (gap=2), cousin primes (gap=4), or sexy primes (gap=6).</p>
             </div>
 
             <div class="theory-card">
                 <h4>&#167;5 &mdash; Twin Prime Geometry</h4>
                 <p>Twin prime candidates (p,&thinsp;p+2) correspond to residue pairs (r,&thinsp;r+2) both coprime to M. Their angular separation on ring m is:</p>
-                <div class="theory-math" data-math="\Delta	heta = rac{720}{M}"></div>
+                <div class="theory-math" data-math="\Delta\theta = \frac{720}{M}"></div>
                 <p>As M grows through primorial extensions, admissible twin-prime ray pairs lift to the refined lattice. The candidate directions are preserved through sieve refinement &mdash; visible as parallel chord pairs in the gap overlay.</p>
             </div>
 
             <div class="theory-card">
                 <h4>&#167;6 &mdash; Farey Discrepancy &amp; RH</h4>
                 <p>By the Franel&ndash;Landau theorem, the Riemann Hypothesis is equivalent to the Farey discrepancy satisfying:</p>
-                <div class="theory-math" data-math="D_N = O\!\left(N^{-	frac{1}{2}}\log N
-ight)"></div>
+                <div class="theory-math" data-math="D_N = O\!\left(N^{-\tfrac{1}{2}}\log N\right)"></div>
                 <p>The near-uniform angular distribution visible at finite N is consistent with RH. It is not a proof &mdash; only a geometric shadow of the analytic statement.</p>
             </div>
 
             <div class="theory-card">
                 <h4>&#167;7 &mdash; Density &amp; Sieve Thinning</h4>
                 <p>The proportion of primitive residues mod m decays to zero by the Euler product:</p>
-                <div class="theory-math" data-math="rac{arphi(m)}{m} = \prod_{p \mid m}\!\Bigl(1 - 	frac{1}{p}\Bigr) \;\longrightarrow\; 0"></div>
+                <div class="theory-math" data-math="\frac{\varphi(m)}{m} = \prod_{p \mid m}\!\Bigl(1 - \tfrac{1}{p}\Bigr) \;\longrightarrow\; 0"></div>
                 <p>The lattice refines as m grows while allowed directions simultaneously thin &mdash; a precise quantification of prime sparsity. Averaged over all m&thinsp;&le;&thinsp;N this density converges to 6/&#960;&sup2; = 1/&#950;(2). The hierarchy navigator tracks &#966;(N)/N live.</p>
             </div>
             <div class="theory-card">
                 <h4>&#167;8 &mdash; Laurent Annuli &amp; Partial Fractions</h4>
                 <p>The ring structure is the discrete skeleton of a Laurent series. For a rational function with poles at coprime prime residues r&#8321;,r&#8322;,&#8230; mod N, the complex plane splits into annular convergence regions &mdash; one per gap between consecutive pole radii.</p>
                 <p><span style="color:#4a90d9;">gcd(r,m)=1 points</span> are <em>independent</em> Laurent terms: irreducible partial fractions that generate new series coefficients. <span style="color:#c94040;">gcd(r,m)&gt;1 points</span> are <em>reducible</em> &mdash; they collapse to lower-denominator rings, contributing no new terms, exactly as reducible fractions cancel in partial fraction decomposition. The 6/&pi;&sup2; coprime density is therefore also the fraction of <em>independent</em> Laurent basis elements across all rings.</p>
-                <div class="theory-math" data-math="f(z)=\sum_k rac{A_k}{z-r_k},\quad r_k = p_k mod N,\quad \gcd(r_k,N)=1"></div>
+                <div class="theory-math" data-math="f(z)=\sum_k \frac{A_k}{z-r_k},\quad r_k = p_k \bmod N,\quad \gcd(r_k,N)=1"></div>
                 <p>The N-body panel uses these same r&#8342; as orbit positions &mdash; bodies in the annular band between poles. Use the explorer below to see the decomposition live as you change N.</p>
                 <!-- Live Laurent explorer -->
                 <div id="laurent-explorer" style="margin-top:10px;background:rgba(0,0,0,0.35);border:1px solid rgba(196,155,56,0.25);border-radius:4px;padding:10px 12px;">
@@ -3481,7 +3495,8 @@ ight)"></div>
       }
     }
     if(document.getElementById('farey-combined-view').style.display!=='none'){
-      syncCombinedSize(); drawCombined();
+      if(window._advSplitOn){ window.fareyAdvSplitDraw && window.fareyAdvSplitDraw(); }
+      else { syncCombinedSize(); drawCombined(); }
     } else {
       drawFarey('coprime'); drawFarey('noncoprime');
     }
@@ -4362,8 +4377,8 @@ ight)"></div>
       var sp  = document.getElementById('f-spokes');        if (sp)  sp.checked  = false;
       var sm  = document.getElementById('f-samemod');       if (sm)  sm.checked  = false;
       var cx2 = document.getElementById('f-crossmod');      if (cx2) cx2.checked = false;
-      // Switch to gcd=1 view; combined rotates 90° CW on first open only
-      if (window.fareyCombinedMode) fareyCombinedMode('coprime');
+      // Switch to split view on open
+      if (window.fareyAdvSplit) { fareyAdvSplit(); } else if (window.fareyCombinedMode) { fareyCombinedMode('coprime'); }
       if (!window._advancedEverOpened) {
         _combinedAngle = (_savedAngle + 90) % 360;
         window._advancedEverOpened = true;
@@ -4371,7 +4386,7 @@ ight)"></div>
         _combinedAngle = _savedAngle;
       }
       syncCombinedSize();
-      drawCombined();
+      if (window._advSplitOn) { window.fareyAdvSplitDraw && window.fareyAdvSplitDraw(); } else { drawCombined(); }
       var _advBtn = document.getElementById('f-adv-btn');
       if (_advBtn) _advBtn.innerHTML = '&#9650; Close';
     } else {
@@ -5084,14 +5099,91 @@ ight)"></div>
     if (typeof window.fareyRedraw === 'function') { window.fareyRedraw(); } else { drawCombined(); }
   };
 
+  // ── Split / Snap helpers ──────────────────────────────────────────────────
+  var _advSplitOn = false;
+  Object.defineProperty(window, '_advSplitOn', { get: function(){ return _advSplitOn; }, set: function(v){ _advSplitOn=v; } });
+
+  function _setAdvBtn(active) {
+    var defs = { split:'#34d399', 'snap-half':'#a855f7', both:'var(--gold)', coprime:'#4a90d9', noncoprime:'#c94040' };
+    Object.keys(defs).forEach(function(k){
+      var b=document.getElementById('fcm-'+k); if(!b) return;
+      var on=(k===active);
+      b.style.background = on ? defs[k] : 'var(--parchment-dark)';
+      b.style.color       = on ? (k==='both'?'var(--parchment)':'var(--parchment)') : defs[k];
+    });
+  }
+
+  function _showSplit(on) {
+    var sw=document.getElementById('fc-split-wrap'), sg=document.getElementById('fc-single-wrap');
+    if(sw) sw.style.display = on ? 'flex' : 'none';
+    if(sg) sg.style.display = on ? 'none' : 'block';
+  }
+
+  window.fareyAdvSplit = function(){
+    _advSplitOn = true;
+    _showSplit(true);
+    _setAdvBtn('split');
+    window.fareyAdvSplitDraw();
+  };
+
+  window.fareyAdvSplitDraw = function(){
+    if(!_advSplitOn) return;
+    var copC=document.getElementById('fc-split-cop');
+    var ncpC=document.getElementById('fc-split-ncp');
+    if(!copC||!ncpC) return;
+    // Size both to match fc-combined resolution
+    var ref=document.getElementById('fc-combined');
+    if(ref){ copC.width=ref.width; copC.height=ref.height; ncpC.width=ref.width; ncpC.height=ref.height; }
+    var saved=_combinedMode;
+    _combinedMode='coprime';    drawCombined(copC);
+    _combinedMode='noncoprime'; drawCombined(ncpC);
+    _combinedMode=saved;
+  };
+
+  // ½ Snap: draw combined canvas split at 1/2 via unfold cut=180 into single fc-combined
+  window.fareySnapHalf = function(){
+    _advSplitOn = false;
+    _showSplit(false);
+    _setAdvBtn('snap-half');
+    // Force unfold-style: draw gcd=1 on left semicircle, gcd>1 on right of fc-combined
+    var C=document.getElementById('fc-combined'); if(!C) return;
+    var W=C.width, H=C.height, ctx=C.getContext('2d');
+    var offL=document.createElement('canvas'); offL.width=W; offL.height=H;
+    var offR=document.createElement('canvas'); offR.width=W; offR.height=H;
+    var saved=_combinedMode;
+    _combinedMode='coprime';    drawCombined(offL);
+    _combinedMode='noncoprime'; drawCombined(offR);
+    _combinedMode=saved;
+    ctx.clearRect(0,0,W,H);
+    // Left half from cop canvas, right half from ncp canvas — clip at center
+    ctx.save(); ctx.beginPath(); ctx.rect(0,0,W/2,H); ctx.clip(); ctx.drawImage(offL,0,0); ctx.restore();
+    ctx.save(); ctx.beginPath(); ctx.rect(W/2,0,W/2,H); ctx.clip(); ctx.drawImage(offR,0,0); ctx.restore();
+    // Center divider
+    ctx.strokeStyle='rgba(196,155,56,0.5)'; ctx.lineWidth=1.5; ctx.setLineDash([5,4]);
+    ctx.beginPath(); ctx.moveTo(W/2,0); ctx.lineTo(W/2,H); ctx.stroke(); ctx.setLineDash([]);
+    // Labels
+    ctx.font='bold 11px Cinzel,serif'; ctx.textBaseline='top'; ctx.textAlign='center';
+    ctx.fillStyle='rgba(74,144,217,0.9)';  ctx.fillText('gcd = 1', W*0.25, 10);
+    ctx.fillStyle='rgba(201,64,64,0.9)';   ctx.fillText('gcd > 1', W*0.75, 10);
+  };
+
+  // Patch fareyCombinedMode to exit split view and return to single canvas
+  var _origFCM = window.fareyCombinedMode;
+  window.fareyCombinedMode = function(mode){
+    _advSplitOn = false;
+    _showSplit(false);
+    _setAdvBtn(mode==='both'?'both':mode==='coprime'?'coprime':'noncoprime');
+    if(_origFCM) _origFCM(mode); else { _combinedMode=mode; drawCombined(); }
+  };
+
   window.fareyCombinedClick = function(){
+    if (_inspectMode) return;  // inspect mode: clicks select points, not rotate
     if (window._unfoldOn) {
       var nu = parseFloat((document.getElementById('f-unfold-num')||{value:'1'}).value)||1;
       var de = parseFloat((document.getElementById('f-unfold-den')||{value:'2'}).value)||2;
       if (de === 0) de = 1;
       var stepDeg = (nu / de) * 360;
       if (stepDeg < 1 || stepDeg > 359) stepDeg = 90;
-      // Circle: clockwise (+step), Rect: counter-clockwise (-step, independent offset)
       _combinedAngle = (_combinedAngle + stepDeg) % 360;
       window._unfoldRectAngle = ((window._unfoldRectAngle - stepDeg * 2) % 360 + 360) % 360;
       drawCombined();
@@ -5099,7 +5191,8 @@ ight)"></div>
       if (lbl) lbl.textContent = 'Unfold \u00b7 circle \u21bb rect \u21ba +' + stepDeg.toFixed(1) + '\u00b0';
     } else {
       _combinedAngle = (_combinedAngle + 90) % 360;
-      drawCombined();
+      if (window._advSplitOn) { window.fareyAdvSplitDraw && window.fareyAdvSplitDraw(); }
+      else { drawCombined(); }
     }
     highlightNavLink();
   };
@@ -6371,28 +6464,109 @@ ight)"></div>
   }
 
   window.fareyComposite = function(){
-    var modN = parseInt(document.getElementById('f-mod-num').value)||49;
-    var col1 = document.getElementById('f-col1').value;
-    var col2 = document.getElementById('f-col2').value;
-    var pt   = _activeTooltipPt;
-    // Use the live canvas — it already has the current drawing at full resolution
-    var live = document.getElementById('fc-combined');
+    var modN  = parseInt(document.getElementById('f-mod-num').value)||49;
+    var col1  = document.getElementById('f-col1').value;
+    var col2  = document.getElementById('f-col2').value;
+    var pt    = _activeTooltipPt;
+    var live  = document.getElementById('fc-combined');
     if (!live) return;
-    var diagSize = live.width, diagH = live.height;
-    var PAD=16, FOOT=18;
-    var DETAIL_W = pt ? 220 : 0, DETAIL_PAD = pt ? 16 : 0;
-    var W = PAD + diagSize + DETAIL_PAD + DETAIL_W + PAD;
-    var H = PAD + diagH + FOOT + PAD;
-    var off = document.createElement('canvas'); off.width=W; off.height=H;
-    var ctx = off.getContext('2d');
-    ctx.fillStyle = window.canvasBg ? window.canvasBg() : '#0e0b05';
-    ctx.fillRect(0,0,W,H);
-    ctx.drawImage(live, PAD, PAD, diagSize, diagH);
+
+    var BG    = '#0e0b05';
+    var PAD   = 24;
+    var TITLE_H = 52;   // top header zone
+    var FOOT  = 22;
+    var DETAIL_W  = pt ? 220 : 0;
+    var DETAIL_PAD= pt ? 16  : 0;
+
+    // ── Collect parameter subtitle string ─────────────────────────────────
+    var colmode = (document.getElementById('f-colmode')||{value:''}).value;
+    var spacing = (document.getElementById('f-spacing')||{value:'100'}).value;
+    var ptsize  = (document.getElementById('f-ptsize')||{value:'100'}).value;
+    var rscale  = (document.getElementById('f-ring-scale')||{value:'linear'}).value;
+    var fracs   = buildFractions(modN);
+    var copCount= fracs ? fracs.cop : '?';
+    var subtitle= 'N=' + modN
+      + '  ·  φ(N)=' + copCount
+      + '  ·  color=' + colmode
+      + '  ·  ring=' + rscale
+      + '  ·  spacing=' + spacing + '%'
+      + '  ·  pt=' + ptsize + '%';
+    if (_combinedMode !== 'both') subtitle += '  ·  mode=' + _combinedMode;
+    if (window._advSplitOn) subtitle += '  ·  SPLIT';
+
+    // ── Build canvas ───────────────────────────────────────────────────────
+    var diagW, diagH, off, ctx, W, H;
+
+    if (window._advSplitOn) {
+      // Use the live split canvases directly
+      var offL = document.getElementById('fc-split-cop') || document.createElement('canvas');
+      var offR = document.getElementById('fc-split-ncp') || document.createElement('canvas');
+      var SZ = offL.width || live.width;
+
+      var GAP = 12;
+      W = PAD + SZ + GAP + SZ + DETAIL_PAD + DETAIL_W + PAD;
+      H = TITLE_H + SZ + FOOT + PAD;
+      off = document.createElement('canvas'); off.width=W; off.height=H;
+      ctx = off.getContext('2d');
+      ctx.fillStyle=BG; ctx.fillRect(0,0,W,H);
+
+      // Draw canvases
+      ctx.drawImage(offL, PAD,              TITLE_H, SZ, SZ);
+      ctx.drawImage(offR, PAD + SZ + GAP,  TITLE_H, SZ, SZ);
+
+      // Side labels
+      ctx.font='bold 11px Cinzel,serif'; ctx.textAlign='center'; ctx.textBaseline='top';
+      ctx.fillStyle='rgba(74,144,217,0.9)';
+      ctx.fillText('gcd(r, m) = 1', PAD + SZ/2, TITLE_H + 8);
+      ctx.fillStyle='rgba(201,64,64,0.9)';
+      ctx.fillText('gcd(r, m) > 1', PAD + SZ + GAP + SZ/2, TITLE_H + 8);
+
+      // Divider
+      ctx.strokeStyle='rgba(196,155,56,0.25)'; ctx.lineWidth=1; ctx.setLineDash([4,4]);
+      ctx.beginPath(); ctx.moveTo(PAD+SZ+GAP/2, TITLE_H); ctx.lineTo(PAD+SZ+GAP/2, TITLE_H+SZ); ctx.stroke();
+      ctx.setLineDash([]);
+
+      if (pt) drawDetailPanel(ctx, pt, W-PAD-DETAIL_W, TITLE_H, DETAIL_W, SZ, col1, col2, modN);
+
+      // Footer
+      ctx.font='9px Cinzel,serif'; ctx.fillStyle='#9a8060'; ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillText('mod 1…'+modN+'  ·  gcd=1 | gcd>1 split', W/2, TITLE_H+SZ+FOOT/2+4);
+
+    } else {
+      // Single canvas
+      diagW = live.width; diagH = live.height;
+      W = PAD + diagW + DETAIL_PAD + DETAIL_W + PAD;
+      H = TITLE_H + diagH + FOOT + PAD;
+      off = document.createElement('canvas'); off.width=W; off.height=H;
+      ctx = off.getContext('2d');
+      ctx.fillStyle=BG; ctx.fillRect(0,0,W,H);
+      ctx.drawImage(live, PAD, TITLE_H, diagW, diagH);
+      if (pt) drawDetailPanel(ctx, pt, W-PAD-DETAIL_W, TITLE_H, DETAIL_W, diagH, col1, col2, modN);
+      // Footer
+      ctx.font='9px Cinzel,serif'; ctx.fillStyle='#9a8060'; ctx.textAlign='center'; ctx.textBaseline='middle';
+      var modeLabel = _combinedMode==='coprime'?'gcd=1 only':_combinedMode==='noncoprime'?'gcd>1 only':'combined';
+      ctx.fillText('mod 1…'+modN+'  ·  '+modeLabel, PAD+diagW/2, TITLE_H+diagH+FOOT/2+4);
+    }
+
+    // ── Title block (top of every export) ─────────────────────────────────
+    // Title
     ctx.textAlign='center'; ctx.textBaseline='middle';
-    ctx.font='9px "Cinzel",Georgia,serif'; ctx.fillStyle='#9a8060';
-    ctx.fillText('mod 1…'+modN, PAD+diagSize/2, PAD+diagH+FOOT/2+2);
-    if (pt) drawDetailPanel(ctx, pt, W-PAD-DETAIL_W, PAD, DETAIL_W, diagH, col1, col2, modN);
-    _dl(off, 'farey_mod'+modN+(pt?'_r'+pt.r+'_m'+pt.m:'')+'_composite.png');
+    ctx.font='bold 16px Cinzel,serif';
+    ctx.fillStyle='#c49b38';
+    ctx.fillText('Rational Unit Circle Structure  —  Farey Modular Residue Rings', W/2, 16);
+    // Subtitle: parameters
+    ctx.font='10px Cinzel,serif'; ctx.fillStyle='#9a8060';
+    ctx.fillText(subtitle, W/2, 34);
+    // Thin rule
+    ctx.strokeStyle='rgba(196,155,56,0.3)'; ctx.lineWidth=0.75; ctx.setLineDash([]);
+    ctx.beginPath(); ctx.moveTo(PAD, TITLE_H-6); ctx.lineTo(W-PAD, TITLE_H-6); ctx.stroke();
+
+    // Attribution
+    ctx.font='8px Cinzel,serif'; ctx.fillStyle='rgba(154,128,96,0.5)';
+    ctx.textAlign='right'; ctx.textBaseline='middle';
+    ctx.fillText('wessengetachew.github.io  ·  2026', W-PAD, 16);
+
+    _dl(off, 'farey_mod'+modN+(window._advSplitOn?'_split':'')+(pt?'_r'+pt.r+'_m'+pt.m:'')+'_composite.png');
   };
 
   // ── Unfold export ──────────────────────────────────────────────────────────
