@@ -3048,16 +3048,14 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
 </div><!-- /farey-canvas-col -->
 </div><!-- /farey-shell -->
 
-<!-- ══ N-BODY PRIME RESIDUE ORBITS ══ -->
+<!-- ══ N-BODY PRIME / ELEMENT RESIDUE ORBITS ══ -->
 <div id="threebody-section" style="margin-top:8px;background:var(--parchment-dark);border:1px solid var(--panel-border);border-radius:4px;">
   <div onclick="tbToggle()" style="display:flex;align-items:center;justify-content:space-between;padding:8px 14px;cursor:pointer;user-select:none;">
-    <span style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);">&#9632; Prime Residue N-Body Orbits <span style="color:#9a8060;font-size:0.5rem;">— first K coprime primes mod N · mass=gcd(r,N)</span></span>
+    <span style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);">&#9632; Residue N-Body Orbits <span style="color:#9a8060;font-size:0.5rem;">— prime or element bodies</span></span>
     <span id="tb-toggle-icon" style="color:var(--gold);font-size:0.7rem;">&#9660;</span>
   </div>
   <div id="tb-body" style="display:none;padding:0 12px 12px;">
     <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-start;">
-
-      <!-- Main canvas -->
       <div style="flex:1;min-width:200px;">
         <canvas id="tb-canvas" width="500" height="500" style="width:100%;height:auto;aspect-ratio:1;background:#020100;border:1px solid var(--border);border-radius:3px;display:block;cursor:crosshair;"></canvas>
         <div style="display:flex;gap:8px;flex-wrap:wrap;padding:3px 0;font-family:'Cinzel',serif;font-size:0.5rem;color:var(--ink-mid);">
@@ -3065,76 +3063,78 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
           <span>E=<span id="tb-e" style="color:var(--gold);">—</span></span>
           <span>sep=<span id="tb-sep" style="color:var(--gold);">—</span></span>
         </div>
-        <!-- Body list readout -->
         <div id="tb-body-list" style="font-family:'Cinzel',serif;font-size:0.44rem;color:#9a8060;line-height:1.8;margin-top:2px;"></div>
+        <div style="margin-top:3px;">
+          <span style="font-family:'Cinzel',serif;font-size:0.43rem;color:#9a8060;letter-spacing:0.06em;text-transform:uppercase;">Camera — click body or:</span>
+          <div id="tb-cam-row" style="display:flex;gap:3px;flex-wrap:wrap;margin-top:3px;"></div>
+        </div>
       </div>
-
-      <!-- Controls -->
-      <div style="display:flex;flex-direction:column;gap:5px;min-width:170px;max-width:230px;">
-        <!-- Ring preview -->
+      <div style="display:flex;flex-direction:column;gap:5px;min-width:175px;max-width:235px;">
         <canvas id="tb-ring" width="180" height="180" style="width:100%;height:auto;aspect-ratio:1;background:#020100;border:1px solid var(--border);border-radius:3px;display:block;"></canvas>
-
-        <!-- Single count input -->
-        <div style="background:#0a0800;border:1px solid var(--panel-border);border-radius:3px;padding:6px 8px;">
-          <div style="font-family:'Cinzel',serif;font-size:0.48rem;color:#9a8060;letter-spacing:0.07em;text-transform:uppercase;margin-bottom:5px;">First K coprime primes mod N</div>
+        <div style="display:flex;gap:3px;">
+          <button id="tb-mode-prime-btn" onclick="tbSetBodyMode('prime')" style="font-family:'Cinzel',serif;font-size:0.46rem;padding:2px 7px;border:1px solid var(--gold);background:var(--gold);color:var(--parchment-dark);cursor:pointer;border-radius:2px;flex:1;">Primes</button>
+          <button id="tb-mode-elem-btn" onclick="tbSetBodyMode('element')" style="font-family:'Cinzel',serif;font-size:0.46rem;padding:2px 7px;border:1px solid #34d399;background:var(--parchment-dark);color:#34d399;cursor:pointer;border-radius:2px;flex:1;">Elements</button>
+        </div>
+        <div id="tb-panel-prime" style="background:#0a0800;border:1px solid var(--panel-border);border-radius:3px;padding:5px 8px;">
+          <div style="font-family:'Cinzel',serif;font-size:0.46rem;color:#9a8060;letter-spacing:0.07em;text-transform:uppercase;margin-bottom:4px;">First K coprime primes mod N</div>
           <div style="display:flex;align-items:center;gap:6px;">
             <span style="font-family:'Cinzel',serif;font-size:0.55rem;color:var(--gold);">K =</span>
-            <input id="tb-K" type="number" min="1" max="20" value="3"
-              style="width:44px;background:#020100;color:var(--ink);border:1px solid var(--gold);padding:3px 5px;font-family:'Cinzel',serif;font-size:0.6rem;text-align:center;border-radius:2px;"
-              oninput="tbSyncPrimes()">
+            <input id="tb-K" type="number" min="1" max="20" value="3" style="width:44px;background:#020100;color:var(--ink);border:1px solid var(--gold);padding:3px 5px;font-family:'Cinzel',serif;font-size:0.6rem;text-align:center;border-radius:2px;" oninput="tbSyncBodies()">
             <span style="font-family:'Cinzel',serif;font-size:0.44rem;color:#9a8060;">bodies</span>
           </div>
           <div id="tb-prime-summary" style="font-family:'Cinzel',serif;font-size:0.44rem;color:#a855f7;margin-top:4px;line-height:1.7;"></div>
         </div>
-
-        <!-- Overlay toggles -->
+        <div id="tb-panel-elem" style="display:none;background:#0a0800;border:1px solid #34d399;border-radius:3px;padding:5px 8px;">
+          <div style="font-family:'Cinzel',serif;font-size:0.46rem;color:#9a8060;letter-spacing:0.07em;text-transform:uppercase;margin-bottom:4px;">Elements (Z start / count)</div>
+          <div style="display:flex;align-items:center;gap:4px;margin-bottom:4px;">
+            <span style="font-family:'Cinzel',serif;font-size:0.46rem;color:#34d399;">Z</span>
+            <input id="tb-Z-start" type="number" min="1" max="36" value="1" style="width:36px;background:#020100;color:var(--ink);border:1px solid #34d399;padding:2px 3px;font-family:'Cinzel',serif;font-size:0.5rem;text-align:center;border-radius:2px;" oninput="tbSyncBodies()">
+            <span style="font-family:'Cinzel',serif;font-size:0.46rem;color:#34d399;">count</span>
+            <input id="tb-Z-count" type="number" min="1" max="20" value="3" style="width:36px;background:#020100;color:var(--ink);border:1px solid #34d399;padding:2px 3px;font-family:'Cinzel',serif;font-size:0.5rem;text-align:center;border-radius:2px;" oninput="tbSyncBodies()">
+          </div>
+          <div style="display:flex;align-items:center;gap:4px;margin-bottom:3px;">
+            <span style="font-family:'Cinzel',serif;font-size:0.44rem;color:#9a8060;">mass =</span>
+            <select id="tb-elem-mass" onchange="tbSyncBodies()" style="font-family:'Cinzel',serif;font-size:0.44rem;background:#020100;color:var(--ink);border:1px solid #34d399;padding:1px 3px;border-radius:2px;">
+              <option value="atomic">Atomic mass</option>
+              <option value="period">Period</option>
+              <option value="group">Group</option>
+              <option value="Z">Atomic number</option>
+            </select>
+          </div>
+          <div id="tb-elem-summary" style="font-family:'Cinzel',serif;font-size:0.44rem;color:#34d399;line-height:1.7;"></div>
+        </div>
         <div style="display:flex;gap:4px;flex-wrap:wrap;">
-          <button id="tb-btn-poly" onclick="tbToggleOverlay('poly')" style="font-family:'Cinzel',serif;font-size:0.46rem;padding:2px 6px;border:1px solid var(--gold);background:var(--parchment-dark);color:var(--gold);cursor:pointer;border-radius:2px;">Polygon</button>
+          <button id="tb-btn-poly" onclick="tbToggleOverlay('poly')" style="font-family:'Cinzel',serif;font-size:0.46rem;padding:2px 6px;border:1px solid var(--gold);background:var(--gold);color:var(--parchment-dark);cursor:pointer;border-radius:2px;">Polygon</button>
           <button id="tb-btn-cross" onclick="tbToggleOverlay('cross')" style="font-family:'Cinzel',serif;font-size:0.46rem;padding:2px 6px;border:1px solid #4a90d9;background:var(--parchment-dark);color:#4a90d9;cursor:pointer;border-radius:2px;">Cross-mod</button>
           <button id="tb-btn-gap" onclick="tbToggleOverlay('gap')" style="font-family:'Cinzel',serif;font-size:0.46rem;padding:2px 6px;border:1px solid #f97316;background:var(--parchment-dark);color:#f97316;cursor:pointer;border-radius:2px;">Gap Force</button>
         </div>
-
-        <!-- Sliders -->
-        <div style="display:flex;align-items:center;gap:4px;">
-          <span style="font-family:'Cinzel',serif;font-size:0.47rem;color:#9a8060;width:32px;">G</span>
-          <input type="range" id="tb-G" min="0.1" max="5" step="0.05" value="1" style="flex:1;accent-color:var(--gold);" oninput="document.getElementById('tb-Gv').textContent=parseFloat(this.value).toFixed(2);">
-          <span id="tb-Gv" style="font-family:'Cinzel',serif;font-size:0.47rem;color:var(--gold);min-width:26px;">1.00</span>
+        <div style="display:flex;align-items:center;gap:4px;"><span style="font-family:'Cinzel',serif;font-size:0.47rem;color:#9a8060;width:32px;">G</span><input type="range" id="tb-G" min="0.1" max="5" step="0.05" value="1" style="flex:1;accent-color:var(--gold);" oninput="document.getElementById('tb-Gv').textContent=parseFloat(this.value).toFixed(2);"><span id="tb-Gv" style="font-family:'Cinzel',serif;font-size:0.47rem;color:var(--gold);min-width:26px;">1.00</span></div>
+        <div style="display:flex;align-items:center;gap:4px;"><span style="font-family:'Cinzel',serif;font-size:0.47rem;color:#9a8060;width:32px;">Gap K</span><input type="range" id="tb-gapk" min="0" max="2" step="0.02" value="0.3" style="flex:1;accent-color:#f97316;" oninput="document.getElementById('tb-gapkv').textContent=parseFloat(this.value).toFixed(2);"><span id="tb-gapkv" style="font-family:'Cinzel',serif;font-size:0.47rem;color:#f97316;min-width:26px;">0.30</span></div>
+        <div style="display:flex;align-items:center;gap:4px;"><span style="font-family:'Cinzel',serif;font-size:0.47rem;color:#9a8060;width:32px;">Orbit R</span><input type="range" id="tb-R" min="0.3" max="3" step="0.05" value="1.5" style="flex:1;accent-color:var(--gold);" oninput="document.getElementById('tb-Rv').textContent=parseFloat(this.value).toFixed(2);"><span id="tb-Rv" style="font-family:'Cinzel',serif;font-size:0.47rem;color:var(--gold);min-width:26px;">1.50</span></div>
+        <div style="display:flex;align-items:center;gap:4px;"><span style="font-family:'Cinzel',serif;font-size:0.47rem;color:#9a8060;width:32px;">Trail</span><input type="range" id="tb-trail" min="100" max="5000" step="100" value="1500" style="flex:1;accent-color:var(--gold);" oninput="document.getElementById('tb-trailv').textContent=this.value;"><span id="tb-trailv" style="font-family:'Cinzel',serif;font-size:0.47rem;color:var(--gold);min-width:26px;">1500</span></div>
+        <div style="display:flex;align-items:center;gap:4px;"><span style="font-family:'Cinzel',serif;font-size:0.47rem;color:#9a8060;width:32px;">Speed</span><input type="range" id="tb-speed" min="1" max="40" step="1" value="10" style="flex:1;accent-color:var(--gold);" oninput="document.getElementById('tb-speedv').textContent=this.value;"><span id="tb-speedv" style="font-family:'Cinzel',serif;font-size:0.47rem;color:var(--gold);min-width:26px;">10</span></div>
+        <div style="display:flex;align-items:center;gap:4px;"><span style="font-family:'Cinzel',serif;font-size:0.47rem;color:#9a8060;width:32px;">ε soft</span><input type="range" id="tb-soft" min="0.005" max="0.3" step="0.005" value="0.04" style="flex:1;accent-color:var(--gold);" oninput="document.getElementById('tb-softv').textContent=parseFloat(this.value).toFixed(3);"><span id="tb-softv" style="font-family:'Cinzel',serif;font-size:0.47rem;color:var(--gold);min-width:30px;">0.040</span></div>
+        <div style="background:#0a0800;border:1px solid var(--panel-border);border-radius:3px;padding:5px 8px;">
+          <div style="font-family:'Cinzel',serif;font-size:0.44rem;color:#9a8060;letter-spacing:0.07em;text-transform:uppercase;margin-bottom:4px;">Presets</div>
+          <div style="display:flex;gap:3px;flex-wrap:wrap;">
+            <button onclick="tbPreset({mode:'prime',N:12,K:3,G:1,gapK:0,R:1.5,soft:0.04,speed:10,trail:1500,overlays:{poly:true,cross:false,gap:false}})" style="font-family:'Cinzel',serif;font-size:0.43rem;padding:2px 5px;border:1px solid var(--gold);background:var(--parchment-dark);color:var(--gold);cursor:pointer;border-radius:2px;">Trinity</button>
+            <button onclick="tbPreset({mode:'prime',N:30,K:5,G:1,gapK:0,R:1.5,soft:0.05,speed:8,trail:2000,overlays:{poly:true,cross:false,gap:false}})" style="font-family:'Cinzel',serif;font-size:0.43rem;padding:2px 5px;border:1px solid var(--gold);background:var(--parchment-dark);color:var(--gold);cursor:pointer;border-radius:2px;">Pentagon</button>
+            <button onclick="tbPreset({mode:'prime',N:210,K:4,G:2,gapK:0,R:1.5,soft:0.03,speed:12,trail:3000,overlays:{poly:true,cross:false,gap:false}})" style="font-family:'Cinzel',serif;font-size:0.43rem;padding:2px 5px;border:1px solid var(--gold);background:var(--parchment-dark);color:var(--gold);cursor:pointer;border-radius:2px;">Quadrant 210</button>
+            <button onclick="tbPreset({mode:'prime',N:12,K:3,G:1,gapK:1.2,R:1.5,soft:0.04,speed:10,trail:2000,overlays:{poly:true,cross:false,gap:true}})" style="font-family:'Cinzel',serif;font-size:0.43rem;padding:2px 5px;border:1px solid #f97316;background:var(--parchment-dark);color:#f97316;cursor:pointer;border-radius:2px;">Gap Dance</button>
+            <button onclick="tbPreset({mode:'prime',N:30,K:6,G:0.8,gapK:0.8,R:1.5,soft:0.04,speed:8,trail:2500,overlays:{poly:true,cross:true,gap:true}})" style="font-family:'Cinzel',serif;font-size:0.43rem;padding:2px 5px;border:1px solid #4a90d9;background:var(--parchment-dark);color:#4a90d9;cursor:pointer;border-radius:2px;">Lattice Web</button>
+            <button onclick="tbPreset({mode:'prime',N:12,K:2,G:1,gapK:0,R:1.5,soft:0.01,speed:15,trail:4000,overlays:{poly:true,cross:false,gap:false}})" style="font-family:'Cinzel',serif;font-size:0.43rem;padding:2px 5px;border:1px solid var(--gold);background:var(--parchment-dark);color:var(--gold);cursor:pointer;border-radius:2px;">Binary Star</button>
+            <button onclick="tbPreset({mode:'element',N:18,Zstart:1,Zcount:5,elemMass:'period',G:1,gapK:0,R:1.5,soft:0.04,speed:10,trail:2000,overlays:{poly:true,cross:false,gap:false}})" style="font-family:'Cinzel',serif;font-size:0.43rem;padding:2px 5px;border:1px solid #34d399;background:var(--parchment-dark);color:#34d399;cursor:pointer;border-radius:2px;">Period 1-5</button>
+            <button onclick="tbPreset({mode:'element',N:36,Zstart:2,Zcount:4,elemMass:'atomic',G:1.2,gapK:0.5,R:1.5,soft:0.04,speed:8,trail:2000,overlays:{poly:true,cross:false,gap:true}})" style="font-family:'Cinzel',serif;font-size:0.43rem;padding:2px 5px;border:1px solid #34d399;background:var(--parchment-dark);color:#34d399;cursor:pointer;border-radius:2px;">Noble Gases</button>
+            <button onclick="tbPreset({mode:'element',N:18,Zstart:3,Zcount:4,elemMass:'group',G:1,gapK:1,R:1.5,soft:0.04,speed:10,trail:2000,overlays:{poly:true,cross:false,gap:true}})" style="font-family:'Cinzel',serif;font-size:0.43rem;padding:2px 5px;border:1px solid #34d399;background:var(--parchment-dark);color:#34d399;cursor:pointer;border-radius:2px;">Alkali Dance</button>
+            <button onclick="tbPreset({mode:'element',N:36,Zstart:1,Zcount:8,elemMass:'atomic',G:0.7,gapK:0.4,R:1.5,soft:0.05,speed:7,trail:2000,overlays:{poly:true,cross:true,gap:false}})" style="font-family:'Cinzel',serif;font-size:0.43rem;padding:2px 5px;border:1px solid #34d399;background:var(--parchment-dark);color:#34d399;cursor:pointer;border-radius:2px;">Row 1-8</button>
+          </div>
         </div>
-        <div style="display:flex;align-items:center;gap:4px;">
-          <span style="font-family:'Cinzel',serif;font-size:0.47rem;color:#9a8060;width:32px;">Gap K</span>
-          <input type="range" id="tb-gapk" min="0" max="2" step="0.02" value="0.3" style="flex:1;accent-color:#f97316;" oninput="document.getElementById('tb-gapkv').textContent=parseFloat(this.value).toFixed(2);">
-          <span id="tb-gapkv" style="font-family:'Cinzel',serif;font-size:0.47rem;color:#f97316;min-width:26px;">0.30</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:4px;">
-          <span style="font-family:'Cinzel',serif;font-size:0.47rem;color:#9a8060;width:32px;">Orbit R</span>
-          <input type="range" id="tb-R" min="0.3" max="3" step="0.05" value="1.5" style="flex:1;accent-color:var(--gold);" oninput="document.getElementById('tb-Rv').textContent=parseFloat(this.value).toFixed(2);">
-          <span id="tb-Rv" style="font-family:'Cinzel',serif;font-size:0.47rem;color:var(--gold);min-width:26px;">1.50</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:4px;">
-          <span style="font-family:'Cinzel',serif;font-size:0.47rem;color:#9a8060;width:32px;">Trail</span>
-          <input type="range" id="tb-trail" min="100" max="5000" step="100" value="1500" style="flex:1;accent-color:var(--gold);" oninput="document.getElementById('tb-trailv').textContent=this.value;">
-          <span id="tb-trailv" style="font-family:'Cinzel',serif;font-size:0.47rem;color:var(--gold);min-width:26px;">1500</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:4px;">
-          <span style="font-family:'Cinzel',serif;font-size:0.47rem;color:#9a8060;width:32px;">Speed</span>
-          <input type="range" id="tb-speed" min="1" max="40" step="1" value="10" style="flex:1;accent-color:var(--gold);" oninput="document.getElementById('tb-speedv').textContent=this.value;">
-          <span id="tb-speedv" style="font-family:'Cinzel',serif;font-size:0.47rem;color:var(--gold);min-width:26px;">10</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:4px;">
-          <span style="font-family:'Cinzel',serif;font-size:0.47rem;color:#9a8060;width:32px;">ε soft</span>
-          <input type="range" id="tb-soft" min="0.005" max="0.3" step="0.005" value="0.04" style="flex:1;accent-color:var(--gold);" oninput="document.getElementById('tb-softv').textContent=parseFloat(this.value).toFixed(3);">
-          <span id="tb-softv" style="font-family:'Cinzel',serif;font-size:0.47rem;color:var(--gold);min-width:30px;">0.040</span>
-        </div>
-
-        <!-- Buttons -->
         <div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:2px;">
           <button id="tb-play-btn" onclick="tbTogglePlay()" style="font-family:'Cinzel',serif;font-size:0.48rem;letter-spacing:0.08em;text-transform:uppercase;padding:3px 8px;border:1px solid var(--gold);background:var(--parchment-dark);color:var(--gold);cursor:pointer;border-radius:2px;">&#9654; Play</button>
           <button onclick="tbReset()" style="font-family:'Cinzel',serif;font-size:0.48rem;letter-spacing:0.08em;text-transform:uppercase;padding:3px 8px;border:1px solid var(--gold);background:var(--parchment-dark);color:var(--gold);cursor:pointer;border-radius:2px;">&#11119; Reset</button>
           <button onclick="tbClearTrails()" style="font-family:'Cinzel',serif;font-size:0.48rem;letter-spacing:0.08em;text-transform:uppercase;padding:3px 8px;border:1px solid #4ecdc4;background:var(--parchment-dark);color:#4ecdc4;cursor:pointer;border-radius:2px;">&#9003; Trace</button>
         </div>
-        <div style="font-family:'Cinzel',serif;font-size:0.44rem;color:#9a8060;line-height:1.6;margin-top:2px;">
-          mass=gcd(r,N) · θ=2πr/N · gap∝Δr/N
-        </div>
+        <div style="font-family:'Cinzel',serif;font-size:0.44rem;color:#9a8060;line-height:1.6;margin-top:2px;">prime: gcd=1 filter · element: Z mod N · gap=Farey density · mass=selected property</div>
       </div>
     </div>
   </div>
@@ -3631,6 +3631,7 @@ ight)"></div>
     var ncpRatio = total>0 ? ncpCount/total : 0;
     var triangleTotal = modN*(modN+1)/2;
     var verified = (total === triangleTotal);
+    var adjustedTotal = triangleTotal - (modN - 1);
     var teal = '#4ecdc4';
     var gold = '#c49b38';
 
@@ -3664,6 +3665,7 @@ ight)"></div>
       html += row('mod N', '' + modN);
       html += divider();
       html += row('Total r/m  (N·(N+1)/2)', (verified?'✓ ':'! ') + triangleTotal, teal);
+      html += row('Adjusted  (−(N−1) dupes)', ''+adjustedTotal, '#a8e6cf');
       html += divider();
 
       // Point list: all GCD=1 fractions grouped in columns
@@ -3706,6 +3708,7 @@ ight)"></div>
       }
       html2 += divider();
       html2 += row('Total r/m  (N·(N+1)/2)', (verified?'✓ ':'! ') + triangleTotal, teal);
+      html2 += row('Adjusted  (−(N−1) dupes)', ''+adjustedTotal, '#a8e6cf');
       html2 += divider();
 
       // Point list
@@ -6507,7 +6510,9 @@ ight)"></div>
     // ── Side legend panels flanking combined ─────────────────────────────
     var triangleTotal = modN*(modN+1)/2;
     var verified = (copCount+ncpCount === triangleTotal);
-    var verifyStr = verified ? '✓ '+triangleTotal : '! '+triangleTotal;
+    var verifyStr = verified ? '\u2713 '+triangleTotal : '! '+triangleTotal;
+    // Adjusted: subtract mod (removes the N copies of 0/m for m=2..N, keeping only 0/1)
+    var adjustedTotal = triangleTotal - (modN - 1);  // = N(N-1)/2 + 1
     var tealColor = document.body.classList.contains('dark-mode') ? '#4ecdc4' : '#1a6a4a';
 
     // Left panel: GCD = 1 (coprime)
@@ -6521,6 +6526,7 @@ ight)"></div>
       ['mod N', ''+modN],
       ['---'],
       ['Total r/m  (N·(N+1)/2)', verifyStr, tealColor],
+      ['Adjusted  (\u2212(N\u22121) dupes)', ''+adjustedTotal, '#a8e6cf'],
     ]);
     // List all coprime points grouped by ring m
     var allCop = [];
@@ -6551,6 +6557,7 @@ ight)"></div>
     }
     ncpRows.push(['---']);
     ncpRows.push(['Total r/m  (N·(N+1)/2)', verifyStr, tealColor]);
+    ncpRows.push(['Adjusted  (−(N−1) dupes)', ''+adjustedTotal, '#a8e6cf']);
     var rightUsedY = drawStats(rightPanX, combY, SIDE_W, STATS_H, 'GCD(R,M) > 1  ·  NON-COPRIME', col2, ncpRows);
     // List all non-coprime points
     var allNcp = [];
@@ -10057,120 +10064,180 @@ function toggleTheoryPanel() {
 </script>
 
 <script>
-// ══ N-BODY PRIME RESIDUE ENGINE ══════════════════════════════════════════
+// ══ N-BODY PRIME / ELEMENT RESIDUE ENGINE ════════════════════════════════
 (function(){
-  // ── sieve up to 10000 ──────────────────────────────────────────────────
-  var PRIMES = (function(){
-    var s=[], p=[];
+  // ── element data (Z1–36) ──────────────────────────────────────────────
+  var ELEMENTS=[
+    {Z:1,s:'H',p:1,g:1,m:1.008},{Z:2,s:'He',p:1,g:18,m:4.003},
+    {Z:3,s:'Li',p:2,g:1,m:6.94},{Z:4,s:'Be',p:2,g:2,m:9.012},
+    {Z:5,s:'B',p:2,g:13,m:10.81},{Z:6,s:'C',p:2,g:14,m:12.011},
+    {Z:7,s:'N',p:2,g:15,m:14.007},{Z:8,s:'O',p:2,g:16,m:15.999},
+    {Z:9,s:'F',p:2,g:17,m:18.998},{Z:10,s:'Ne',p:2,g:18,m:20.18},
+    {Z:11,s:'Na',p:3,g:1,m:22.99},{Z:12,s:'Mg',p:3,g:2,m:24.305},
+    {Z:13,s:'Al',p:3,g:13,m:26.982},{Z:14,s:'Si',p:3,g:14,m:28.085},
+    {Z:15,s:'P',p:3,g:15,m:30.974},{Z:16,s:'S',p:3,g:16,m:32.06},
+    {Z:17,s:'Cl',p:3,g:17,m:35.45},{Z:18,s:'Ar',p:3,g:18,m:39.948},
+    {Z:19,s:'K',p:4,g:1,m:39.098},{Z:20,s:'Ca',p:4,g:2,m:40.078},
+    {Z:21,s:'Sc',p:4,g:3,m:44.956},{Z:22,s:'Ti',p:4,g:4,m:47.867},
+    {Z:23,s:'V',p:4,g:5,m:50.942},{Z:24,s:'Cr',p:4,g:6,m:51.996},
+    {Z:25,s:'Mn',p:4,g:7,m:54.938},{Z:26,s:'Fe',p:4,g:8,m:55.845},
+    {Z:27,s:'Co',p:4,g:9,m:58.933},{Z:28,s:'Ni',p:4,g:10,m:58.693},
+    {Z:29,s:'Cu',p:4,g:11,m:63.546},{Z:30,s:'Zn',p:4,g:12,m:65.38},
+    {Z:31,s:'Ga',p:4,g:13,m:69.723},{Z:32,s:'Ge',p:4,g:14,m:72.630},
+    {Z:33,s:'As',p:4,g:15,m:74.922},{Z:34,s:'Se',p:4,g:16,m:78.971},
+    {Z:35,s:'Br',p:4,g:17,m:79.904},{Z:36,s:'Kr',p:4,g:18,m:83.798}
+  ];
+
+  // ── prime sieve ───────────────────────────────────────────────────────
+  var PRIMES=(function(){
+    var s=[],p=[];
     for(var i=0;i<=10000;i++) s[i]=true;
     s[0]=s[1]=false;
     for(var i=2;i<=10000;i++) if(s[i]){p.push(i);for(var j=i*i;j<=10000;j+=i)s[j]=false;}
     return p;
   })();
 
-  // palette — cycles for >8 bodies
   var PAL=['#f97316','#4ecdc4','#a855f7','#facc15','#34d399','#f472b6','#60a5fa','#fb7185',
            '#a3e635','#e879f9','#22d3ee','#fbbf24','#4ade80','#c084fc','#38bdf8','#fb923c',
            '#86efac','#f9a8d4','#7dd3fc','#fde68a'];
 
   var running=false, started=false, tbTime=0;
-  var bodies=[], trails=[], overlays={poly:false,cross:false,gap:false};
-  var tbPrimes=[];   // actual prime values currently in use
-  var tbResidues=[]; // residues mod N
+  var bodies=[], trails=[], overlays={poly:true,cross:false,gap:false};
+  var tbBodyMode='prime';  // 'prime' | 'element'
+  var tbLabels=[];    // display label per body
+  var tbResidues=[];  // Z mod N per body
+  var tbMasses=[];    // physical mass per body
+  var camBody=-1;
 
   function gv(id){var e=document.getElementById(id);return e?parseFloat(e.value)||0:0;}
   function iv(id){var e=document.getElementById(id);return e?parseInt(e.value)||0:0;}
+  function sv(id){var e=document.getElementById(id);return e?e.value:'';}
   function getN(){var e=document.getElementById('f-mod-num');return e?(parseInt(e.value)||12):12;}
   function gcdf(a,b){a=Math.abs(a);b=Math.abs(b);while(b){var t=b;b=a%b;a=t;}return a||1;}
-  function getMass(r,N){return Math.max(1,gcdf(r,N));}
 
-  // First K primes with gcd(p mod N, N) == 1
-  function coprimePrimesModN(K, N){
-    var result=[], i=0;
-    while(result.length<K && i<PRIMES.length){
-      var p=PRIMES[i++];
-      var r=((p%N)+N)%N;
-      if(gcdf(r,N)===1) result.push(p);
+  // ── Farey-density gap weight ──────────────────────────────────────────
+  function eulerPhi(n){var r=n,m=n;for(var p=2;p*p<=m;p++)if(m%p===0){r-=r/p;while(m%p===0)m/=p;}if(m>1)r-=r/m;return Math.round(r);}
+  function fareyGapWeight(ri,rj,N){
+    var arc=((rj-ri)%N+N)%N; arc=Math.min(arc,N-arc);
+    return (eulerPhi(N)/N)*(arc/N);
+  }
+  function primeGap(rs,N,i,j){ return fareyGapWeight(rs[i],rs[j],N); }
+
+  // ── body source ───────────────────────────────────────────────────────
+  function coprimePrimesModN(K,N){
+    var res=[],i=0;
+    while(res.length<K&&i<PRIMES.length){
+      var p=PRIMES[i++], r=((p%N)+N)%N;
+      if(gcdf(r,N)===1) res.push({label:'p'+p,r:r,mass:1,Z:p});
     }
-    return result;
+    return res;
   }
 
-  function primeGap(rs,N,i,j){
-    var d=((rs[j]-rs[i])%N+N)%N;
-    return Math.min(d,N-d)/N;
+  function elemBodies(Zstart,Zcount,massMode,N){
+    var res=[];
+    var z=Math.max(1,Zstart);
+    while(res.length<Zcount&&z<=36){
+      var el=ELEMENTS[z-1];
+      var r=((el.Z%N)+N)%N;
+      var mass=massMode==='atomic'?Math.max(1,Math.round(el.m/10))
+              :massMode==='period'?el.p
+              :massMode==='group'?Math.max(1,el.g>10?el.g-10:el.g)
+              :el.Z;
+      res.push({label:el.s+'(Z'+el.Z+')',r:r,mass:mass,Z:el.Z,elem:el});
+      z++;
+    }
+    return res;
   }
 
-  // ── sync: recompute primes from K input ────────────────────────────────
-  window.tbSyncPrimes = function(){
-    var N=getN(), K=Math.max(1,Math.min(20,iv('tb-K')||3));
-    tbPrimes=coprimePrimesModN(K,N);
-    tbResidues=tbPrimes.map(function(p){return ((p%N)+N)%N;});
+  // ── sync bodies from current inputs ───────────────────────────────────
+  window.tbSyncBodies = function(){
+    var N=getN();
+    var bds;
+    if(tbBodyMode==='prime'){
+      var K=Math.max(1,Math.min(20,iv('tb-K')||3));
+      bds=coprimePrimesModN(K,N);
+    } else {
+      var Zs=Math.max(1,iv('tb-Z-start')||1);
+      var Zc=Math.max(1,Math.min(20,iv('tb-Z-count')||3));
+      bds=elemBodies(Zs,Zc,sv('tb-elem-mass')||'atomic',N);
+    }
+    tbLabels  = bds.map(function(b){return b.label;});
+    tbResidues= bds.map(function(b){return b.r;});
+    tbMasses  = bds.map(function(b){return b.mass;});
 
-    // Summary box
-    var sumEl=document.getElementById('tb-prime-summary');
-    if(sumEl){
-      var lines=tbPrimes.map(function(p,i){
-        var r=tbResidues[i];
-        return '<span style="color:'+PAL[i%PAL.length]+'">p'+(i+1)+'='+p+' r='+r+'</span>';
-      });
-      sumEl.innerHTML=lines.join(' &nbsp;');
+    // update summary panel
+    if(tbBodyMode==='prime'){
+      var sumEl=document.getElementById('tb-prime-summary');
+      if(sumEl) sumEl.innerHTML=bds.map(function(b,i){
+        return '<span style="color:'+PAL[i%PAL.length]+'">'+b.label+' r='+b.r+'</span>';
+      }).join(' ');
+    } else {
+      var sumEl=document.getElementById('tb-elem-summary');
+      if(sumEl) sumEl.innerHTML=bds.map(function(b,i){
+        var el=b.elem;
+        return '<span style="color:'+PAL[i%PAL.length]+'">'+el.s+' r='+b.r+' m='+b.mass+'</span>';
+      }).join(' ');
     }
 
-    // Body list below canvas
+    // body list below canvas
     var listEl=document.getElementById('tb-body-list');
-    if(listEl){
-      listEl.innerHTML=tbPrimes.map(function(p,i){
-        var r=tbResidues[i], g=getMass(r,N);
-        return '<span style="color:'+PAL[i%PAL.length]+'">'+(i+1)+': p='+p+' r='+r+' g='+g+'</span>';
-      }).join(' &nbsp;&nbsp;');
-    }
+    if(listEl) listEl.innerHTML=bds.map(function(b,i){
+      return '<span style="color:'+PAL[i%PAL.length]+'">'+b.label+' r='+b.r+' m='+b.mass+'</span>';
+    }).join(' &nbsp;');
 
     tbSyncRing();
+    if(typeof tbRebuildCamButtons==='function') tbRebuildCamButtons();
   };
 
-  // ── ring preview ───────────────────────────────────────────────────────
-  window.tbSyncRing = function(){
+  // keep old name as alias for presets/compat
+  window.tbSyncPrimes = window.tbSyncBodies;
+
+  // ── mode switch ───────────────────────────────────────────────────────
+  window.tbSetBodyMode=function(mode){
+    tbBodyMode=mode;
+    document.getElementById('tb-panel-prime').style.display=mode==='prime'?'block':'none';
+    document.getElementById('tb-panel-elem').style.display =mode==='element'?'block':'none';
+    var pb=document.getElementById('tb-mode-prime-btn');
+    var eb=document.getElementById('tb-mode-elem-btn');
+    if(pb){pb.style.background=mode==='prime'?'var(--gold)':'var(--parchment-dark)';
+           pb.style.color=mode==='prime'?'var(--parchment-dark)':'var(--gold)';}
+    if(eb){eb.style.background=mode==='element'?'#34d399':'var(--parchment-dark)';
+           eb.style.color=mode==='element'?'var(--parchment-dark)':'#34d399';}
+    tbSyncBodies();
+  };
+
+  // ── ring preview ──────────────────────────────────────────────────────
+  window.tbSyncRing=function(){
     var RC=document.getElementById('tb-ring'); if(!RC) return;
     var ctx=RC.getContext('2d');
     var W=RC.width,H=RC.height,cx=W/2,cy=H/2,R=W*0.38;
     var N=getN(), rs=tbResidues;
     ctx.clearRect(0,0,W,H);
     ctx.fillStyle='#020100'; ctx.fillRect(0,0,W,H);
-
-    // ring
     ctx.strokeStyle='rgba(196,155,56,0.3)'; ctx.lineWidth=0.8;
     ctx.beginPath(); ctx.arc(cx,cy,R,0,2*Math.PI); ctx.stroke();
-
-    // ticks
-    for(var r=0;r<N;r++){
+    for(var r=0;r<N&&r<64;r++){
       var th=2*Math.PI*r/N;
       ctx.beginPath(); ctx.arc(cx+R*Math.cos(th),cy-R*Math.sin(th),1.2,0,2*Math.PI);
       ctx.fillStyle='rgba(196,155,56,0.2)'; ctx.fill();
     }
-
-    // polygon
     if(rs.length>1){
       ctx.beginPath();
-      rs.forEach(function(r,i){
-        var th=2*Math.PI*r/N, px=cx+R*Math.cos(th), py=cy-R*Math.sin(th);
-        i===0?ctx.moveTo(px,py):ctx.lineTo(px,py);
-      });
+      rs.forEach(function(r,i){var th=2*Math.PI*r/N;i===0?ctx.moveTo(cx+R*Math.cos(th),cy-R*Math.sin(th)):ctx.lineTo(cx+R*Math.cos(th),cy-R*Math.sin(th));});
       ctx.closePath(); ctx.strokeStyle='rgba(196,155,56,0.2)'; ctx.lineWidth=0.7; ctx.stroke();
     }
-
-    // bodies
     rs.forEach(function(r,i){
       var th=2*Math.PI*r/N, px=cx+R*Math.cos(th), py=cy-R*Math.sin(th);
-      var g=getMass(r,N);
-      ctx.beginPath(); ctx.arc(px,py,Math.max(2.5,g*2),0,2*Math.PI);
+      var m=tbMasses[i]||1;
+      ctx.beginPath(); ctx.arc(px,py,Math.max(2.5,m*1.5),0,2*Math.PI);
       ctx.fillStyle=PAL[i%PAL.length]; ctx.fill();
       ctx.font='5px Cinzel,serif'; ctx.fillStyle='rgba(232,217,176,0.85)';
       ctx.textAlign='center'; ctx.textBaseline='middle';
-      ctx.fillText(r,px,py);
+      ctx.fillText(tbLabels[i]||r,px,py);
     });
   };
 
-  // ── physics ────────────────────────────────────────────────────────────
+  // ── physics ───────────────────────────────────────────────────────────
   function tbAccel(bs,G,soft,gapK,rs,N){
     return bs.map(function(_,i){
       var ax=0,ay=0;
@@ -10185,16 +10252,9 @@ function toggleTheoryPanel() {
       return {ax:ax,ay:ay};
     });
   }
-
   function tbStep(dt,G,soft,gapK,N){
-    function deriv(s){
-      var a=tbAccel(s,G,soft,gapK,tbResidues,N);
-      return s.map(function(b,i){return{dx:b.vx,dy:b.vy,dvx:a[i].ax,dvy:a[i].ay};});
-    }
-    function add(s,d,h){
-      return s.map(function(b,i){return{x:b.x+d[i].dx*h,y:b.y+d[i].dy*h,
-        vx:b.vx+d[i].dvx*h,vy:b.vy+d[i].dvy*h,m:b.m};});
-    }
+    function deriv(s){var a=tbAccel(s,G,soft,gapK,tbResidues,N);return s.map(function(b,i){return{dx:b.vx,dy:b.vy,dvx:a[i].ax,dvy:a[i].ay};});}
+    function add(s,d,h){return s.map(function(b,i){return{x:b.x+d[i].dx*h,y:b.y+d[i].dy*h,vx:b.vx+d[i].dvx*h,vy:b.vy+d[i].dvy*h,m:b.m};});}
     var s0=bodies.map(function(b){return{x:b.x,y:b.y,vx:b.vx,vy:b.vy,m:b.m};});
     var k1=deriv(s0),k2=deriv(add(s0,k1,dt/2)),k3=deriv(add(s0,k2,dt/2)),k4=deriv(add(s0,k3,dt));
     bodies.forEach(function(b,i){
@@ -10206,7 +10266,6 @@ function toggleTheoryPanel() {
     });
     tbTime+=dt;
   }
-
   function tbEnergy(G,soft){
     var KE=0,PE=0;
     bodies.forEach(function(b){KE+=0.5*b.m*(b.vx*b.vx+b.vy*b.vy);});
@@ -10216,7 +10275,6 @@ function toggleTheoryPanel() {
     }
     return KE+PE;
   }
-
   function tbMinSep(){
     var mn=Infinity;
     for(var i=0;i<bodies.length;i++) for(var j=i+1;j<bodies.length;j++){
@@ -10226,14 +10284,14 @@ function toggleTheoryPanel() {
     return mn===Infinity?0:mn;
   }
 
-  // ── init ───────────────────────────────────────────────────────────────
+  // ── init ──────────────────────────────────────────────────────────────
   function tbInit(){
-    tbSyncPrimes();
+    tbSyncBodies();
     var N=getN(), R=gv('tb-R')||1.5, G=gv('tb-G')||1;
-    var totalM=tbResidues.reduce(function(s,r){return s+getMass(r,N);},0);
+    var totalM=tbMasses.reduce(function(s,m){return s+m;},0)||1;
     bodies=tbResidues.map(function(r,i){
       var th=2*Math.PI*r/N;
-      return {x:R*Math.cos(th),y:R*Math.sin(th),vx:0,vy:0,m:getMass(r,N)};
+      return {x:R*Math.cos(th),y:R*Math.sin(th),vx:0,vy:0,m:tbMasses[i]||1};
     });
     var vMag=Math.sqrt(G*totalM/R);
     bodies.forEach(function(b){
@@ -10243,20 +10301,36 @@ function toggleTheoryPanel() {
     var mx=bodies.reduce(function(s,b){return s+b.m*b.vx;},0)/totalM;
     var my=bodies.reduce(function(s,b){return s+b.m*b.vy;},0)/totalM;
     bodies.forEach(function(b){b.vx-=mx;b.vy-=my;});
-    tbTime=0;
-    trails=bodies.map(function(){return [];});
+    tbTime=0; trails=bodies.map(function(){return [];});
+    if(typeof tbRebuildCamButtons==='function') tbRebuildCamButtons();
   }
 
-  // ── draw ───────────────────────────────────────────────────────────────
+  // ── draw ──────────────────────────────────────────────────────────────
   function tbDraw(){
     var C=document.getElementById('tb-canvas'); if(!C) return;
     var ctx=C.getContext('2d');
     var W=C.width,H=C.height,cx=W/2,cy=H/2;
     var N=getN(), p={G:gv('tb-G')||1,gapK:gv('tb-gapk')||0,soft:gv('tb-soft')||0.04};
 
+    // camera
+    var camOx=0,camOy=0,camAngle=0;
+    var egoActive=camBody>=0&&camBody<bodies.length&&isFinite(bodies[camBody].x);
+    if(egoActive){
+      var cb=bodies[camBody]; camOx=cb.x; camOy=cb.y;
+      var vl=Math.sqrt(cb.vx*cb.vx+cb.vy*cb.vy);
+      if(vl>1e-9) camAngle=Math.atan2(cb.vx,-cb.vy);
+    }
+    function w2s(wx,wy){
+      var dx=wx-camOx,dy=wy-camOy;
+      var rx=dx*Math.cos(camAngle)+dy*Math.sin(camAngle);
+      var ry=-dx*Math.sin(camAngle)+dy*Math.cos(camAngle);
+      return {x:cx+rx*scale,y:cy-ry*scale};
+    }
+
     // auto-zoom
     var maxR=0.5;
-    bodies.forEach(function(b){if(isFinite(b.x)&&isFinite(b.y))maxR=Math.max(maxR,Math.sqrt(b.x*b.x+b.y*b.y));});
+    bodies.forEach(function(b){if(!isFinite(b.x)) return;var dx=b.x-camOx,dy=b.y-camOy;maxR=Math.max(maxR,Math.sqrt(dx*dx+dy*dy));});
+    if(egoActive&&maxR<0.3) maxR=0.3;
     var scale=(W*0.44)/(maxR*1.25);
 
     ctx.fillStyle='rgba(2,1,0,0.18)'; ctx.fillRect(0,0,W,H);
@@ -10266,53 +10340,59 @@ function toggleTheoryPanel() {
     ctx.strokeStyle='rgba(196,155,56,0.04)'; ctx.lineWidth=0.5;
     for(var rr=0.5;rr<=4;rr+=0.5){ctx.beginPath();ctx.arc(cx,cy,rr*scale,0,2*Math.PI);ctx.stroke();}
     for(var ri=0;ri<N&&ri<64;ri++){
-      var th=2*Math.PI*ri/N;
+      var th=2*Math.PI*ri/N-camAngle;
       ctx.strokeStyle='rgba(196,155,56,0.03)';
-      ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+4*scale*Math.cos(th),cy-4*scale*Math.sin(th));ctx.stroke();
+      ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+4*scale*Math.cos(th),cy+4*scale*Math.sin(th));ctx.stroke();
     }
     ctx.restore();
 
-    // polygon overlay
-    if(overlays.poly && bodies.length>1){
+    // ego crosshair
+    if(egoActive){
+      ctx.save();
+      ctx.strokeStyle='rgba(196,155,56,0.5)'; ctx.lineWidth=0.7; ctx.setLineDash([3,3]);
+      ctx.beginPath();ctx.moveTo(cx-12,cy);ctx.lineTo(cx+12,cy);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(cx,cy-12);ctx.lineTo(cx,cy+12);ctx.stroke();
+      ctx.strokeStyle=PAL[camBody%PAL.length]; ctx.lineWidth=1.2; ctx.setLineDash([]);
+      ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx,cy-18);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(cx,cy-18);ctx.lineTo(cx-4,cy-12);ctx.moveTo(cx,cy-18);ctx.lineTo(cx+4,cy-12);ctx.stroke();
+      ctx.restore();
+    }
+
+    // polygon
+    if(overlays.poly&&bodies.length>1){
       ctx.save(); ctx.setLineDash([4,4]);
       ctx.strokeStyle='rgba(196,155,56,0.4)'; ctx.lineWidth=1;
       ctx.beginPath();
-      bodies.forEach(function(b,i){
-        var px=cx+b.x*scale,py=cy-b.y*scale;
-        i===0?ctx.moveTo(px,py):ctx.lineTo(px,py);
-      });
+      bodies.forEach(function(b,i){var s=w2s(b.x,b.y);i===0?ctx.moveTo(s.x,s.y):ctx.lineTo(s.x,s.y);});
       ctx.closePath(); ctx.stroke(); ctx.setLineDash([]); ctx.restore();
     }
 
-    // cross-mod overlay
+    // cross-mod
     if(overlays.cross){
       ctx.save(); ctx.lineWidth=0.8;
       for(var i=0;i<bodies.length;i++) for(var j=i+1;j<bodies.length;j++){
         var g1=gcdf(tbResidues[i],N),g2=gcdf(tbResidues[j],N);
         if(gcdf(g1,g2)<2&&!(g1>1&&g2>1)) continue;
-        var px1=cx+bodies[i].x*scale,py1=cy-bodies[i].y*scale;
-        var px2=cx+bodies[j].x*scale,py2=cy-bodies[j].y*scale;
-        if(!isFinite(px1)||!isFinite(px2)) continue;
-        var grad=ctx.createLinearGradient(px1,py1,px2,py2);
-        grad.addColorStop(0,PAL[i%PAL.length]+'88');
-        grad.addColorStop(1,PAL[j%PAL.length]+'88');
-        ctx.strokeStyle=grad; ctx.beginPath(); ctx.moveTo(px1,py1); ctx.lineTo(px2,py2); ctx.stroke();
+        var s1=w2s(bodies[i].x,bodies[i].y),s2=w2s(bodies[j].x,bodies[j].y);
+        if(!isFinite(s1.x)||!isFinite(s2.x)) continue;
+        var grd=ctx.createLinearGradient(s1.x,s1.y,s2.x,s2.y);
+        grd.addColorStop(0,PAL[i%PAL.length]+'88'); grd.addColorStop(1,PAL[j%PAL.length]+'88');
+        ctx.strokeStyle=grd; ctx.beginPath(); ctx.moveTo(s1.x,s1.y); ctx.lineTo(s2.x,s2.y); ctx.stroke();
       }
       ctx.restore();
     }
 
-    // gap force overlay
+    // gap force
     if(overlays.gap){
       ctx.save();
       for(var i=0;i<bodies.length;i++) for(var j=i+1;j<bodies.length;j++){
         var gap=primeGap(tbResidues,N,i,j);
         var alpha=Math.min(0.85,gap*p.gapK*6); if(alpha<0.03) continue;
-        var px1=cx+bodies[i].x*scale,py1=cy-bodies[i].y*scale;
-        var px2=cx+bodies[j].x*scale,py2=cy-bodies[j].y*scale;
-        if(!isFinite(px1)||!isFinite(px2)) continue;
+        var s1=w2s(bodies[i].x,bodies[i].y),s2=w2s(bodies[j].x,bodies[j].y);
+        if(!isFinite(s1.x)||!isFinite(s2.x)) continue;
         ctx.strokeStyle='rgba(249,115,22,'+alpha.toFixed(2)+')';
         ctx.lineWidth=Math.max(0.5,gap*6); ctx.setLineDash([2,3]);
-        ctx.beginPath(); ctx.moveTo(px1,py1); ctx.lineTo(px2,py2); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(s1.x,s1.y); ctx.lineTo(s2.x,s2.y); ctx.stroke();
         ctx.setLineDash([]);
       }
       ctx.restore();
@@ -10321,109 +10401,183 @@ function toggleTheoryPanel() {
     // trails
     bodies.forEach(function(b,i){
       var tr=trails[i]; if(!tr||tr.length<2) return;
-      var maxTr=iv('tb-trail')||1500;
-      var start=Math.max(0,tr.length-maxTr);
-      var x0=cx+tr[start].x*scale,y0=cy-tr[start].y*scale;
-      var x1=cx+tr[tr.length-1].x*scale,y1=cy-tr[tr.length-1].y*scale;
-      if(!isFinite(x0)||!isFinite(x1)) return;
-      ctx.beginPath(); ctx.moveTo(x0,y0);
-      for(var k=start+1;k<tr.length;k++){
-        var tx=cx+tr[k].x*scale,ty=cy-tr[k].y*scale;
-        if(isFinite(tx)&&isFinite(ty)) ctx.lineTo(tx,ty);
+      var maxTr=iv('tb-trail')||1500, start=Math.max(0,tr.length-maxTr);
+      ctx.beginPath(); var first=true;
+      for(var k=start;k<tr.length;k++){
+        var s=w2s(tr[k].x,tr[k].y); if(!isFinite(s.x)) continue;
+        first?(ctx.moveTo(s.x,s.y),first=false):ctx.lineTo(s.x,s.y);
       }
-      var ddx=x1-x0,ddy=y1-y0;
-      if(ddx*ddx+ddy*ddy>0.01){
-        var grad=ctx.createLinearGradient(x0,y0,x1,y1);
-        grad.addColorStop(0,'rgba(0,0,0,0)');
-        grad.addColorStop(1,PAL[i%PAL.length]+'cc');
-        ctx.strokeStyle=grad;
-      } else { ctx.strokeStyle=PAL[i%PAL.length]+'cc'; }
-      ctx.lineWidth=1.2; ctx.stroke();
+      if(!first){
+        var sA=w2s(tr[start].x,tr[start].y), sB=w2s(tr[tr.length-1].x,tr[tr.length-1].y);
+        var ddx=sB.x-sA.x,ddy=sB.y-sA.y;
+        if(ddx*ddx+ddy*ddy>0.01){
+          var grd=ctx.createLinearGradient(sA.x,sA.y,sB.x,sB.y);
+          grd.addColorStop(0,'rgba(0,0,0,0)'); grd.addColorStop(1,PAL[i%PAL.length]+'cc');
+          ctx.strokeStyle=grd;
+        } else { ctx.strokeStyle=PAL[i%PAL.length]+'cc'; }
+        ctx.lineWidth=1.2; ctx.stroke();
+      }
     });
 
     // bodies
     bodies.forEach(function(b,i){
-      var px=cx+b.x*scale,py=cy-b.y*scale;
-      if(!isFinite(px)||!isFinite(py)) return;
-      var col=PAL[i%PAL.length];
-      var rad=Math.max(3,b.m*3.5);
-      // glow
-      var grd=ctx.createRadialGradient(px,py,0,px,py,rad*4);
-      grd.addColorStop(0,col+'55'); grd.addColorStop(1,col+'00');
-      ctx.beginPath(); ctx.arc(px,py,rad*4,0,2*Math.PI); ctx.fillStyle=grd; ctx.fill();
-      // dot
-      ctx.beginPath(); ctx.arc(px,py,rad,0,2*Math.PI); ctx.fillStyle=col; ctx.fill();
-      // label
+      var s=w2s(b.x,b.y); if(!isFinite(s.x)) return;
+      var col=PAL[i%PAL.length], rad=Math.max(3,b.m*2), isCam=(i===camBody);
+      var grd=ctx.createRadialGradient(s.x,s.y,0,s.x,s.y,rad*(isCam?6:4));
+      grd.addColorStop(0,col+(isCam?'88':'44')); grd.addColorStop(1,col+'00');
+      ctx.beginPath();ctx.arc(s.x,s.y,rad*(isCam?6:4),0,2*Math.PI);ctx.fillStyle=grd;ctx.fill();
+      ctx.beginPath();ctx.arc(s.x,s.y,rad,0,2*Math.PI);ctx.fillStyle=col;ctx.fill();
+      if(isCam){ctx.beginPath();ctx.arc(s.x,s.y,rad+3,0,2*Math.PI);ctx.strokeStyle=col;ctx.lineWidth=1;ctx.stroke();}
       ctx.fillStyle='rgba(232,217,176,0.8)';
       ctx.font=Math.max(7,rad+1)+'px Cinzel,serif';
       ctx.textAlign='left'; ctx.textBaseline='bottom';
-      ctx.fillText('p'+tbPrimes[i]+' r'+tbResidues[i],px+rad+2,py);
+      ctx.fillText(tbLabels[i]||('r'+tbResidues[i]),s.x+rad+2,s.y);
     });
+
+    if(egoActive){
+      ctx.fillStyle='rgba(196,155,56,0.6)';
+      ctx.font='8px Cinzel,serif'; ctx.textAlign='left'; ctx.textBaseline='top';
+      ctx.fillText('CAM: '+tbLabels[camBody]+' (r'+tbResidues[camBody]+')',6,6);
+    }
   }
 
-  // ── animation loop ─────────────────────────────────────────────────────
+  // ── animation loop ────────────────────────────────────────────────────
   function tbLoop(){
     var bodyEl=document.getElementById('tb-body');
     if(!bodyEl||bodyEl.style.display==='none'){requestAnimationFrame(tbLoop);return;}
     if(running&&bodies.length>0){
-      var G=gv('tb-G')||1, soft=gv('tb-soft')||0.04, gapK=gv('tb-gapk')||0;
-      var speed=iv('tb-speed')||10, N=getN(), maxTr=(iv('tb-trail')||1500)+500;
+      var G=gv('tb-G')||1,soft=gv('tb-soft')||0.04,gapK=gv('tb-gapk')||0;
+      var speed=iv('tb-speed')||10,N=getN();
       for(var s=0;s<speed;s++){
         tbStep(0.001,G,soft,gapK,N);
-        bodies.forEach(function(b,i){
-          if(isFinite(b.x)&&isFinite(b.y)) trails[i].push({x:b.x,y:b.y});
-        });
+        bodies.forEach(function(b,i){if(isFinite(b.x)&&isFinite(b.y))trails[i].push({x:b.x,y:b.y});});
       }
-      trails.forEach(function(tr,i){var m=iv('tb-trail')||1500;if(tr.length>m+500)tr.splice(0,tr.length-m);});
+      var maxTr=iv('tb-trail')||1500;
+      trails.forEach(function(tr){if(tr.length>maxTr+500)tr.splice(0,tr.length-maxTr);});
       tbDraw();
-      var G2=gv('tb-G')||1,soft2=gv('tb-soft')||0.04;
       var tEl=document.getElementById('tb-t');if(tEl)tEl.textContent=tbTime.toFixed(3);
-      var eEl=document.getElementById('tb-e');if(eEl)eEl.textContent=tbEnergy(G2,soft2).toFixed(4);
+      var eEl=document.getElementById('tb-e');if(eEl)eEl.textContent=tbEnergy(G,soft).toFixed(4);
       var sEl=document.getElementById('tb-sep');if(sEl)sEl.textContent=tbMinSep().toFixed(4);
-    } else if(!running&&bodies.length>0){
-      tbDraw();
-    }
+    } else if(!running&&bodies.length>0){ tbDraw(); }
     requestAnimationFrame(tbLoop);
   }
 
-  // ── public API ─────────────────────────────────────────────────────────
+  // ── camera ────────────────────────────────────────────────────────────
+  window.tbSetCam=function(idx){
+    camBody=idx;
+    document.querySelectorAll('.tb-cam-btn').forEach(function(btn){
+      var i=parseInt(btn.dataset.idx);
+      var active=(i===idx);
+      var col=i===-1?'var(--gold)':PAL[i%PAL.length];
+      btn.style.background=active?col:'var(--parchment-dark)';
+      btn.style.color=active?'var(--parchment-dark)':col;
+      btn.style.borderColor=col;
+    });
+    tbClearTrails();
+  };
+  function tbRebuildCamButtons(){
+    var row=document.getElementById('tb-cam-row'); if(!row) return;
+    row.innerHTML='';
+    var gb=document.createElement('button');
+    gb.className='tb-cam-btn'; gb.dataset.idx=-1; gb.textContent='Global'; gb.onclick=function(){tbSetCam(-1);};
+    var active=(camBody===-1);
+    gb.style.cssText='font-family:Cinzel,serif;font-size:0.44rem;padding:2px 5px;border:1px solid var(--gold);background:'+(active?'var(--gold)':'var(--parchment-dark)')+';color:'+(active?'var(--parchment-dark)':'var(--gold)')+';cursor:pointer;border-radius:2px;';
+    row.appendChild(gb);
+    tbLabels.forEach(function(lbl,i){
+      var col=PAL[i%PAL.length], btn=document.createElement('button');
+      btn.className='tb-cam-btn'; btn.dataset.idx=i; btn.textContent=lbl;
+      btn.onclick=(function(idx){return function(){tbSetCam(idx);};})(i);
+      var act=(camBody===i);
+      btn.style.cssText='font-family:Cinzel,serif;font-size:0.44rem;padding:2px 5px;border:1px solid '+col+';background:'+(act?col:'var(--parchment-dark)')+';color:'+(act?'var(--parchment-dark)':col)+';cursor:pointer;border-radius:2px;';
+      row.appendChild(btn);
+    });
+  }
+
+  // ── presets ───────────────────────────────────────────────────────────
+  function setSlider(id,val){var e=document.getElementById(id);if(!e)return;e.value=val;e.dispatchEvent(new Event('input',{bubbles:true}));}
+  function setMainMod(n){
+    var e=document.getElementById('f-mod-num');if(!e)return;
+    e.value=n;e.dispatchEvent(new Event('change',{bubbles:true}));
+    var s=document.getElementById('f-mod');if(s)s.value=n;
+    if(typeof fareyRedraw==='function')fareyRedraw();
+  }
+  window.tbPreset=function(cfg){
+    if(cfg.N) setMainMod(cfg.N);
+    if(cfg.mode) tbSetBodyMode(cfg.mode);
+    // prime params
+    if(cfg.K){var k=document.getElementById('tb-K');if(k)k.value=cfg.K;}
+    // element params
+    if(cfg.Zstart){var z=document.getElementById('tb-Z-start');if(z)z.value=cfg.Zstart;}
+    if(cfg.Zcount){var z=document.getElementById('tb-Z-count');if(z)z.value=cfg.Zcount;}
+    if(cfg.elemMass){var z=document.getElementById('tb-elem-mass');if(z)z.value=cfg.elemMass;}
+    // sliders
+    if(cfg.G    !==undefined)setSlider('tb-G',    cfg.G);
+    if(cfg.gapK !==undefined)setSlider('tb-gapk', cfg.gapK);
+    if(cfg.R    !==undefined)setSlider('tb-R',    cfg.R);
+    if(cfg.soft !==undefined)setSlider('tb-soft', cfg.soft);
+    if(cfg.speed!==undefined)setSlider('tb-speed',cfg.speed);
+    if(cfg.trail!==undefined)setSlider('tb-trail',cfg.trail);
+    // overlays
+    if(cfg.overlays) Object.keys(cfg.overlays).forEach(function(k){if(overlays[k]!==cfg.overlays[k])tbToggleOverlay(k);});
+    tbInit(); tbDraw(); running=false;
+    var btn=document.getElementById('tb-play-btn');if(btn)btn.textContent='▶ Play';
+  };
+
+  // ── public API ────────────────────────────────────────────────────────
   window.tbToggle=function(){
-    var body=document.getElementById('tb-body');
-    var icon=document.getElementById('tb-toggle-icon');
-    if(!body) return;
+    var body=document.getElementById('tb-body'),icon=document.getElementById('tb-toggle-icon');
+    if(!body)return;
     var open=body.style.display==='none';
     body.style.display=open?'block':'none';
-    if(icon) icon.textContent=open?'▲':'▼';
-    if(open&&!started){started=true;tbInit();tbDraw();
-      var btn=document.getElementById('tb-play-btn');if(btn)btn.textContent='▶ Play';}
+    if(icon)icon.textContent=open?'▲':'▼';
+    if(open&&!started){started=true;tbInit();tbDraw();var btn=document.getElementById('tb-play-btn');if(btn)btn.textContent='▶ Play';}
   };
   window.tbTogglePlay=function(){
-    running=!running;
-    var btn=document.getElementById('tb-play-btn');
-    if(btn) btn.textContent=running?'⏸ Pause':'▶ Play';
+    running=!running;var btn=document.getElementById('tb-play-btn');
+    if(btn)btn.textContent=running?'⏸ Pause':'▶ Play';
   };
-  window.tbReset=function(){tbInit();tbDraw();running=false;
-    var btn=document.getElementById('tb-play-btn');if(btn)btn.textContent='▶ Play';};
+  window.tbReset=function(){tbInit();tbDraw();running=false;var btn=document.getElementById('tb-play-btn');if(btn)btn.textContent='▶ Play';};
   window.tbClearTrails=function(){trails=bodies.map(function(){return[];});};
   window.tbToggleOverlay=function(key){
     overlays[key]=!overlays[key];
     var btn=document.getElementById('tb-btn-'+key);if(!btn)return;
-    var on=overlays[key];
-    var cols={poly:'var(--gold)',cross:'#4a90d9',gap:'#f97316'};
-    var col=cols[key]||'var(--gold)';
+    var on=overlays[key],cols={poly:'var(--gold)',cross:'#4a90d9',gap:'#f97316'},col=cols[key]||'var(--gold)';
     btn.style.background=on?col:'var(--parchment-dark)';
     btn.style.color=on?'var(--parchment-dark)':col;
   };
 
   document.addEventListener('DOMContentLoaded',function(){
     var modEl=document.getElementById('f-mod-num');
-    if(modEl) modEl.addEventListener('change',function(){
-      if(started){tbInit();}
-      tbSyncPrimes();
+    if(modEl)modEl.addEventListener('change',function(){if(started)tbInit();tbSyncBodies();});
+    // canvas click for camera
+    var C=document.getElementById('tb-canvas');
+    if(C)C.addEventListener('click',function(e){
+      if(!bodies.length)return;
+      var rect=C.getBoundingClientRect();
+      var mx=(e.clientX-rect.left)*(C.width/rect.width);
+      var my=(e.clientY-rect.top)*(C.height/rect.height);
+      var W=C.width,H=C.height,cx=W/2,cy=H/2;
+      var camOx=0,camOy=0,camAngle=0;
+      var ea=camBody>=0&&camBody<bodies.length&&isFinite(bodies[camBody].x);
+      if(ea){var cb=bodies[camBody];camOx=cb.x;camOy=cb.y;var vl=Math.sqrt(cb.vx*cb.vx+cb.vy*cb.vy);if(vl>1e-9)camAngle=Math.atan2(cb.vx,-cb.vy);}
+      var maxR=0.5;
+      bodies.forEach(function(b){if(!isFinite(b.x))return;var dx=b.x-camOx,dy=b.y-camOy;maxR=Math.max(maxR,Math.sqrt(dx*dx+dy*dy));});
+      var scale=(W*0.44)/(maxR*1.25);
+      var best=-1,bestD=Infinity;
+      bodies.forEach(function(b,i){
+        if(!isFinite(b.x))return;
+        var dx=b.x-camOx,dy=b.y-camOy;
+        var rx=dx*Math.cos(camAngle)+dy*Math.sin(camAngle);
+        var ry=-dx*Math.sin(camAngle)+dy*Math.cos(camAngle);
+        var d=Math.sqrt((cx+rx*scale-mx)*(cx+rx*scale-mx)+(cy-ry*scale-my)*(cy-ry*scale-my));
+        if(d<bestD){best=i;bestD=d;}
+      });
+      tbSetCam(bestD<40?(best===camBody?-1:best):-1);
     });
     tbLoop();
   });
 })();
 </script>
+
 </body>
 </html>
