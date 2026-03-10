@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>Rational Unit Circle Structure</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Cinzel:wght@400;600;700&family=Cinzel+Decorative:wght@400;700&family=Inter:wght@300;400;500;600&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
@@ -3050,7 +3053,7 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
 
 <!-- ══ N-BODY PRIME / ELEMENT RESIDUE ORBITS ══ -->
 <div id="threebody-section" style="margin-top:8px;background:var(--parchment-dark);border:1px solid var(--panel-border);border-radius:4px;">
-  <div onclick="tbToggle()" style="display:flex;align-items:center;justify-content:space-between;padding:8px 14px;cursor:pointer;user-select:none;">
+  <div onclick="if(window.tbToggle)window.tbToggle();" style="display:flex;align-items:center;justify-content:space-between;padding:8px 14px;cursor:pointer;user-select:none;">
     <span style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);">&#9632; Residue N-Body Orbits <span style="color:#9a8060;font-size:0.5rem;">— prime or element bodies</span></span>
     <span id="tb-toggle-icon" style="color:var(--gold);font-size:0.7rem;">&#9660;</span>
   </div>
@@ -3072,14 +3075,14 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
       <div style="display:flex;flex-direction:column;gap:5px;min-width:175px;max-width:235px;">
         <canvas id="tb-ring" width="180" height="180" style="width:100%;height:auto;aspect-ratio:1;background:#020100;border:1px solid var(--border);border-radius:3px;display:block;"></canvas>
         <div style="display:flex;gap:3px;">
-          <button id="tb-mode-prime-btn" onclick="tbSetBodyMode('prime')" style="font-family:'Cinzel',serif;font-size:0.46rem;padding:2px 7px;border:1px solid var(--gold);background:var(--gold);color:var(--parchment-dark);cursor:pointer;border-radius:2px;flex:1;">Primes</button>
-          <button id="tb-mode-elem-btn" onclick="tbSetBodyMode('element')" style="font-family:'Cinzel',serif;font-size:0.46rem;padding:2px 7px;border:1px solid #34d399;background:var(--parchment-dark);color:#34d399;cursor:pointer;border-radius:2px;flex:1;">Elements</button>
+          <button id="tb-mode-prime-btn" onclick="if(window.tbSetBodyMode)window.tbSetBodyMode('prime')" style="font-family:'Cinzel',serif;font-size:0.46rem;padding:2px 7px;border:1px solid var(--gold);background:var(--gold);color:var(--parchment-dark);cursor:pointer;border-radius:2px;flex:1;">Primes</button>
+          <button id="tb-mode-elem-btn" onclick="if(window.tbSetBodyMode)window.tbSetBodyMode('element')" style="font-family:'Cinzel',serif;font-size:0.46rem;padding:2px 7px;border:1px solid #34d399;background:var(--parchment-dark);color:#34d399;cursor:pointer;border-radius:2px;flex:1;">Elements</button>
         </div>
         <div id="tb-panel-prime" style="background:#0a0800;border:1px solid var(--panel-border);border-radius:3px;padding:5px 8px;">
           <div style="font-family:'Cinzel',serif;font-size:0.46rem;color:#9a8060;letter-spacing:0.07em;text-transform:uppercase;margin-bottom:4px;">First K coprime primes mod N</div>
           <div style="display:flex;align-items:center;gap:6px;">
             <span style="font-family:'Cinzel',serif;font-size:0.55rem;color:var(--gold);">K =</span>
-            <input id="tb-K" type="number" min="1" max="20" value="3" style="width:44px;background:#020100;color:var(--ink);border:1px solid var(--gold);padding:3px 5px;font-family:'Cinzel',serif;font-size:0.6rem;text-align:center;border-radius:2px;" oninput="tbSyncBodies()">
+            <input id="tb-K" type="number" min="1" max="20" value="3" style="width:44px;background:#020100;color:var(--ink);border:1px solid var(--gold);padding:3px 5px;font-family:'Cinzel',serif;font-size:0.6rem;text-align:center;border-radius:2px;" oninput="if(window.tbSyncBodies)window.tbSyncBodies()">
             <span style="font-family:'Cinzel',serif;font-size:0.44rem;color:#9a8060;">bodies</span>
           </div>
           <div id="tb-prime-summary" style="font-family:'Cinzel',serif;font-size:0.44rem;color:#a855f7;margin-top:4px;line-height:1.7;"></div>
@@ -3088,13 +3091,13 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
           <div style="font-family:'Cinzel',serif;font-size:0.46rem;color:#9a8060;letter-spacing:0.07em;text-transform:uppercase;margin-bottom:4px;">Elements (Z start / count)</div>
           <div style="display:flex;align-items:center;gap:4px;margin-bottom:4px;">
             <span style="font-family:'Cinzel',serif;font-size:0.46rem;color:#34d399;">Z</span>
-            <input id="tb-Z-start" type="number" min="1" max="36" value="1" style="width:36px;background:#020100;color:var(--ink);border:1px solid #34d399;padding:2px 3px;font-family:'Cinzel',serif;font-size:0.5rem;text-align:center;border-radius:2px;" oninput="tbSyncBodies()">
+            <input id="tb-Z-start" type="number" min="1" max="36" value="1" style="width:36px;background:#020100;color:var(--ink);border:1px solid #34d399;padding:2px 3px;font-family:'Cinzel',serif;font-size:0.5rem;text-align:center;border-radius:2px;" oninput="if(window.tbSyncBodies)window.tbSyncBodies()">
             <span style="font-family:'Cinzel',serif;font-size:0.46rem;color:#34d399;">count</span>
-            <input id="tb-Z-count" type="number" min="1" max="20" value="3" style="width:36px;background:#020100;color:var(--ink);border:1px solid #34d399;padding:2px 3px;font-family:'Cinzel',serif;font-size:0.5rem;text-align:center;border-radius:2px;" oninput="tbSyncBodies()">
+            <input id="tb-Z-count" type="number" min="1" max="20" value="3" style="width:36px;background:#020100;color:var(--ink);border:1px solid #34d399;padding:2px 3px;font-family:'Cinzel',serif;font-size:0.5rem;text-align:center;border-radius:2px;" oninput="if(window.tbSyncBodies)window.tbSyncBodies()">
           </div>
           <div style="display:flex;align-items:center;gap:4px;margin-bottom:3px;">
             <span style="font-family:'Cinzel',serif;font-size:0.44rem;color:#9a8060;">mass =</span>
-            <select id="tb-elem-mass" onchange="tbSyncBodies()" style="font-family:'Cinzel',serif;font-size:0.44rem;background:#020100;color:var(--ink);border:1px solid #34d399;padding:1px 3px;border-radius:2px;">
+            <select id="tb-elem-mass" onchange="if(window.tbSyncBodies)window.tbSyncBodies()" style="font-family:'Cinzel',serif;font-size:0.44rem;background:#020100;color:var(--ink);border:1px solid #34d399;padding:1px 3px;border-radius:2px;">
               <option value="atomic">Atomic mass</option>
               <option value="period">Period</option>
               <option value="group">Group</option>
@@ -3104,9 +3107,9 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
           <div id="tb-elem-summary" style="font-family:'Cinzel',serif;font-size:0.44rem;color:#34d399;line-height:1.7;"></div>
         </div>
         <div style="display:flex;gap:4px;flex-wrap:wrap;">
-          <button id="tb-btn-poly" onclick="tbToggleOverlay('poly')" style="font-family:'Cinzel',serif;font-size:0.46rem;padding:2px 6px;border:1px solid var(--gold);background:var(--gold);color:var(--parchment-dark);cursor:pointer;border-radius:2px;">Polygon</button>
-          <button id="tb-btn-cross" onclick="tbToggleOverlay('cross')" style="font-family:'Cinzel',serif;font-size:0.46rem;padding:2px 6px;border:1px solid #4a90d9;background:var(--parchment-dark);color:#4a90d9;cursor:pointer;border-radius:2px;">Cross-mod</button>
-          <button id="tb-btn-gap" onclick="tbToggleOverlay('gap')" style="font-family:'Cinzel',serif;font-size:0.46rem;padding:2px 6px;border:1px solid #f97316;background:var(--parchment-dark);color:#f97316;cursor:pointer;border-radius:2px;">Gap Force</button>
+          <button id="tb-btn-poly" onclick="if(window.tbToggleOverlay)window.tbToggleOverlay('poly')" style="font-family:'Cinzel',serif;font-size:0.46rem;padding:2px 6px;border:1px solid var(--gold);background:var(--gold);color:var(--parchment-dark);cursor:pointer;border-radius:2px;">Polygon</button>
+          <button id="tb-btn-cross" onclick="if(window.tbToggleOverlay)window.tbToggleOverlay('cross')" style="font-family:'Cinzel',serif;font-size:0.46rem;padding:2px 6px;border:1px solid #4a90d9;background:var(--parchment-dark);color:#4a90d9;cursor:pointer;border-radius:2px;">Cross-mod</button>
+          <button id="tb-btn-gap" onclick="if(window.tbToggleOverlay)window.tbToggleOverlay('gap')" style="font-family:'Cinzel',serif;font-size:0.46rem;padding:2px 6px;border:1px solid #f97316;background:var(--parchment-dark);color:#f97316;cursor:pointer;border-radius:2px;">Gap Force</button>
         </div>
         <div style="display:flex;align-items:center;gap:4px;"><span style="font-family:'Cinzel',serif;font-size:0.47rem;color:#9a8060;width:32px;">G</span><input type="range" id="tb-G" min="0.1" max="5" step="0.05" value="1" style="flex:1;accent-color:var(--gold);" oninput="document.getElementById('tb-Gv').textContent=parseFloat(this.value).toFixed(2);"><span id="tb-Gv" style="font-family:'Cinzel',serif;font-size:0.47rem;color:var(--gold);min-width:26px;">1.00</span></div>
         <div style="display:flex;align-items:center;gap:4px;"><span style="font-family:'Cinzel',serif;font-size:0.47rem;color:#9a8060;width:32px;">Gap K</span><input type="range" id="tb-gapk" min="0" max="2" step="0.02" value="0.3" style="flex:1;accent-color:#f97316;" oninput="document.getElementById('tb-gapkv').textContent=parseFloat(this.value).toFixed(2);"><span id="tb-gapkv" style="font-family:'Cinzel',serif;font-size:0.47rem;color:#f97316;min-width:26px;">0.30</span></div>
@@ -3117,22 +3120,22 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
         <div style="background:#0a0800;border:1px solid var(--panel-border);border-radius:3px;padding:5px 8px;">
           <div style="font-family:'Cinzel',serif;font-size:0.44rem;color:#9a8060;letter-spacing:0.07em;text-transform:uppercase;margin-bottom:4px;">Presets</div>
           <div style="display:flex;gap:3px;flex-wrap:wrap;">
-            <button onclick="tbPreset({mode:'prime',N:12,K:3,G:1,gapK:0,R:1.5,soft:0.04,speed:10,trail:1500,overlays:{poly:true,cross:false,gap:false}})" style="font-family:'Cinzel',serif;font-size:0.43rem;padding:2px 5px;border:1px solid var(--gold);background:var(--parchment-dark);color:var(--gold);cursor:pointer;border-radius:2px;">Trinity</button>
-            <button onclick="tbPreset({mode:'prime',N:30,K:5,G:1,gapK:0,R:1.5,soft:0.05,speed:8,trail:2000,overlays:{poly:true,cross:false,gap:false}})" style="font-family:'Cinzel',serif;font-size:0.43rem;padding:2px 5px;border:1px solid var(--gold);background:var(--parchment-dark);color:var(--gold);cursor:pointer;border-radius:2px;">Pentagon</button>
-            <button onclick="tbPreset({mode:'prime',N:210,K:4,G:2,gapK:0,R:1.5,soft:0.03,speed:12,trail:3000,overlays:{poly:true,cross:false,gap:false}})" style="font-family:'Cinzel',serif;font-size:0.43rem;padding:2px 5px;border:1px solid var(--gold);background:var(--parchment-dark);color:var(--gold);cursor:pointer;border-radius:2px;">Quadrant 210</button>
-            <button onclick="tbPreset({mode:'prime',N:12,K:3,G:1,gapK:1.2,R:1.5,soft:0.04,speed:10,trail:2000,overlays:{poly:true,cross:false,gap:true}})" style="font-family:'Cinzel',serif;font-size:0.43rem;padding:2px 5px;border:1px solid #f97316;background:var(--parchment-dark);color:#f97316;cursor:pointer;border-radius:2px;">Gap Dance</button>
-            <button onclick="tbPreset({mode:'prime',N:30,K:6,G:0.8,gapK:0.8,R:1.5,soft:0.04,speed:8,trail:2500,overlays:{poly:true,cross:true,gap:true}})" style="font-family:'Cinzel',serif;font-size:0.43rem;padding:2px 5px;border:1px solid #4a90d9;background:var(--parchment-dark);color:#4a90d9;cursor:pointer;border-radius:2px;">Lattice Web</button>
-            <button onclick="tbPreset({mode:'prime',N:12,K:2,G:1,gapK:0,R:1.5,soft:0.01,speed:15,trail:4000,overlays:{poly:true,cross:false,gap:false}})" style="font-family:'Cinzel',serif;font-size:0.43rem;padding:2px 5px;border:1px solid var(--gold);background:var(--parchment-dark);color:var(--gold);cursor:pointer;border-radius:2px;">Binary Star</button>
-            <button onclick="tbPreset({mode:'element',N:18,Zstart:1,Zcount:5,elemMass:'period',G:1,gapK:0,R:1.5,soft:0.04,speed:10,trail:2000,overlays:{poly:true,cross:false,gap:false}})" style="font-family:'Cinzel',serif;font-size:0.43rem;padding:2px 5px;border:1px solid #34d399;background:var(--parchment-dark);color:#34d399;cursor:pointer;border-radius:2px;">Period 1-5</button>
-            <button onclick="tbPreset({mode:'element',N:36,Zstart:2,Zcount:4,elemMass:'atomic',G:1.2,gapK:0.5,R:1.5,soft:0.04,speed:8,trail:2000,overlays:{poly:true,cross:false,gap:true}})" style="font-family:'Cinzel',serif;font-size:0.43rem;padding:2px 5px;border:1px solid #34d399;background:var(--parchment-dark);color:#34d399;cursor:pointer;border-radius:2px;">Noble Gases</button>
-            <button onclick="tbPreset({mode:'element',N:18,Zstart:3,Zcount:4,elemMass:'group',G:1,gapK:1,R:1.5,soft:0.04,speed:10,trail:2000,overlays:{poly:true,cross:false,gap:true}})" style="font-family:'Cinzel',serif;font-size:0.43rem;padding:2px 5px;border:1px solid #34d399;background:var(--parchment-dark);color:#34d399;cursor:pointer;border-radius:2px;">Alkali Dance</button>
-            <button onclick="tbPreset({mode:'element',N:36,Zstart:1,Zcount:8,elemMass:'atomic',G:0.7,gapK:0.4,R:1.5,soft:0.05,speed:7,trail:2000,overlays:{poly:true,cross:true,gap:false}})" style="font-family:'Cinzel',serif;font-size:0.43rem;padding:2px 5px;border:1px solid #34d399;background:var(--parchment-dark);color:#34d399;cursor:pointer;border-radius:2px;">Row 1-8</button>
+            <button onclick="if(window.tbPreset)window.tbPreset({mode:'prime',N:12,K:3,G:1,gapK:0,R:1.5,soft:0.04,speed:10,trail:1500,overlays:{poly:true,cross:false,gap:false}})" style="font-family:'Cinzel',serif;font-size:0.43rem;padding:2px 5px;border:1px solid var(--gold);background:var(--parchment-dark);color:var(--gold);cursor:pointer;border-radius:2px;">Trinity</button>
+            <button onclick="if(window.tbPreset)window.tbPreset({mode:'prime',N:30,K:5,G:1,gapK:0,R:1.5,soft:0.05,speed:8,trail:2000,overlays:{poly:true,cross:false,gap:false}})" style="font-family:'Cinzel',serif;font-size:0.43rem;padding:2px 5px;border:1px solid var(--gold);background:var(--parchment-dark);color:var(--gold);cursor:pointer;border-radius:2px;">Pentagon</button>
+            <button onclick="if(window.tbPreset)window.tbPreset({mode:'prime',N:210,K:4,G:2,gapK:0,R:1.5,soft:0.03,speed:12,trail:3000,overlays:{poly:true,cross:false,gap:false}})" style="font-family:'Cinzel',serif;font-size:0.43rem;padding:2px 5px;border:1px solid var(--gold);background:var(--parchment-dark);color:var(--gold);cursor:pointer;border-radius:2px;">Quadrant 210</button>
+            <button onclick="if(window.tbPreset)window.tbPreset({mode:'prime',N:12,K:3,G:1,gapK:1.2,R:1.5,soft:0.04,speed:10,trail:2000,overlays:{poly:true,cross:false,gap:true}})" style="font-family:'Cinzel',serif;font-size:0.43rem;padding:2px 5px;border:1px solid #f97316;background:var(--parchment-dark);color:#f97316;cursor:pointer;border-radius:2px;">Gap Dance</button>
+            <button onclick="if(window.tbPreset)window.tbPreset({mode:'prime',N:30,K:6,G:0.8,gapK:0.8,R:1.5,soft:0.04,speed:8,trail:2500,overlays:{poly:true,cross:true,gap:true}})" style="font-family:'Cinzel',serif;font-size:0.43rem;padding:2px 5px;border:1px solid #4a90d9;background:var(--parchment-dark);color:#4a90d9;cursor:pointer;border-radius:2px;">Lattice Web</button>
+            <button onclick="if(window.tbPreset)window.tbPreset({mode:'prime',N:12,K:2,G:1,gapK:0,R:1.5,soft:0.01,speed:15,trail:4000,overlays:{poly:true,cross:false,gap:false}})" style="font-family:'Cinzel',serif;font-size:0.43rem;padding:2px 5px;border:1px solid var(--gold);background:var(--parchment-dark);color:var(--gold);cursor:pointer;border-radius:2px;">Binary Star</button>
+            <button onclick="if(window.tbPreset)window.tbPreset({mode:'element',N:18,Zstart:1,Zcount:5,elemMass:'period',G:1,gapK:0,R:1.5,soft:0.04,speed:10,trail:2000,overlays:{poly:true,cross:false,gap:false}})" style="font-family:'Cinzel',serif;font-size:0.43rem;padding:2px 5px;border:1px solid #34d399;background:var(--parchment-dark);color:#34d399;cursor:pointer;border-radius:2px;">Period 1-5</button>
+            <button onclick="if(window.tbPreset)window.tbPreset({mode:'element',N:36,Zstart:2,Zcount:4,elemMass:'atomic',G:1.2,gapK:0.5,R:1.5,soft:0.04,speed:8,trail:2000,overlays:{poly:true,cross:false,gap:true}})" style="font-family:'Cinzel',serif;font-size:0.43rem;padding:2px 5px;border:1px solid #34d399;background:var(--parchment-dark);color:#34d399;cursor:pointer;border-radius:2px;">Noble Gases</button>
+            <button onclick="if(window.tbPreset)window.tbPreset({mode:'element',N:18,Zstart:3,Zcount:4,elemMass:'group',G:1,gapK:1,R:1.5,soft:0.04,speed:10,trail:2000,overlays:{poly:true,cross:false,gap:true}})" style="font-family:'Cinzel',serif;font-size:0.43rem;padding:2px 5px;border:1px solid #34d399;background:var(--parchment-dark);color:#34d399;cursor:pointer;border-radius:2px;">Alkali Dance</button>
+            <button onclick="if(window.tbPreset)window.tbPreset({mode:'element',N:36,Zstart:1,Zcount:8,elemMass:'atomic',G:0.7,gapK:0.4,R:1.5,soft:0.05,speed:7,trail:2000,overlays:{poly:true,cross:true,gap:false}})" style="font-family:'Cinzel',serif;font-size:0.43rem;padding:2px 5px;border:1px solid #34d399;background:var(--parchment-dark);color:#34d399;cursor:pointer;border-radius:2px;">Row 1-8</button>
           </div>
         </div>
         <div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:2px;">
-          <button id="tb-play-btn" onclick="tbTogglePlay()" style="font-family:'Cinzel',serif;font-size:0.48rem;letter-spacing:0.08em;text-transform:uppercase;padding:3px 8px;border:1px solid var(--gold);background:var(--parchment-dark);color:var(--gold);cursor:pointer;border-radius:2px;">&#9654; Play</button>
-          <button onclick="tbReset()" style="font-family:'Cinzel',serif;font-size:0.48rem;letter-spacing:0.08em;text-transform:uppercase;padding:3px 8px;border:1px solid var(--gold);background:var(--parchment-dark);color:var(--gold);cursor:pointer;border-radius:2px;">&#11119; Reset</button>
-          <button onclick="tbClearTrails()" style="font-family:'Cinzel',serif;font-size:0.48rem;letter-spacing:0.08em;text-transform:uppercase;padding:3px 8px;border:1px solid #4ecdc4;background:var(--parchment-dark);color:#4ecdc4;cursor:pointer;border-radius:2px;">&#9003; Trace</button>
+          <button id="tb-play-btn" onclick="if(window.tbTogglePlay)window.tbTogglePlay()" style="font-family:'Cinzel',serif;font-size:0.48rem;letter-spacing:0.08em;text-transform:uppercase;padding:3px 8px;border:1px solid var(--gold);background:var(--parchment-dark);color:var(--gold);cursor:pointer;border-radius:2px;">&#9654; Play</button>
+          <button onclick="if(window.tbReset)window.tbReset()" style="font-family:'Cinzel',serif;font-size:0.48rem;letter-spacing:0.08em;text-transform:uppercase;padding:3px 8px;border:1px solid var(--gold);background:var(--parchment-dark);color:var(--gold);cursor:pointer;border-radius:2px;">&#11119; Reset</button>
+          <button onclick="if(window.tbClearTrails)window.tbClearTrails()" style="font-family:'Cinzel',serif;font-size:0.48rem;letter-spacing:0.08em;text-transform:uppercase;padding:3px 8px;border:1px solid #4ecdc4;background:var(--parchment-dark);color:#4ecdc4;cursor:pointer;border-radius:2px;">&#9003; Trace</button>
         </div>
         <div style="font-family:'Cinzel',serif;font-size:0.44rem;color:#9a8060;line-height:1.6;margin-top:2px;">prime: gcd=1 filter · element: Z mod N · gap=Farey density · mass=selected property</div>
       </div>
@@ -3307,6 +3310,85 @@ ight)"></div>
                 <p>The proportion of primitive residues mod m decays to zero by the Euler product:</p>
                 <div class="theory-math" data-math="rac{arphi(m)}{m} = \prod_{p \mid m}\!\Bigl(1 - 	frac{1}{p}\Bigr) \;\longrightarrow\; 0"></div>
                 <p>The lattice refines as m grows while allowed directions simultaneously thin &mdash; a precise quantification of prime sparsity. Averaged over all m&thinsp;&le;&thinsp;N this density converges to 6/&#960;&sup2; = 1/&#950;(2). The hierarchy navigator tracks &#966;(N)/N live.</p>
+            </div>
+            <div class="theory-card">
+                <h4>&#167;8 &mdash; Laurent Annuli &amp; Partial Fractions</h4>
+                <p>The ring structure is the discrete skeleton of a Laurent series. For a rational function with poles at coprime prime residues r&#8321;,r&#8322;,&#8230; mod N, the complex plane splits into annular convergence regions &mdash; one per gap between consecutive pole radii.</p>
+                <p><span style="color:#4a90d9;">gcd(r,m)=1 points</span> are <em>independent</em> Laurent terms: irreducible partial fractions that generate new series coefficients. <span style="color:#c94040;">gcd(r,m)&gt;1 points</span> are <em>reducible</em> &mdash; they collapse to lower-denominator rings, contributing no new terms, exactly as reducible fractions cancel in partial fraction decomposition. The 6/&pi;&sup2; coprime density is therefore also the fraction of <em>independent</em> Laurent basis elements across all rings.</p>
+                <div class="theory-math" data-math="f(z)=\sum_k rac{A_k}{z-r_k},\quad r_k = p_k mod N,\quad \gcd(r_k,N)=1"></div>
+                <p>The N-body panel uses these same r&#8342; as orbit positions &mdash; bodies in the annular band between poles. Use the explorer below to see the decomposition live as you change N.</p>
+                <!-- Live Laurent explorer -->
+                <div id="laurent-explorer" style="margin-top:10px;background:rgba(0,0,0,0.35);border:1px solid rgba(196,155,56,0.25);border-radius:4px;padding:10px 12px;">
+                  <div style="font-family:'Cinzel',serif;font-size:0.5rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;">&#9632; Laurent Explorer &mdash; live with mod N slider</div>
+                  <div style="display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap;">
+                    <canvas id="laurent-canvas" width="200" height="200" style="background:#020100;border:1px solid var(--border);border-radius:3px;flex-shrink:0;"></canvas>
+                    <div style="flex:1;min-width:160px;">
+                      <div style="font-family:'Cinzel',serif;font-size:0.44rem;color:#9a8060;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.07em;">Poles &mdash; coprime primes mod N</div>
+                      <div id="lx-poles" style="font-family:'Cinzel',serif;font-size:0.46rem;color:#4a90d9;line-height:1.8;margin-bottom:5px;"></div>
+                      <div style="font-family:'Cinzel',serif;font-size:0.44rem;color:#9a8060;margin-bottom:3px;text-transform:uppercase;letter-spacing:0.07em;">Annuli (inner / annulus / outer)</div>
+                      <div id="lx-annuli" style="font-family:'Cinzel',serif;font-size:0.44rem;line-height:2;margin-bottom:5px;"></div>
+                      <div style="font-family:'Cinzel',serif;font-size:0.44rem;color:#9a8060;margin-bottom:3px;text-transform:uppercase;letter-spacing:0.07em;">Partial fraction decomposition</div>
+                      <div id="lx-pf" style="font-family:'Cinzel',serif;font-size:0.44rem;color:#e8d9b0;line-height:2;word-break:break-all;margin-bottom:4px;"></div>
+                      <div id="lx-reducible" style="font-family:'Cinzel',serif;font-size:0.43rem;color:#c94040;line-height:1.7;"></div>
+                      <div style="display:flex;gap:4px;margin-top:7px;flex-wrap:wrap;">
+                        <button onclick="lxSyncToNBody()" style="font-family:'Cinzel',serif;font-size:0.43rem;padding:2px 6px;border:1px solid #a855f7;background:var(--parchment-dark);color:#a855f7;cursor:pointer;border-radius:2px;">&#8594; N-Body</button>
+                        <button onclick="lxToggleGcd()" id="lx-gcd-btn" style="font-family:'Cinzel',serif;font-size:0.43rem;padding:2px 6px;border:1px solid #c94040;background:var(--parchment-dark);color:#c94040;cursor:pointer;border-radius:2px;">Show gcd&gt;1</button>
+                        <button onclick="lxDraw()" style="font-family:'Cinzel',serif;font-size:0.43rem;padding:2px 6px;border:1px solid var(--gold);background:var(--parchment-dark);color:var(--gold);cursor:pointer;border-radius:2px;">&#8635; Refresh</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+            <div class="theory-card">
+                <h4>&#167;9 &mdash; Riemann&rsquo;s Explicit Formula</h4>
+                <p>The exact prime counting function is given by the explicit formula, where each nontrivial zero &rho; = &frac12; + i&gamma;<sub>n</sub> of &zeta;(s) contributes one oscillatory correction:</p>
+                <div class="theory-math" data-math="\pi(x) = \operatorname{Li}(x) - \sum_{\rho}\operatorname{Li}(x^\rho) - \log 2 + \int_x^\infty \frac{dt}{t(t^2-1)\log t}"></div>
+                <p>Each conjugate pair &rho;, &rho;&macr; produces a real cosine wave of frequency &gamma;<sub>n</sub> log x. Your Farey discrepancy D<sub>N</sub> measures whether these oscillations stay bounded &mdash; the Franel&ndash;Landau equivalence to RH. The N-body panel places bodies at the residue positions r<sub>k</sub> = p<sub>k</sub> mod N, which are the discrete analog of the x<sup>&rho;</sup> phase evaluations. Each conjugate zero pair (&gamma;<sub>n</sub>, &minus;&gamma;<sub>n</sub>) mirrors the (r, N&minus;r) mirror involution on your coprime ring.</p>
+
+                <!-- Live Explicit Formula Explorer -->
+                <div id="rf-explorer" style="margin-top:10px;background:rgba(0,0,0,0.35);border:1px solid rgba(168,85,247,0.3);border-radius:4px;padding:10px 12px;">
+                  <div style="font-family:'Cinzel',serif;font-size:0.5rem;letter-spacing:0.12em;text-transform:uppercase;color:#a855f7;margin-bottom:8px;">&#9632; Explicit Formula Explorer</div>
+                  <div style="display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap;">
+
+                    <!-- Complex plane canvas -->
+                    <canvas id="rf-canvas" width="220" height="220" style="background:#020100;border:1px solid var(--border);border-radius:3px;flex-shrink:0;cursor:crosshair;"></canvas>
+
+                    <div style="flex:1;min-width:160px;display:flex;flex-direction:column;gap:5px;">
+
+                      <!-- Controls -->
+                      <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap;">
+                        <span style="font-family:'Cinzel',serif;font-size:0.44rem;color:#9a8060;">K zeros</span>
+                        <input id="rf-k" type="number" min="1" max="50" value="5"
+                          style="width:36px;background:#020100;color:var(--ink);border:1px solid #a855f7;padding:2px 3px;font-family:'Cinzel',serif;font-size:0.5rem;text-align:center;border-radius:2px;"
+                          oninput="rfDraw()">
+                        <span style="font-family:'Cinzel',serif;font-size:0.44rem;color:#9a8060;">x =</span>
+                        <input id="rf-x" type="number" min="3" max="1000" value="50"
+                          style="width:44px;background:#020100;color:var(--ink);border:1px solid #a855f7;padding:2px 3px;font-family:'Cinzel',serif;font-size:0.5rem;text-align:center;border-radius:2px;"
+                          oninput="rfDraw()">
+                      </div>
+
+                      <!-- Zero list -->
+                      <div style="font-family:'Cinzel',serif;font-size:0.43rem;color:#9a8060;text-transform:uppercase;letter-spacing:0.06em;">First K zeros &rho; = &frac12; + i&gamma;<sub>n</sub></div>
+                      <div id="rf-zeros" style="font-family:'Cinzel',serif;font-size:0.43rem;line-height:1.9;max-height:100px;overflow-y:auto;"></div>
+
+                      <!-- Explicit formula readout -->
+                      <div style="font-family:'Cinzel',serif;font-size:0.43rem;color:#9a8060;text-transform:uppercase;letter-spacing:0.06em;margin-top:3px;">Formula terms at x</div>
+                      <div id="rf-terms" style="font-family:'Cinzel',serif;font-size:0.43rem;color:#e8d9b0;line-height:1.9;"></div>
+
+                      <!-- Pi(x) approximation -->
+                      <div id="rf-pix" style="font-family:'Cinzel',serif;font-size:0.46rem;color:#a855f7;margin-top:3px;"></div>
+
+                      <!-- Connection to mod N -->
+                      <div id="rf-mod-link" style="font-family:'Cinzel',serif;font-size:0.43rem;color:#34d399;line-height:1.7;margin-top:3px;"></div>
+
+                      <!-- Buttons -->
+                      <div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:4px;">
+                        <button onclick="rfSyncToNBody()" style="font-family:'Cinzel',serif;font-size:0.43rem;padding:2px 6px;border:1px solid #a855f7;background:var(--parchment-dark);color:#a855f7;cursor:pointer;border-radius:2px;">&#8594; N-Body (K zeros)</button>
+                        <button onclick="rfDraw()" style="font-family:'Cinzel',serif;font-size:0.43rem;padding:2px 6px;border:1px solid var(--gold);background:var(--parchment-dark);color:var(--gold);cursor:pointer;border-radius:2px;">&#8635; Refresh</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
             </div>
 
         </div>
@@ -10064,7 +10146,423 @@ function toggleTheoryPanel() {
 </script>
 
 <script>
-// ══ N-BODY PRIME / ELEMENT RESIDUE ENGINE ════════════════════════════════
+// ══ LAURENT EXPLORER ══════════════════════════════════════════════════════
+(function(){
+  var _lxShowGcd = false;
+
+  function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){var t=b;b=a%b;a=t;}return a||1;}
+
+  var PRIMES=(function(){
+    var s=[],p=[];for(var i=0;i<=500;i++)s[i]=true;s[0]=s[1]=false;
+    for(var i=2;i<=500;i++)if(s[i]){p.push(i);for(var j=i*i;j<=500;j+=i)s[j]=false;}
+    return p;
+  })();
+
+  function getN(){var e=document.getElementById('f-mod-num');return e?(parseInt(e.value)||12):12;}
+
+  // First K coprime primes mod N (K up to 6 for display)
+  function coprimePolesModN(N, K){
+    var res=[]; var i=0;
+    while(res.length<K && i<PRIMES.length){
+      var p=PRIMES[i++], r=((p%N)+N)%N;
+      if(r>0 && gcd(r,N)===1) res.push({p:p,r:r});
+    }
+    return res;
+  }
+
+  // Non-coprime residues of first K primes mod N
+  function nonCoprimePolesModN(N, K){
+    var res=[]; var i=0;
+    while(res.length<K && i<PRIMES.length){
+      var p=PRIMES[i++], r=((p%N)+N)%N;
+      if(r>0 && gcd(r,N)>1) res.push({p:p,r:r,g:gcd(r,N)});
+    }
+    return res;
+  }
+
+  window.lxDraw = function(){
+    var N=getN();
+    var poles = coprimePolesModN(N, 5);
+    var ncpPoles = _lxShowGcd ? nonCoprimePolesModN(N, 4) : [];
+
+    // ── canvas annulus diagram ────────────────────────────────────────────
+    var C=document.getElementById('laurent-canvas');
+    if(C){
+      var ctx=C.getContext('2d'), W=C.width, H=C.height, cx=W/2, cy=H/2;
+      ctx.clearRect(0,0,W,H);
+      ctx.fillStyle='#020100'; ctx.fillRect(0,0,W,H);
+
+      var sortedR = poles.map(function(p){return p.r;}).sort(function(a,b){return a-b;});
+      var maxR = Math.max(N, sortedR[sortedR.length-1]||1);
+      var scale = (W*0.42) / maxR;
+
+      // outer ring = N
+      ctx.strokeStyle='rgba(196,155,56,0.15)'; ctx.lineWidth=0.5;
+      ctx.beginPath(); ctx.arc(cx,cy,N*scale,0,2*Math.PI); ctx.stroke();
+
+      // annular bands between consecutive poles
+      var bandCols=['rgba(74,144,217,0.08)','rgba(196,155,56,0.07)','rgba(168,85,247,0.07)',
+                    'rgba(52,211,153,0.07)','rgba(249,115,22,0.07)'];
+      var boundaries=[0].concat(sortedR).concat([maxR]);
+      for(var b=0;b<boundaries.length-1;b++){
+        var r0=boundaries[b]*scale, r1=boundaries[b+1]*scale;
+        ctx.fillStyle=bandCols[b%bandCols.length];
+        ctx.beginPath();
+        ctx.arc(cx,cy,r1,0,2*Math.PI); ctx.arc(cx,cy,Math.max(0,r0),0,2*Math.PI,true);
+        ctx.fill();
+        // label
+        var rmid=((boundaries[b]+boundaries[b+1])/2)*scale;
+        ctx.fillStyle='rgba(196,155,56,0.4)'; ctx.font='6px Cinzel,serif';
+        ctx.textAlign='center';
+        var lbl = b===0 ? 'inner' : b===boundaries.length-2 ? 'outer' : 'annulus '+(b);
+        ctx.fillText(lbl, cx, cy-rmid+3);
+      }
+
+      // pole circles + labels
+      var PAL=['#4a90d9','#facc15','#a855f7','#34d399','#f97316'];
+      poles.forEach(function(pl,i){
+        var r=pl.r*scale;
+        ctx.strokeStyle=PAL[i%PAL.length]; ctx.lineWidth=1; ctx.setLineDash([3,3]);
+        ctx.beginPath(); ctx.arc(cx,cy,r,0,2*Math.PI); ctx.stroke();
+        ctx.setLineDash([]);
+        // dot at angle theta=2pi*r/N
+        var th=2*Math.PI*pl.r/N;
+        var px=cx+r*Math.cos(th), py=cy-r*Math.sin(th);
+        ctx.beginPath(); ctx.arc(px,py,3,0,2*Math.PI);
+        ctx.fillStyle=PAL[i%PAL.length]; ctx.fill();
+        ctx.fillStyle='rgba(232,217,176,0.85)'; ctx.font='6px Cinzel,serif';
+        ctx.textAlign='left'; ctx.textBaseline='bottom';
+        ctx.fillText('p'+pl.p,px+3,py);
+      });
+
+      // gcd>1 poles in red
+      if(_lxShowGcd){
+        ncpPoles.forEach(function(pl){
+          var r=pl.r*scale;
+          ctx.strokeStyle='rgba(201,64,64,0.5)'; ctx.lineWidth=0.8; ctx.setLineDash([2,4]);
+          ctx.beginPath(); ctx.arc(cx,cy,r,0,2*Math.PI); ctx.stroke();
+          ctx.setLineDash([]);
+          var th=2*Math.PI*pl.r/N;
+          var px=cx+r*Math.cos(th), py=cy-r*Math.sin(th);
+          ctx.beginPath(); ctx.arc(px,py,2.5,0,2*Math.PI);
+          ctx.fillStyle='#c94040'; ctx.fill();
+          ctx.fillStyle='rgba(201,100,100,0.8)'; ctx.font='5px Cinzel,serif';
+          ctx.textAlign='left'; ctx.textBaseline='bottom';
+          ctx.fillText('p'+pl.p+'(g'+pl.g+')',px+3,py);
+        });
+      }
+
+      // mod N label
+      ctx.fillStyle='rgba(196,155,56,0.5)'; ctx.font='7px Cinzel,serif';
+      ctx.textAlign='left'; ctx.textBaseline='top';
+      ctx.fillText('mod '+N, 4, 4);
+    }
+
+    // ── pole list ─────────────────────────────────────────────────────────
+    var poleEl=document.getElementById('lx-poles');
+    if(poleEl){
+      var PAL=['#4a90d9','#facc15','#a855f7','#34d399','#f97316'];
+      poleEl.innerHTML = poles.map(function(pl,i){
+        return '<span style="color:'+PAL[i%PAL.length]+'">p='+pl.p+' → r='+pl.r+'/'+N+'</span>';
+      }).join('<br>');
+      if(_lxShowGcd && ncpPoles.length){
+        poleEl.innerHTML += '<br><span style="color:#9a8060;font-size:0.42rem;">gcd&gt;1 (reducible):</span><br>';
+        poleEl.innerHTML += ncpPoles.map(function(pl){
+          return '<span style="color:#c94040">p='+pl.p+' → r='+pl.r+' gcd='+pl.g+'</span>';
+        }).join('<br>');
+      }
+    }
+
+    // ── annuli readout ────────────────────────────────────────────────────
+    var annEl=document.getElementById('lx-annuli');
+    if(annEl){
+      var sortedBands=[0].concat(sortedR).concat(['∞']);
+      var bandLabels=['inner disk','outer region'];
+      var html='';
+      for(var b=0;b<sortedBands.length-1;b++){
+        var lo=sortedBands[b], hi=sortedBands[b+1];
+        var label = b===0?'inner disk':b===sortedBands.length-2?'outer region':'annulus '+b;
+        var col = b===0?'#4a90d9':b===sortedBands.length-2?'#f97316':'#34d399';
+        html+='<span style="color:'+col+'">|z|∈('+lo+','+hi+') — '+label+'</span><br>';
+      }
+      annEl.innerHTML=html;
+    }
+
+    // ── partial fraction ──────────────────────────────────────────────────
+    var pfEl=document.getElementById('lx-pf');
+    if(pfEl && poles.length){
+      // Compute residues A_k = 1 / prod_{j≠k}(r_k - r_j)
+      var PAL=['#4a90d9','#facc15','#a855f7','#34d399','#f97316'];
+      var terms = poles.map(function(pl,k){
+        var denom=1;
+        poles.forEach(function(pj,j){ if(j!==k) denom*=(pl.r - pj.r); });
+        if(denom===0) return null;
+        var A=1/denom;
+        var sign=A>=0?'+':'-';
+        var val=Math.abs(A).toFixed(3);
+        return '<span style="color:'+PAL[k%PAL.length]+'">'+sign+val+'/(z−'+pl.r+')</span>';
+      }).filter(Boolean);
+      pfEl.innerHTML = 'f(z) = ' + terms.join(' ');
+    }
+
+    // ── reducible note ────────────────────────────────────────────────────
+    var redEl=document.getElementById('lx-reducible');
+    if(redEl){
+      if(_lxShowGcd && ncpPoles.length){
+        redEl.innerHTML = ncpPoles.map(function(pl){
+          var lower = pl.r/pl.g;
+          return 'p='+pl.p+': r='+pl.r+' gcd='+pl.g+' → collapses to ring '+pl.g+' (r/gcd='+lower.toFixed(2)+')';
+        }).join('<br>');
+      } else {
+        redEl.innerHTML='';
+      }
+    }
+  };
+
+  window.lxToggleGcd = function(){
+    _lxShowGcd=!_lxShowGcd;
+    var btn=document.getElementById('lx-gcd-btn');
+    if(btn){
+      btn.style.background=_lxShowGcd?'#c94040':'var(--parchment-dark)';
+      btn.style.color=_lxShowGcd?'var(--parchment-dark)':'#c94040';
+    }
+    lxDraw();
+  };
+
+  window.lxSyncToNBody = function(){
+    // Open N-body panel if closed, set to prime mode, K=5, reset
+    var body=document.getElementById('tb-body');
+    if(body && body.style.display==='none'){
+      if(window.tbToggle) tbToggle();
+    }
+    if(window.tbSetBodyMode) tbSetBodyMode('prime');
+    var kEl=document.getElementById('tb-K'); if(kEl){kEl.value=5;}
+    if(window.tbSyncBodies) tbSyncBodies();
+    if(window.tbReset) tbReset();
+    // Scroll down to N-body panel
+    var sec=document.getElementById('threebody-section');
+    if(sec) sec.scrollIntoView({behavior:'smooth',block:'start'});
+  };
+
+  // Hook into mod slider changes
+  document.addEventListener('DOMContentLoaded', function(){
+    lxDraw();
+    var modEl=document.getElementById('f-mod-num');
+    if(modEl) modEl.addEventListener('change', function(){ lxDraw(); });
+    var modSlider=document.getElementById('f-mod');
+    if(modSlider) modSlider.addEventListener('input', function(){ lxDraw(); });
+    // Also redraw when theory panel opens
+    var bar=document.getElementById('theory-toggle-bar');
+    if(bar) bar.addEventListener('click', function(){
+      setTimeout(lxDraw, 50);
+    });
+  });
+})();
+</script>
+
+<script>
+// ══ RIEMANN EXPLICIT FORMULA EXPLORER ════════════════════════════════════
+(function(){
+  var RZ = [
+    14.134725, 21.022040, 25.010858, 30.424876, 32.935062,
+    37.586178, 40.918719, 43.327073, 48.005151, 49.773832,
+    52.970321, 56.446248, 59.347044, 60.831779, 65.112544,
+    67.079811, 69.546402, 72.067158, 75.704691, 77.144840,
+    79.337375, 82.910381, 84.735493, 87.425275, 88.809111,
+    92.491899, 94.651344, 95.870634, 98.831194,101.317851,
+   103.725538,105.446623,107.168611,111.029536,111.874659,
+   114.320220,116.226680,118.790782,121.370125,122.946829,
+   124.256819,127.516683,129.578704,131.087688,133.497737,
+   134.756510,138.116042,139.736209,141.123707,143.111846
+  ];
+
+  var PAL=['#f97316','#4ecdc4','#a855f7','#facc15','#34d399',
+           '#f472b6','#60a5fa','#fb7185','#a3e635','#e879f9'];
+
+  // Li(x) via numerical integration (simple trapezoidal)
+  function Li(x){
+    if(x<=2) return 0;
+    var n=200, a=2, b=x, h=(b-a)/n, s=0;
+    for(var i=0;i<=n;i++){
+      var t=a+i*h, w=(i===0||i===n)?0.5:1;
+      if(t>1.001) s+=w/Math.log(t);
+    }
+    return s*h;
+  }
+
+  // Li(x^rho) for rho = 1/2 + i*gamma
+  // x^rho = exp(rho * log x) = exp((1/2)*log x) * exp(i*gamma*log x)
+  // Li(x^rho) pair contribution: 2*Re[Li(x^rho)]
+  // Approximate: |x^rho| = sqrt(x), phase = gamma*log(x)
+  // Li(x^rho) ≈ x^(1/2) / (log x) * 2*cos(gamma*log x - arg correction)
+  function liRhoPairContrib(gamma, x){
+    var logx = Math.log(x);
+    var amp  = 2 * Math.sqrt(x) / logx;
+    var phase= gamma * logx;
+    return -amp * Math.cos(phase);  // negative: subtractive correction
+  }
+
+  function getK(){ var e=document.getElementById('rf-k'); return e?Math.min(50,Math.max(1,parseInt(e.value)||5)):5; }
+  function getX(){ var e=document.getElementById('rf-x'); return e?Math.max(3,parseFloat(e.value)||50):50; }
+  function getN(){ var e=document.getElementById('f-mod-num'); return e?(parseInt(e.value)||12):12; }
+
+  window.rfDraw = function(){
+    var K=getK(), x=getX(), N=getN();
+    var zeros=RZ.slice(0,K);
+
+    // ── complex plane canvas ──────────────────────────────────────────────
+    var C=document.getElementById('rf-canvas');
+    if(C){
+      var ctx=C.getContext('2d'), W=C.width, H=C.height, cx=W/2, cy=H/2;
+      ctx.fillStyle='#020100'; ctx.fillRect(0,0,W,H);
+
+      // scale: fit gamma range into canvas
+      var maxG = Math.max(zeros[zeros.length-1]*1.15, 20);
+      var scaleR = W*0.18;   // Re axis: 0..1 maps to small range
+      var scaleI = H*0.46 / maxG;
+
+      // axes
+      ctx.strokeStyle='rgba(196,155,56,0.25)'; ctx.lineWidth=0.6;
+      ctx.beginPath(); ctx.moveTo(cx,4); ctx.lineTo(cx,H-4); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(4,cy); ctx.lineTo(W-4,cy); ctx.stroke();
+
+      // critical line Re=1/2
+      var critX = cx + 0.5*scaleR;
+      ctx.strokeStyle='rgba(168,85,247,0.35)'; ctx.lineWidth=0.8; ctx.setLineDash([3,3]);
+      ctx.beginPath(); ctx.moveTo(critX,4); ctx.lineTo(critX,H-4); ctx.stroke();
+      ctx.setLineDash([]);
+
+      // spiral contour (the green oval from the image)
+      // Hankel contour: parameterized as Re(z)=1+2cos(t), Im(z)=maxG*0.9*sin(t)
+      ctx.strokeStyle='rgba(120,200,80,0.5)'; ctx.lineWidth=1.2;
+      ctx.beginPath();
+      for(var ti=0;ti<=200;ti++){
+        var tt=2*Math.PI*ti/200;
+        var rx=1+2*Math.cos(tt), ry=maxG*0.88*Math.sin(tt);
+        var sx=cx+rx*scaleR, sy=cy-ry*scaleI;
+        ti===0?ctx.moveTo(sx,sy):ctx.lineTo(sx,sy);
+      }
+      ctx.stroke();
+
+      // axis labels
+      ctx.fillStyle='rgba(196,155,56,0.5)'; ctx.font='6px Cinzel,serif';
+      ctx.textAlign='center';
+      ctx.fillText('Re(z)',W-16,cy-4);
+      ctx.fillText('Im(z)',cx+3,10);
+      ctx.fillText('½',critX,cy+10);
+
+      // zeros as conjugate pairs with glow
+      zeros.forEach(function(g,i){
+        var col=PAL[i%PAL.length];
+        // rho = 1/2 + ig
+        var sx=cx+0.5*scaleR, syP=cy-g*scaleI, syN=cy+g*scaleI;
+        // glow
+        [[sx,syP],[sx,syN]].forEach(function(pt,pi){
+          var grd=ctx.createRadialGradient(pt[0],pt[1],0,pt[0],pt[1],pi===0?8:5);
+          grd.addColorStop(0,col+(pi===0?'cc':'88')); grd.addColorStop(1,col+'00');
+          ctx.beginPath(); ctx.arc(pt[0],pt[1],pi===0?8:5,0,2*Math.PI);
+          ctx.fillStyle=grd; ctx.fill();
+        });
+        // dots
+        ctx.beginPath(); ctx.arc(sx,syP,3,0,2*Math.PI); ctx.fillStyle=col; ctx.fill();
+        ctx.beginPath(); ctx.arc(sx,syN,2.5,0,2*Math.PI); ctx.fillStyle=col+'aa'; ctx.fill();
+        // label
+        ctx.fillStyle='rgba(232,217,176,0.75)'; ctx.font='5.5px Cinzel,serif';
+        ctx.textAlign='left'; ctx.textBaseline='middle';
+        if(i<8) ctx.fillText('\u03b3'+'\u2081'+(i>0?String(i+1):'')+'='+g.toFixed(2), sx+4, syP);
+      });
+
+      // Li(x) label
+      ctx.fillStyle='rgba(168,85,247,0.6)'; ctx.font='6px Cinzel,serif';
+      ctx.textAlign='left'; ctx.textBaseline='top';
+      ctx.fillText('x='+x+'  K='+K, 4, 4);
+    }
+
+    // ── zeros list ────────────────────────────────────────────────────────
+    var zEl=document.getElementById('rf-zeros');
+    if(zEl){
+      zEl.innerHTML=zeros.map(function(g,i){
+        var phaseModN = (g * Math.log(N)) % (2*Math.PI);
+        return '<span style="color:'+PAL[i%PAL.length]+'">'+
+          '\u03b3'+(i+1)+'='+g.toFixed(3)+
+          ' &nbsp;\u2192&nbsp; phase(N)='+phaseModN.toFixed(3)+
+          '</span>';
+      }).join('<br>');
+    }
+
+    // ── formula terms ─────────────────────────────────────────────────────
+    var liX = Li(x);
+    var corrections = zeros.map(function(g){ return liRhoPairContrib(g,x); });
+    var sumCorr = corrections.reduce(function(s,v){return s+v;},0);
+    var approxPi = liX + sumCorr - Math.log(2);
+
+    var tEl=document.getElementById('rf-terms');
+    if(tEl){
+      var lines=['<span style="color:#34d399">Li(x) = '+liX.toFixed(3)+'</span>'];
+      corrections.slice(0,6).forEach(function(v,i){
+        lines.push('<span style="color:'+PAL[i%PAL.length]+'">Li(x^\u03c1'+String(i+1)+') \u2248 '+v.toFixed(3)+'</span>');
+      });
+      if(K>6) lines.push('<span style="color:#9a8060">+ '+(K-6)+' more terms</span>');
+      lines.push('<span style="color:#9a8060">\u2211 corrections = '+sumCorr.toFixed(3)+'</span>');
+      tEl.innerHTML=lines.join('<br>');
+    }
+
+    var pEl=document.getElementById('rf-pix');
+    if(pEl){
+      // actual pi(x) via simple count
+      var actual=0; for(var p2=2;p2<=x;p2++){var isp=true;for(var d=2;d*d<=p2;d++)if(p2%d===0){isp=false;break;}if(isp)actual++;}
+      pEl.innerHTML=
+        '\u03c0('+x+') exact = <strong>'+actual+'</strong><br>'+
+        'Li(x) \u2212 \u03a3Li(x^\u03c1) \u2248 <strong>'+approxPi.toFixed(2)+'</strong><br>'+
+        'Error: <span style="color:'+(Math.abs(approxPi-actual)<actual*0.05?'#34d399':'#f97316')+'">'+
+        (approxPi-actual).toFixed(2)+'</span>';
+    }
+
+    // ── mod N connection ──────────────────────────────────────────────────
+    var mEl=document.getElementById('rf-mod-link');
+    if(mEl){
+      var phases=zeros.slice(0,K).map(function(g){
+        return (g*Math.log(N)%(2*Math.PI)/(2*Math.PI)*N).toFixed(1);
+      });
+      mEl.innerHTML=
+        'mod N='+N+': zero phases map to residues<br>'+
+        zeros.slice(0,Math.min(K,5)).map(function(g,i){
+          var r=((g*Math.log(N)%(2*Math.PI))/(2*Math.PI)*N);
+          return '<span style="color:'+PAL[i%PAL.length]+'">\u03b3'+(i+1)+
+            ' \u2192 r\u2248'+r.toFixed(1)+'/'+N+'</span>';
+        }).join(' &nbsp;');
+    }
+  };
+
+  window.rfSyncToNBody = function(){
+    var K=getK();
+    // Open N-body if closed
+    var body=document.getElementById('tb-body');
+    if(body&&body.style.display==='none') if(window.tbToggle) tbToggle();
+    // Set prime mode, K bodies
+    if(window.tbSetBodyMode) tbSetBodyMode('prime');
+    var kEl=document.getElementById('tb-K'); if(kEl) kEl.value=Math.min(K,10);
+    if(window.tbSyncBodies) tbSyncBodies();
+    if(window.tbReset) tbReset();
+    var sec=document.getElementById('threebody-section');
+    if(sec) sec.scrollIntoView({behavior:'smooth',block:'start'});
+  };
+
+  document.addEventListener('DOMContentLoaded',function(){
+    rfDraw();
+    // sync on mod change
+    var modEl=document.getElementById('f-mod-num');
+    if(modEl) modEl.addEventListener('change',function(){ rfDraw(); });
+    var modSlider=document.getElementById('f-mod');
+    if(modSlider) modSlider.addEventListener('input',function(){ rfDraw(); });
+    // redraw on theory panel open
+    var bar=document.getElementById('theory-toggle-bar');
+    if(bar) bar.addEventListener('click',function(){ setTimeout(rfDraw,60); });
+  });
+})();
+</script>
+<script>
+// ══ N-BODY PRIME / ELEMENT RESIDUE ENGINE ═════════════════════════════════════════════
 (function(){
   // ── element data (Z1–36) ──────────────────────────────────────────────
   var ELEMENTS=[
