@@ -2507,7 +2507,7 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
               <div id="farey-combined-view" style="display:none;text-align:center;width:100%;">
                 <!-- Single canvas (default) -->
                 <div id="fc-single-wrap" style="position:relative;display:block;width:100%;">
-                  <canvas id="fc-combined" width="800" height="800" style="cursor:crosshair;display:block;width:100%;height:auto;margin-bottom:12px;" title="Click a point to inspect it" onclick="if(window.fareyCombinedClick)window.fareyCombinedClick()"></canvas>
+                  <canvas id="fc-combined" width="800" height="800" style="cursor:crosshair;display:block;width:100%;height:auto;margin-bottom:12px;" title="Click to rotate 90° · Inspect mode: click points"></canvas>
                   <div id="farey-tooltip" style="display:none;position:absolute;pointer-events:none;background:#0e0b05;border:1px solid #c49b38;padding:10px 14px;font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.06em;line-height:1.8;color:#e8d9b0;min-width:160px;z-index:10;box-shadow:0 4px 20px rgba(0,0,0,0.7);"></div>
                 </div>
                 <!-- Split view: two independent canvases side by side -->
@@ -2542,6 +2542,8 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
                   <button id="fcm-unfold" onclick="fareyToggleUnfold()" title="Unfold left semicircle into rectangle alongside the circle" style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.08em;text-transform:uppercase;padding:4px 10px;border:1px solid #f97316;background:var(--parchment-dark);color:#f97316;cursor:pointer;">&#11835; Unfold</button>
                   <button id="fcm-mirror" onclick="fareyToggleMirror()" title="Show mirror symmetry σ(r)=M−r−2 on outer ring (twin prime paper §4)" style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.08em;text-transform:uppercase;padding:4px 10px;border:1px solid var(--gold);background:var(--parchment-dark);color:var(--gold);cursor:pointer;">&#8651; Mirror</button>
                   <button id="fcm-dipole" onclick="fareyToggleDipole()" title="Dipole field: north pole (top) and south pole (bottom) mod towers connected by field lines" style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.08em;text-transform:uppercase;padding:4px 10px;border:1px solid #e879f9;background:var(--parchment-dark);color:#e879f9;cursor:pointer;">&#8853;&#8854; Dipole</button>
+                  <!-- Split Data dropdown (shown in Snap or Split mode) -->
+                  <button id="fcm-splitdata-btn" onclick="if(window.fareyToggleSplitData)window.fareyToggleSplitData()" style="display:none;font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.08em;text-transform:uppercase;padding:4px 10px;border:1px solid #a855f7;background:var(--parchment-dark);color:#a855f7;cursor:pointer;">&#9660; Split Data</button>
                   <!-- Dipole panel -->
                   <div id="farey-dipole-panel" style="display:none;align-items:center;gap:6px;font-family:'Cinzel',serif;font-size:0.58rem;background:rgba(232,121,249,0.06);border:1px solid rgba(232,121,249,0.3);border-radius:4px;padding:6px 10px;flex-wrap:wrap;">
                     <span style="color:#4ecdc4;">N-POLE BASE</span>
@@ -2622,6 +2624,35 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
 
                 <!-- Canvas sub-label -->
                 <div id="fc-combined-label" style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);margin-top:12px;">Combined · click canvas to rotate 90°</div>
+
+                <!-- Split Data Panel -->
+                <div id="fc-splitdata-panel" style="display:none;margin-top:10px;width:100%;max-width:720px;margin-left:auto;margin-right:auto;font-family:'Cinzel',serif;font-size:0.6rem;background:rgba(168,85,247,0.05);border:1px solid rgba(168,85,247,0.25);border-radius:4px;padding:10px 14px;text-align:left;">
+                  <div style="display:flex;gap:0;width:100%;">
+                    <!-- Left half stats (gcd=1 side) -->
+                    <div style="flex:1;padding-right:10px;border-right:1px solid rgba(196,155,56,0.2);">
+                      <div style="color:#4a90d9;letter-spacing:0.1em;text-transform:uppercase;font-size:0.55rem;font-weight:700;margin-bottom:6px;">&#9612; Left Half · gcd = 1</div>
+                      <div id="sd-cop-left" style="line-height:2;color:var(--ink-mid);"></div>
+                    </div>
+                    <!-- Right half stats (gcd>1 side) -->
+                    <div style="flex:1;padding-left:10px;">
+                      <div style="color:#c94040;letter-spacing:0.1em;text-transform:uppercase;font-size:0.55rem;font-weight:700;margin-bottom:6px;">&#9616; Right Half · gcd &gt; 1</div>
+                      <div id="sd-ncp-right" style="line-height:2;color:var(--ink-mid);"></div>
+                    </div>
+                    <!-- Totals column -->
+                    <div style="flex:0 0 auto;padding-left:10px;border-left:1px solid rgba(196,155,56,0.2);">
+                      <div style="color:var(--gold);letter-spacing:0.1em;text-transform:uppercase;font-size:0.55rem;font-weight:700;margin-bottom:6px;">&#9670; Totals</div>
+                      <div id="sd-totals" style="line-height:2;color:var(--ink-mid);"></div>
+                    </div>
+                  </div>
+                  <div id="sd-density-bar" style="margin-top:8px;height:6px;border-radius:3px;overflow:hidden;background:rgba(196,155,56,0.1);position:relative;">
+                    <div id="sd-density-cop" style="position:absolute;left:0;top:0;height:100%;background:#4a90d9;transition:width 0.3s;"></div>
+                    <div id="sd-density-ncp" style="position:absolute;top:0;height:100%;background:#c94040;transition:width 0.3s;"></div>
+                  </div>
+                  <div id="sd-density-labels" style="margin-top:2px;display:flex;justify-content:space-between;font-size:0.5rem;color:#9a8060;"></div>
+                  <div style="margin-top:6px;color:rgba(154,128,96,0.5);font-size:0.5rem;">
+                    Rotation: <span id="sd-angle">0°</span> · 1/ζ(2) = 60.793% · φ(N)/N ≈ <span id="sd-phin"></span>
+                  </div>
+                </div>
 
                 <!-- Gap animation bar (shown when gap active) -->
 
@@ -3496,6 +3527,7 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
     }
     if(document.getElementById('farey-combined-view').style.display!=='none'){
       if(window._advSplitOn){ window.fareyAdvSplitDraw && window.fareyAdvSplitDraw(); }
+      else if(window._snapOn){ window.fareySnapHalf && window.fareySnapHalf(); }
       else { syncCombinedSize(); drawCombined(); }
     } else {
       drawFarey('coprime'); drawFarey('noncoprime');
@@ -3510,6 +3542,8 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
     }
     // Update live stats panel
     fareyUpdateLiveStats();
+    // Refresh split data panel if open
+    window.fareyUpdateSplitData && window.fareyUpdateSplitData();
     // drawCombined handles unfold transform internally
   };
 
@@ -5103,7 +5137,11 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
   var _advSplitOn = false;
   Object.defineProperty(window, '_advSplitOn', { get: function(){ return _advSplitOn; }, set: function(v){ _advSplitOn=v; } });
 
+  var _snapOn = false;
+  Object.defineProperty(window, '_snapOn', { get: function(){ return _snapOn; }, set: function(v){ _snapOn=v; } });
+
   function _setAdvBtn(active) {
+    _snapOn = (active === 'snap-half');
     var defs = { split:'#34d399', 'snap-half':'#a855f7', both:'var(--gold)', coprime:'#4a90d9', noncoprime:'#c94040' };
     Object.keys(defs).forEach(function(k){
       var b=document.getElementById('fcm-'+k); if(!b) return;
@@ -5121,8 +5159,10 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
 
   window.fareyAdvSplit = function(){
     _advSplitOn = true;
+    window._snapOn = false;
     _showSplit(true);
     _setAdvBtn('split');
+    var sdb=document.getElementById('fcm-splitdata-btn'); if(sdb) sdb.style.display='inline-block';
     window.fareyAdvSplitDraw();
   };
 
@@ -5141,11 +5181,107 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
   };
 
   // ½ Snap: draw combined canvas split at 1/2 via unfold cut=180 into single fc-combined
+  // ── Split Data panel ─────────────────────────────────────────────────────
+  var _snapDataOpen = false;
+
+  function _sdRow(label, val, col) {
+    return '<div style="display:flex;justify-content:space-between;gap:8px;border-bottom:1px solid rgba(196,155,56,0.07);padding:1px 0;">'
+      + '<span style="color:#9a8060;">' + label + '</span>'
+      + '<span style="color:' + (col||'#e8d9b0') + ';font-weight:600;">' + val + '</span>'
+      + '</div>';
+  }
+
+  window.fareyUpdateSplitData = function() {
+    var panel = document.getElementById('fc-splitdata-panel'); if(!panel||panel.style.display==='none') return;
+    var modN = parseInt(document.getElementById('f-mod-num').value)||49;
+    var fracs = buildFractions(modN); if(!fracs) return;
+    var cop = fracs.cop, ncp = fracs.ncp;
+    var dir = parseFloat((document.getElementById('f-dir')||{value:'1'}).value)||1;
+    var angRad = _combinedAngle * Math.PI / 180;
+
+    // Classify each point: left = screen x < canvas_cx (i.e. cos(θ) < 0 after rotation)
+    // θ = dir*2π*r/m + angRad; left half = θ mod 2π in [π, 2π) → cos < 0
+    function side(r, m) {
+      var theta = dir * 2 * Math.PI * r / m + angRad;
+      var c = Math.cos(theta);
+      return c < 0 ? 'left' : 'right';
+    }
+
+    var copL=0, copR=0, ncpL=0, ncpR=0;
+    cop.forEach(function(p){ if(side(p.r,p.m)==='left') copL++; else copR++; });
+    ncp.forEach(function(p){ if(side(p.r,p.m)==='left') ncpL++; else ncpR++; });
+    var totalL = copL+ncpL, totalR = copR+ncpR, total = cop.length+ncp.length;
+    var dp2 = function(v){ return (Math.round(v*100)/100).toFixed(2); };
+    var pct = function(n,d){ return d>0 ? (n/d*100).toFixed(1)+'%' : '—'; };
+
+    // Left panel (gcd=1 on left, gcd>1 on left)
+    var hL = '';
+    hL += _sdRow('gcd=1 visible', copL.toLocaleString(), '#4a90d9');
+    hL += _sdRow('gcd=1 hidden',  copR.toLocaleString(), '#9a8060');
+    hL += _sdRow('gcd=1 share',   pct(copL, cop.length), '#4a90d9');
+    hL += _sdRow('gcd>1 visible', ncpL.toLocaleString(), '#c94040');
+    hL += _sdRow('gcd>1 hidden',  ncpR.toLocaleString(), '#9a8060');
+    hL += _sdRow('total left',    totalL.toLocaleString(), '#e8d9b0');
+    hL += _sdRow('left share',    pct(totalL, total), '#e8d9b0');
+    document.getElementById('sd-cop-left').innerHTML = hL;
+
+    // Right panel
+    var hR = '';
+    hR += _sdRow('gcd=1 visible', copR.toLocaleString(), '#4a90d9');
+    hR += _sdRow('gcd=1 hidden',  copL.toLocaleString(), '#9a8060');
+    hR += _sdRow('gcd=1 share',   pct(copR, cop.length), '#4a90d9');
+    hR += _sdRow('gcd>1 visible', ncpR.toLocaleString(), '#c94040');
+    hR += _sdRow('gcd>1 hidden',  ncpL.toLocaleString(), '#9a8060');
+    hR += _sdRow('total right',   totalR.toLocaleString(), '#e8d9b0');
+    hR += _sdRow('right share',   pct(totalR, total), '#e8d9b0');
+    document.getElementById('sd-ncp-right').innerHTML = hR;
+
+    // Totals column
+    var hT = '';
+    hT += _sdRow('gcd=1 all',    cop.length.toLocaleString(), '#4a90d9');
+    hT += _sdRow('gcd>1 all',    ncp.length.toLocaleString(), '#c94040');
+    hT += _sdRow('total pts',    total.toLocaleString(), '#e8d9b0');
+    hT += _sdRow('1/ζ(2)',       '60.793%', '#c49b38');
+    hT += _sdRow('φ(N)/N',       pct(cop.length, total), '#c49b38');
+    hT += _sdRow('angle',        _combinedAngle + '°', '#a855f7');
+    document.getElementById('sd-totals').innerHTML = hT;
+
+    // Density bar: left portion = totalL/total
+    var leftPct = total > 0 ? totalL/total*100 : 50;
+    var copPct  = total > 0 ? copL/total*100 : 0;
+    var ncpPct  = total > 0 ? ncpL/total*100 : 0;
+    var barCop  = document.getElementById('sd-density-cop');
+    var barNcp  = document.getElementById('sd-density-ncp');
+    if(barCop) { barCop.style.width = copPct.toFixed(1)+'%'; }
+    if(barNcp) { barNcp.style.left = copPct.toFixed(1)+'%'; barNcp.style.width = ncpPct.toFixed(1)+'%'; }
+    var lbls = document.getElementById('sd-density-labels');
+    if(lbls) lbls.innerHTML = '<span style="color:#4a90d9;">gcd=1 left: ' + copPct.toFixed(1) + '%</span>'
+      + '<span style="color:#c94040;">gcd>1 left: ' + ncpPct.toFixed(1) + '%</span>'
+      + '<span>left total: ' + leftPct.toFixed(1) + '%</span>';
+
+    // Footer
+    var angEl = document.getElementById('sd-angle'); if(angEl) angEl.textContent = _combinedAngle + '°';
+    var phiEl = document.getElementById('sd-phin');
+    if(phiEl) phiEl.textContent = total > 0 ? pct(cop.length, total) : '—';
+  };
+
+  window.fareyToggleSplitData = function() {
+    var panel  = document.getElementById('fc-splitdata-panel');
+    var btn    = document.getElementById('fcm-splitdata-btn');
+    if(!panel) return;
+    _snapDataOpen = !_snapDataOpen;
+    panel.style.display = _snapDataOpen ? 'block' : 'none';
+    if(btn) btn.innerHTML = (_snapDataOpen ? '&#9650;' : '&#9660;') + ' Split Data';
+    if(_snapDataOpen) window.fareyUpdateSplitData();
+  };
+
   window.fareySnapHalf = function(){
     _advSplitOn = false;
+    window._snapOn = true;
     _showSplit(false);
     _setAdvBtn('snap-half');
-    // Force unfold-style: draw gcd=1 on left semicircle, gcd>1 on right of fc-combined
+    // Show the Split Data button
+    var sdb = document.getElementById('fcm-splitdata-btn'); if(sdb) sdb.style.display='inline-block';
     var C=document.getElementById('fc-combined'); if(!C) return;
     var W=C.width, H=C.height, ctx=C.getContext('2d');
     var offL=document.createElement('canvas'); offL.width=W; offL.height=H;
@@ -5155,16 +5291,14 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
     _combinedMode='noncoprime'; drawCombined(offR);
     _combinedMode=saved;
     ctx.clearRect(0,0,W,H);
-    // Left half from cop canvas, right half from ncp canvas — clip at center
     ctx.save(); ctx.beginPath(); ctx.rect(0,0,W/2,H); ctx.clip(); ctx.drawImage(offL,0,0); ctx.restore();
     ctx.save(); ctx.beginPath(); ctx.rect(W/2,0,W/2,H); ctx.clip(); ctx.drawImage(offR,0,0); ctx.restore();
-    // Center divider
     ctx.strokeStyle='rgba(196,155,56,0.5)'; ctx.lineWidth=1.5; ctx.setLineDash([5,4]);
     ctx.beginPath(); ctx.moveTo(W/2,0); ctx.lineTo(W/2,H); ctx.stroke(); ctx.setLineDash([]);
-    // Labels
     ctx.font='bold 11px Cinzel,serif'; ctx.textBaseline='top'; ctx.textAlign='center';
     ctx.fillStyle='rgba(74,144,217,0.9)';  ctx.fillText('gcd = 1', W*0.25, 10);
     ctx.fillStyle='rgba(201,64,64,0.9)';   ctx.fillText('gcd > 1', W*0.75, 10);
+    window.fareyUpdateSplitData();
   };
 
   // Patch fareyCombinedMode to exit split view and return to single canvas
@@ -5173,27 +5307,35 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
     _advSplitOn = false;
     _showSplit(false);
     _setAdvBtn(mode==='both'?'both':mode==='coprime'?'coprime':'noncoprime');
+    // Hide split data
+    var sdb=document.getElementById('fcm-splitdata-btn'); if(sdb) sdb.style.display='none';
+    var sdp=document.getElementById('fc-splitdata-panel'); if(sdp) sdp.style.display='none';
+    _snapDataOpen=false;
+    window._snapOn = false;
     if(_origFCM) _origFCM(mode); else { _combinedMode=mode; drawCombined(); }
   };
 
   window.fareyCombinedClick = function(){
     if (_inspectMode) return;  // inspect mode: clicks select points, not rotate
     if (window._unfoldOn) {
-      var nu = parseFloat((document.getElementById('f-unfold-num')||{value:'1'}).value)||1;
-      var de = parseFloat((document.getElementById('f-unfold-den')||{value:'2'}).value)||2;
-      if (de === 0) de = 1;
-      var stepDeg = (nu / de) * 360;
-      if (stepDeg < 1 || stepDeg > 359) stepDeg = 90;
+      // Unfold: always rotate 180° (half-turn keeps the seam consistent)
+      var stepDeg = 180;
       _combinedAngle = (_combinedAngle + stepDeg) % 360;
       window._unfoldRectAngle = ((window._unfoldRectAngle - stepDeg * 2) % 360 + 360) % 360;
       drawCombined();
       var lbl = document.getElementById('fc-combined-label');
-      if (lbl) lbl.textContent = 'Unfold \u00b7 circle \u21bb rect \u21ba +' + stepDeg.toFixed(1) + '\u00b0';
+      if (lbl) lbl.textContent = 'Unfold \u00b7 click to flip 180\u00b0';
     } else {
+      // Normal: always +90°
       _combinedAngle = (_combinedAngle + 90) % 360;
       if (window._advSplitOn) { window.fareyAdvSplitDraw && window.fareyAdvSplitDraw(); }
+      else if (window._snapOn) { window.fareySnapHalf && window.fareySnapHalf(); }
       else { drawCombined(); }
+      var lbl2 = document.getElementById('fc-combined-label');
+      if (lbl2 && !window._advSplitOn) lbl2.textContent = 'Combined \u00b7 ' + _combinedAngle + '\u00b0 \u00b7 click to rotate 90\u00b0';
     }
+    // Refresh split data panel if open
+    window.fareyUpdateSplitData && window.fareyUpdateSplitData();
     highlightNavLink();
   };
 
