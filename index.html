@@ -3050,85 +3050,110 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
 
 <!-- ══ THREE-BODY RESIDUE ORBITS ══ -->
 <div id="threebody-section" style="margin-top:8px;background:var(--parchment-dark);border:1px solid var(--panel-border);border-radius:4px;">
-  <!-- Header toggle -->
   <div onclick="tbToggle()" style="display:flex;align-items:center;justify-content:space-between;padding:8px 14px;cursor:pointer;user-select:none;">
-    <span style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);">&#9632; Three-Body Residue Orbits &nbsp;<span style="color:#9a8060;font-size:0.5rem;">— initial positions from θ = 2πr/N, mass = gcd(r,N)</span></span>
+    <span style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);">&#9632; Three-Body Residue Orbits <span style="color:#9a8060;font-size:0.5rem;">— θ=2πr/N · mass=gcd(r,N) · gap dynamics</span></span>
     <span id="tb-toggle-icon" style="color:var(--gold);font-size:0.7rem;">&#9660;</span>
   </div>
   <div id="tb-body" style="display:none;padding:0 12px 12px;">
     <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-start;">
 
-      <!-- Simulation canvas -->
+      <!-- Canvas -->
       <div style="flex:1;min-width:200px;">
         <canvas id="tb-canvas" width="500" height="500" style="width:100%;height:auto;aspect-ratio:1;background:#020100;border:1px solid var(--border);border-radius:3px;display:block;cursor:crosshair;"></canvas>
         <div style="display:flex;gap:10px;flex-wrap:wrap;padding:4px 0;font-family:'Cinzel',serif;font-size:0.5rem;color:var(--ink-mid);">
-          <span>t = <span id="tb-t" style="color:var(--gold);">0.000</span></span>
-          <span>E = <span id="tb-e" style="color:var(--gold);">—</span></span>
-          <span>min sep = <span id="tb-sep" style="color:var(--gold);">—</span></span>
+          <span>t=<span id="tb-t" style="color:var(--gold);">0.000</span></span>
+          <span>E=<span id="tb-e" style="color:var(--gold);">—</span></span>
+          <span>sep=<span id="tb-sep" style="color:var(--gold);">—</span></span>
+          <span id="tb-prime-info" style="color:#a855f7;"></span>
         </div>
       </div>
 
-      <!-- Ring preview + controls -->
-      <div style="display:flex;flex-direction:column;gap:6px;min-width:160px;max-width:220px;">
+      <!-- Controls -->
+      <div style="display:flex;flex-direction:column;gap:5px;min-width:170px;max-width:230px;">
         <canvas id="tb-ring" width="180" height="180" style="width:100%;height:auto;aspect-ratio:1;background:#020100;border:1px solid var(--border);border-radius:3px;display:block;"></canvas>
 
-        <!-- Body selectors — driven by current mod N -->
-        <div style="font-family:'Cinzel',serif;font-size:0.5rem;color:#9a8060;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:2px;">Bodies (r, auto mass = gcd(r,N))</div>
-        <div style="display:flex;align-items:center;gap:5px;">
-          <div style="width:8px;height:8px;border-radius:50%;background:#f97316;flex-shrink:0;"></div>
-          <span style="font-family:'Cinzel',serif;font-size:0.5rem;color:#9a8060;width:14px;">r₁</span>
-          <input id="tb-r1" type="number" min="0" value="1" oninput="tbSyncRing()" style="width:40px;background:#0a0800;color:var(--ink);border:1px solid var(--border);padding:2px 4px;font-family:'Cinzel',serif;font-size:0.5rem;text-align:right;border-radius:2px;">
-          <span id="tb-gcd1" style="font-family:'Cinzel',serif;font-size:0.46rem;color:#f97316;">gcd=1</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:5px;">
-          <div style="width:8px;height:8px;border-radius:50%;background:#4ecdc4;flex-shrink:0;"></div>
-          <span style="font-family:'Cinzel',serif;font-size:0.5rem;color:#9a8060;width:14px;">r₂</span>
-          <input id="tb-r2" type="number" min="0" value="5" oninput="tbSyncRing()" style="width:40px;background:#0a0800;color:var(--ink);border:1px solid var(--border);padding:2px 4px;font-family:'Cinzel',serif;font-size:0.5rem;text-align:right;border-radius:2px;">
-          <span id="tb-gcd2" style="font-family:'Cinzel',serif;font-size:0.46rem;color:#4ecdc4;">gcd=1</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:5px;">
-          <div style="width:8px;height:8px;border-radius:50%;background:#a855f7;flex-shrink:0;"></div>
-          <span style="font-family:'Cinzel',serif;font-size:0.5rem;color:#9a8060;width:14px;">r₃</span>
-          <input id="tb-r3" type="number" min="0" value="9" oninput="tbSyncRing()" style="width:40px;background:#0a0800;color:var(--ink);border:1px solid var(--border);padding:2px 4px;font-family:'Cinzel',serif;font-size:0.5rem;text-align:right;border-radius:2px;">
-          <span id="tb-gcd3" style="font-family:'Cinzel',serif;font-size:0.46rem;color:#a855f7;">gcd=1</span>
+        <!-- Nth-prime body inputs (always shown, default 1st/2nd/3rd primes) -->
+        <div>
+          <div style="font-family:'Cinzel',serif;font-size:0.48rem;color:#9a8060;letter-spacing:0.07em;text-transform:uppercase;margin-bottom:4px;">Bodies — nth prime mod N</div>
+          <!-- Body 1 -->
+          <div style="display:flex;align-items:center;gap:4px;margin-bottom:4px;">
+            <div style="width:7px;height:7px;border-radius:50%;background:#f97316;flex-shrink:0;"></div>
+            <span style="font-family:'Cinzel',serif;font-size:0.48rem;color:#9a8060;width:10px;">n</span>
+            <input id="tb-n1" type="number" min="1" value="1" oninput="tbSyncPrimes()" style="width:32px;background:#0a0800;color:var(--ink);border:1px solid #f97316;padding:2px 3px;font-family:'Cinzel',serif;font-size:0.48rem;text-align:right;border-radius:2px;">
+            <span style="font-family:'Cinzel',serif;font-size:0.44rem;color:#9a8060;">=</span>
+            <span id="tb-p1-val" style="font-family:'Cinzel',serif;font-size:0.48rem;color:#f97316;min-width:18px;">2</span>
+            <span style="font-family:'Cinzel',serif;font-size:0.44rem;color:#9a8060;">r=</span><span id="tb-r1-val" style="font-family:'Cinzel',serif;font-size:0.48rem;color:#f97316;min-width:16px;">2</span>
+            <span id="tb-gcd1" style="font-family:'Cinzel',serif;font-size:0.44rem;color:#f97316;">g=1</span>
+          </div>
+          <!-- Body 2 -->
+          <div style="display:flex;align-items:center;gap:4px;margin-bottom:4px;">
+            <div style="width:7px;height:7px;border-radius:50%;background:#4ecdc4;flex-shrink:0;"></div>
+            <span style="font-family:'Cinzel',serif;font-size:0.48rem;color:#9a8060;width:10px;">n</span>
+            <input id="tb-n2" type="number" min="1" value="2" oninput="tbSyncPrimes()" style="width:32px;background:#0a0800;color:var(--ink);border:1px solid #4ecdc4;padding:2px 3px;font-family:'Cinzel',serif;font-size:0.48rem;text-align:right;border-radius:2px;">
+            <span style="font-family:'Cinzel',serif;font-size:0.44rem;color:#9a8060;">=</span>
+            <span id="tb-p2-val" style="font-family:'Cinzel',serif;font-size:0.48rem;color:#4ecdc4;min-width:18px;">3</span>
+            <span style="font-family:'Cinzel',serif;font-size:0.44rem;color:#9a8060;">r=</span><span id="tb-r2-val" style="font-family:'Cinzel',serif;font-size:0.48rem;color:#4ecdc4;min-width:16px;">3</span>
+            <span id="tb-gcd2" style="font-family:'Cinzel',serif;font-size:0.44rem;color:#4ecdc4;">g=1</span>
+          </div>
+          <!-- Body 3 -->
+          <div style="display:flex;align-items:center;gap:4px;">
+            <div style="width:7px;height:7px;border-radius:50%;background:#a855f7;flex-shrink:0;"></div>
+            <span style="font-family:'Cinzel',serif;font-size:0.48rem;color:#9a8060;width:10px;">n</span>
+            <input id="tb-n3" type="number" min="1" value="3" oninput="tbSyncPrimes()" style="width:32px;background:#0a0800;color:var(--ink);border:1px solid #a855f7;padding:2px 3px;font-family:'Cinzel',serif;font-size:0.48rem;text-align:right;border-radius:2px;">
+            <span style="font-family:'Cinzel',serif;font-size:0.44rem;color:#9a8060;">=</span>
+            <span id="tb-p3-val" style="font-family:'Cinzel',serif;font-size:0.48rem;color:#a855f7;min-width:18px;">5</span>
+            <span style="font-family:'Cinzel',serif;font-size:0.44rem;color:#9a8060;">r=</span><span id="tb-r3-val" style="font-family:'Cinzel',serif;font-size:0.48rem;color:#a855f7;min-width:16px;">5</span>
+            <span id="tb-gcd3" style="font-family:'Cinzel',serif;font-size:0.44rem;color:#a855f7;">g=1</span>
+          </div>
         </div>
 
-        <!-- Sim params -->
-        <div style="display:flex;align-items:center;gap:5px;margin-top:2px;">
-          <span style="font-family:'Cinzel',serif;font-size:0.48rem;color:#9a8060;width:30px;">G</span>
+        <!-- Overlay toggles -->
+        <div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:2px;">
+          <button id="tb-btn-poly" onclick="tbToggleOverlay('poly')" style="font-family:'Cinzel',serif;font-size:0.46rem;padding:2px 6px;border:1px solid var(--gold);background:var(--parchment-dark);color:var(--gold);cursor:pointer;border-radius:2px;">Polygon</button>
+          <button id="tb-btn-cross" onclick="tbToggleOverlay('cross')" style="font-family:'Cinzel',serif;font-size:0.46rem;padding:2px 6px;border:1px solid #4a90d9;background:var(--parchment-dark);color:#4a90d9;cursor:pointer;border-radius:2px;">Cross-mod</button>
+          <button id="tb-btn-gap" onclick="tbToggleOverlay('gap')" style="font-family:'Cinzel',serif;font-size:0.46rem;padding:2px 6px;border:1px solid #f97316;background:var(--parchment-dark);color:#f97316;cursor:pointer;border-radius:2px;">Gap Force</button>
+        </div>
+
+        <!-- Sliders -->
+        <div style="display:flex;align-items:center;gap:4px;">
+          <span style="font-family:'Cinzel',serif;font-size:0.47rem;color:#9a8060;width:28px;">G</span>
           <input type="range" id="tb-G" min="0.1" max="5" step="0.05" value="1" style="flex:1;accent-color:var(--gold);" oninput="document.getElementById('tb-Gv').textContent=parseFloat(this.value).toFixed(2);">
-          <span id="tb-Gv" style="font-family:'Cinzel',serif;font-size:0.48rem;color:var(--gold);min-width:28px;">1.00</span>
+          <span id="tb-Gv" style="font-family:'Cinzel',serif;font-size:0.47rem;color:var(--gold);min-width:26px;">1.00</span>
         </div>
-        <div style="display:flex;align-items:center;gap:5px;">
-          <span style="font-family:'Cinzel',serif;font-size:0.48rem;color:#9a8060;width:30px;">Orbit R</span>
+        <div style="display:flex;align-items:center;gap:4px;">
+          <span style="font-family:'Cinzel',serif;font-size:0.47rem;color:#9a8060;width:28px;">Gap K</span>
+          <input type="range" id="tb-gapk" min="0" max="2" step="0.02" value="0.3" style="flex:1;accent-color:#f97316;" oninput="document.getElementById('tb-gapkv').textContent=parseFloat(this.value).toFixed(2);">
+          <span id="tb-gapkv" style="font-family:'Cinzel',serif;font-size:0.47rem;color:#f97316;min-width:26px;">0.30</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:4px;">
+          <span style="font-family:'Cinzel',serif;font-size:0.47rem;color:#9a8060;width:28px;">Orbit R</span>
           <input type="range" id="tb-R" min="0.3" max="3" step="0.05" value="1.5" style="flex:1;accent-color:var(--gold);" oninput="document.getElementById('tb-Rv').textContent=parseFloat(this.value).toFixed(2);">
-          <span id="tb-Rv" style="font-family:'Cinzel',serif;font-size:0.48rem;color:var(--gold);min-width:28px;">1.50</span>
+          <span id="tb-Rv" style="font-family:'Cinzel',serif;font-size:0.47rem;color:var(--gold);min-width:26px;">1.50</span>
         </div>
-        <div style="display:flex;align-items:center;gap:5px;">
-          <span style="font-family:'Cinzel',serif;font-size:0.48rem;color:#9a8060;width:30px;">Trail</span>
+        <div style="display:flex;align-items:center;gap:4px;">
+          <span style="font-family:'Cinzel',serif;font-size:0.47rem;color:#9a8060;width:28px;">Trail</span>
           <input type="range" id="tb-trail" min="100" max="5000" step="100" value="1500" style="flex:1;accent-color:var(--gold);" oninput="document.getElementById('tb-trailv').textContent=this.value;">
-          <span id="tb-trailv" style="font-family:'Cinzel',serif;font-size:0.48rem;color:var(--gold);min-width:28px;">1500</span>
+          <span id="tb-trailv" style="font-family:'Cinzel',serif;font-size:0.47rem;color:var(--gold);min-width:26px;">1500</span>
         </div>
-        <div style="display:flex;align-items:center;gap:5px;">
-          <span style="font-family:'Cinzel',serif;font-size:0.48rem;color:#9a8060;width:30px;">Speed</span>
+        <div style="display:flex;align-items:center;gap:4px;">
+          <span style="font-family:'Cinzel',serif;font-size:0.47rem;color:#9a8060;width:28px;">Speed</span>
           <input type="range" id="tb-speed" min="1" max="40" step="1" value="10" style="flex:1;accent-color:var(--gold);" oninput="document.getElementById('tb-speedv').textContent=this.value;">
-          <span id="tb-speedv" style="font-family:'Cinzel',serif;font-size:0.48rem;color:var(--gold);min-width:28px;">10</span>
+          <span id="tb-speedv" style="font-family:'Cinzel',serif;font-size:0.47rem;color:var(--gold);min-width:26px;">10</span>
         </div>
-        <div style="display:flex;align-items:center;gap:5px;">
-          <span style="font-family:'Cinzel',serif;font-size:0.48rem;color:#9a8060;width:30px;">ε soft</span>
+        <div style="display:flex;align-items:center;gap:4px;">
+          <span style="font-family:'Cinzel',serif;font-size:0.47rem;color:#9a8060;width:28px;">ε soft</span>
           <input type="range" id="tb-soft" min="0.005" max="0.3" step="0.005" value="0.04" style="flex:1;accent-color:var(--gold);" oninput="document.getElementById('tb-softv').textContent=parseFloat(this.value).toFixed(3);">
-          <span id="tb-softv" style="font-family:'Cinzel',serif;font-size:0.48rem;color:var(--gold);min-width:32px;">0.040</span>
+          <span id="tb-softv" style="font-family:'Cinzel',serif;font-size:0.47rem;color:var(--gold);min-width:30px;">0.040</span>
         </div>
 
         <!-- Buttons -->
-        <div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:4px;">
-          <button id="tb-play-btn" onclick="tbTogglePlay()" style="font-family:'Cinzel',serif;font-size:0.5rem;letter-spacing:0.08em;text-transform:uppercase;padding:3px 9px;border:1px solid var(--gold);background:var(--gold);color:var(--parchment-dark);cursor:pointer;border-radius:2px;">&#9646;&#9646; Pause</button>
-          <button onclick="tbReset()" style="font-family:'Cinzel',serif;font-size:0.5rem;letter-spacing:0.08em;text-transform:uppercase;padding:3px 9px;border:1px solid var(--gold);background:var(--parchment-dark);color:var(--gold);cursor:pointer;border-radius:2px;">&#11119; Reset</button>
-          <button onclick="tbClearTrails()" style="font-family:'Cinzel',serif;font-size:0.5rem;letter-spacing:0.08em;text-transform:uppercase;padding:3px 9px;border:1px solid #4ecdc4;background:var(--parchment-dark);color:#4ecdc4;cursor:pointer;border-radius:2px;">&#9003; Trace</button>
+        <div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:2px;">
+          <button id="tb-play-btn" onclick="tbTogglePlay()" style="font-family:'Cinzel',serif;font-size:0.48rem;letter-spacing:0.08em;text-transform:uppercase;padding:3px 8px;border:1px solid var(--gold);background:var(--parchment-dark);color:var(--gold);cursor:pointer;border-radius:2px;">&#9654; Play</button>
+          <button onclick="tbReset()" style="font-family:'Cinzel',serif;font-size:0.48rem;letter-spacing:0.08em;text-transform:uppercase;padding:3px 8px;border:1px solid var(--gold);background:var(--parchment-dark);color:var(--gold);cursor:pointer;border-radius:2px;">&#11119; Reset</button>
+          <button onclick="tbClearTrails()" style="font-family:'Cinzel',serif;font-size:0.48rem;letter-spacing:0.08em;text-transform:uppercase;padding:3px 8px;border:1px solid #4ecdc4;background:var(--parchment-dark);color:#4ecdc4;cursor:pointer;border-radius:2px;">&#9003; Trace</button>
         </div>
-        <div style="font-family:'Cinzel',serif;font-size:0.46rem;color:#9a8060;line-height:1.6;margin-top:4px;">
-          mass = gcd(r, N) &nbsp;·&nbsp; θ = 2πr/N<br>
-          v₀ ⊥ radius, |v| = √(GM/R)
+        <div style="font-family:'Cinzel',serif;font-size:0.44rem;color:#9a8060;line-height:1.6;margin-top:3px;">
+          mass=gcd(r,N) · θ=2πr/N · gap force∝Δp<sub>ij</sub>/N
         </div>
       </div>
     </div>
@@ -10055,115 +10080,108 @@ function toggleTheoryPanel() {
 <script>
 // ══ THREE-BODY RESIDUE ENGINE ══════════════════════════════════════════════
 (function(){
-  var TB = window._TB = {};
+  // ── Prime sieve ──────────────────────────────────────────────────────────
+  var PRIMES = (function(){
+    var sieve = [], ps = [], limit = 10000;
+    for(var i=0;i<=limit;i++) sieve[i]=true;
+    sieve[0]=sieve[1]=false;
+    for(var i=2;i<=limit;i++) if(sieve[i]) { ps.push(i); for(var j=i*i;j<=limit;j+=i) sieve[j]=false; }
+    return ps;
+  })();
+  function nthPrime(n){ return PRIMES[Math.max(0, n-1)] || PRIMES[PRIMES.length-1]; }
+
   var COLS  = ['#f97316','#4ecdc4','#a855f7'];
   var GLOW  = ['rgba(249,115,22,','rgba(78,205,196,','rgba(168,85,247,'];
-  var running = false; // starts paused until panel opened
-  var tbTime  = 0;
-  var bodies  = [];
-  var trails  = [[],[],[]];
-  var animId  = null;
-  var started = false;
 
-  function gv(id){ return parseFloat(document.getElementById(id).value)||0; }
-  function iv(id){ return parseInt(document.getElementById(id).value)||0; }
+  var running = false, started = false, tbTime = 0;
+  var bodies = [], trails = [[],[],[]], animId = null;
+  var tbMode = 'manual';   // 'manual' | 'prime'
+  var overlays = { poly: false, cross: false, gap: false };
+  var tbPrimes = [2, 3, 5]; // actual prime values for the 3 bodies
 
-  function getCurrentModN(){
-    // Use the main tool's current N
-    var el = document.getElementById('f-mod-num');
-    return el ? (parseInt(el.value)||12) : 12;
+  // ── helpers ──────────────────────────────────────────────────────────────
+  function gv(id){ var e=document.getElementById(id); return e?parseFloat(e.value)||0:0; }
+  function iv(id){ var e=document.getElementById(id); return e?parseInt(e.value)||0:0; }
+  function getN(){ var e=document.getElementById('f-mod-num'); return e?(parseInt(e.value)||12):12; }
+  function gcdf(a,b){ a=Math.abs(a);b=Math.abs(b); while(b){var t=b;b=a%b;a=t;} return a||1; }
+  function getMass(r,N){ return Math.max(1,gcdf(r,N)); }
+
+  function tbGetResidues(){
+    var N = getN();
+    var rs = tbPrimes.map(function(p){ return ((p % N) + N) % N; });
+    return { N:N, rs:rs, ms:rs.map(function(r){ return getMass(r,N); }) };
   }
-
-  function getGCD(a,b){ a=Math.abs(a); b=Math.abs(b); while(b){var t=b;b=a%b;a=t;} return a||1; }
-
-  function getMass(r, N){ return Math.max(1, getGCD(r, N)); }
 
   function tbGetParams(){
-    var N = getCurrentModN();
-    var r1=iv('tb-r1'), r2=iv('tb-r2'), r3=iv('tb-r3');
-    return {
-      N: N,
-      rs: [r1, r2, r3],
-      ms: [getMass(r1,N), getMass(r2,N), getMass(r3,N)],
-      G:     gv('tb-G')  || 1,
-      trail: iv('tb-trail') || 1500,
-      speed: iv('tb-speed') || 10,
-      soft:  gv('tb-soft')  || 0.04,
-      R: gv('tb-R') || 1.5
-    };
+    var rp = tbGetResidues();
+    return Object.assign(rp, {
+      G:     gv('tb-G')    || 1,
+      gapK:  gv('tb-gapk') || 0,
+      trail: iv('tb-trail')|| 1500,
+      speed: iv('tb-speed')|| 10,
+      soft:  gv('tb-soft') || 0.04,
+      R:     gv('tb-R')    || 1.5
+    });
   }
 
-  function tbInit(){
-    var p = tbGetParams();
-    var totalM = p.ms[0]+p.ms[1]+p.ms[2];
-    bodies = p.rs.map(function(r,i){
-      var theta = 2*Math.PI*r/p.N;
-      return { x: p.R*Math.cos(theta), y: p.R*Math.sin(theta), vx:0, vy:0, m: p.ms[i] };
-    });
-    // Circular tangential velocities
-    var vMag = Math.sqrt(p.G * totalM / p.R);
-    bodies.forEach(function(b){
-      var r = Math.sqrt(b.x*b.x+b.y*b.y)||1;
-      b.vx = -vMag*(b.y/r)*0.85;
-      b.vy =  vMag*(b.x/r)*0.85;
-    });
-    // Remove CoM drift
-    var mx = bodies.reduce(function(s,b){return s+b.m*b.vx;},0)/totalM;
-    var my = bodies.reduce(function(s,b){return s+b.m*b.vy;},0)/totalM;
-    bodies.forEach(function(b){b.vx-=mx;b.vy-=my;});
-    tbTime = 0;
-    trails = [[],[],[]];
-    tbSyncRing();
+  // prime-gap coupling: gap between prime residues i,j on the ring
+  function primeGap(rs, N, i, j){
+    var d = ((rs[j] - rs[i]) % N + N) % N;
+    return Math.min(d, N - d) / N; // normalised 0..0.5
   }
 
-  function tbAccel(bs, G, soft){
+  // ── physics ──────────────────────────────────────────────────────────────
+  function tbAccel(bs, G, soft, gapK, rs, N){
     return bs.map(function(_,i){
-      var ax=0,ay=0;
+      var ax=0, ay=0;
       bs.forEach(function(bj,j){
         if(i===j) return;
         var dx=bj.x-bs[i].x, dy=bj.y-bs[i].y;
         var dist2=dx*dx+dy*dy+soft*soft;
         var dist3=Math.pow(dist2,1.5);
-        var f=G*bj.m/dist3;
-        ax+=f*dx; ay+=f*dy;
+        // gravitational term
+        var fg = G*bj.m/dist3;
+        // gap-modulated coupling: scale gravity by (1 + gapK * normalised_gap)
+        var gap = primeGap(rs, N, i, j);
+        var f = fg * (1 + gapK * gap * 4);
+        ax += f*dx; ay += f*dy;
       });
-      return {ax:ax,ay:ay};
+      return {ax:ax, ay:ay};
     });
   }
 
-  function tbStep(dt, G, soft){
-    function state(){ return bodies.map(function(b){return {x:b.x,y:b.y,vx:b.vx,vy:b.vy,m:b.m};}); }
+  function tbStep(dt, p){
     function deriv(s){
-      var a=tbAccel(s,G,soft);
-      return s.map(function(b,i){return {dx:b.vx,dy:b.vy,dvx:a[i].ax,dvy:a[i].ay};});
+      var a=tbAccel(s, p.G, p.soft, p.gapK, p.rs, p.N);
+      return s.map(function(b,i){return{dx:b.vx,dy:b.vy,dvx:a[i].ax,dvy:a[i].ay};});
     }
     function add(s,d,h){
-      return s.map(function(b,i){return {x:b.x+d[i].dx*h,y:b.y+d[i].dy*h,vx:b.vx+d[i].dvx*h,vy:b.vy+d[i].dvy*h,m:b.m};});
+      return s.map(function(b,i){return{x:b.x+d[i].dx*h,y:b.y+d[i].dy*h,
+        vx:b.vx+d[i].dvx*h,vy:b.vy+d[i].dvy*h,m:b.m};});
     }
-    var s0=state(), k1=deriv(s0), k2=deriv(add(s0,k1,dt/2)), k3=deriv(add(s0,k2,dt/2)), k4=deriv(add(s0,k3,dt));
+    var s0=bodies.map(function(b){return{x:b.x,y:b.y,vx:b.vx,vy:b.vy,m:b.m};});
+    var k1=deriv(s0),k2=deriv(add(s0,k1,dt/2)),k3=deriv(add(s0,k2,dt/2)),k4=deriv(add(s0,k3,dt));
     var s1=s0.map(function(b,i){
-      return {
-        x:  b.x +(k1[i].dx +2*k2[i].dx +2*k3[i].dx +k4[i].dx )*dt/6,
-        y:  b.y +(k1[i].dy +2*k2[i].dy +2*k3[i].dy +k4[i].dy )*dt/6,
-        vx: b.vx+(k1[i].dvx+2*k2[i].dvx+2*k3[i].dvx+k4[i].dvx)*dt/6,
-        vy: b.vy+(k1[i].dvy+2*k2[i].dvy+2*k3[i].dvy+k4[i].dvy)*dt/6,
-        m:  b.m
-      };
+      return{x:b.x+(k1[i].dx+2*k2[i].dx+2*k3[i].dx+k4[i].dx)*dt/6,
+             y:b.y+(k1[i].dy+2*k2[i].dy+2*k3[i].dy+k4[i].dy)*dt/6,
+             vx:b.vx+(k1[i].dvx+2*k2[i].dvx+2*k3[i].dvx+k4[i].dvx)*dt/6,
+             vy:b.vy+(k1[i].dvy+2*k2[i].dvy+2*k3[i].dvy+k4[i].dvy)*dt/6,
+             m:b.m};
     });
     bodies.forEach(function(b,i){
-      if(!isFinite(s1[i].x)||!isFinite(s1[i].y)||!isFinite(s1[i].vx)||!isFinite(s1[i].vy)) return;
+      if(!isFinite(s1[i].x)||!isFinite(s1[i].y)) return;
       b.x=s1[i].x; b.y=s1[i].y; b.vx=s1[i].vx; b.vy=s1[i].vy;
     });
-    tbTime += dt;
+    tbTime+=dt;
   }
 
-  function tbEnergy(G,soft){
+  function tbEnergy(p){
     var KE=0,PE=0;
     bodies.forEach(function(b){KE+=0.5*b.m*(b.vx*b.vx+b.vy*b.vy);});
     for(var i=0;i<3;i++) for(var j=i+1;j<3;j++){
-      var dx=bodies[j].x-bodies[i].x, dy=bodies[j].y-bodies[i].y;
-      var r=Math.sqrt(dx*dx+dy*dy+soft*soft);
-      PE-=G*bodies[i].m*bodies[j].m/r;
+      var dx=bodies[j].x-bodies[i].x,dy=bodies[j].y-bodies[i].y;
+      var r=Math.sqrt(dx*dx+dy*dy+p.soft*p.soft);
+      PE-=p.G*bodies[i].m*bodies[j].m/r;
     }
     return KE+PE;
   }
@@ -10177,160 +10195,269 @@ function toggleTheoryPanel() {
     return mn;
   }
 
-  function tbDraw(){
-    var C = document.getElementById('tb-canvas');
-    if(!C) return;
-    var ctx = C.getContext('2d');
-    var W=C.width, H=C.height, cx=W/2, cy=H/2;
-    // Auto-zoom: find max extent of all bodies + 20% margin
-    var maxR = 0.5;
-    bodies.forEach(function(b){
-      if(isFinite(b.x)&&isFinite(b.y))
-        maxR = Math.max(maxR, Math.sqrt(b.x*b.x+b.y*b.y));
-    });
-    var scale = (W * 0.44) / (maxR * 1.25);
+  // ── init ─────────────────────────────────────────────────────────────────
+  function tbInit(){
     var p = tbGetParams();
+    var totalM = p.ms.reduce(function(a,b){return a+b;},0);
+    bodies = p.rs.map(function(r,i){
+      var theta = 2*Math.PI*r/p.N;
+      return {x:p.R*Math.cos(theta), y:p.R*Math.sin(theta), vx:0, vy:0, m:p.ms[i]};
+    });
+    var vMag = Math.sqrt(p.G*totalM/p.R);
+    bodies.forEach(function(b){
+      var r=Math.sqrt(b.x*b.x+b.y*b.y)||1;
+      b.vx=-vMag*(b.y/r)*0.85; b.vy=vMag*(b.x/r)*0.85;
+    });
+    var mx=bodies.reduce(function(s,b){return s+b.m*b.vx;},0)/totalM;
+    var my=bodies.reduce(function(s,b){return s+b.m*b.vy;},0)/totalM;
+    bodies.forEach(function(b){b.vx-=mx; b.vy-=my;});
+    tbTime=0; trails=[[],[],[]];
+    tbSyncRing();
+  }
 
-    ctx.fillStyle='rgba(2,1,0,0.2)';
-    ctx.fillRect(0,0,W,H);
+  // ── draw ─────────────────────────────────────────────────────────────────
+  function tbDraw(){
+    var C=document.getElementById('tb-canvas'); if(!C) return;
+    var ctx=C.getContext('2d');
+    var W=C.width, H=C.height, cx=W/2, cy=H/2;
+    var p=tbGetParams();
 
-    // Subtle ring grid
+    // auto-zoom
+    var maxR=0.5;
+    bodies.forEach(function(b){
+      if(isFinite(b.x)&&isFinite(b.y)) maxR=Math.max(maxR,Math.sqrt(b.x*b.x+b.y*b.y));
+    });
+    var scale=(W*0.44)/(maxR*1.25);
+
+    // fade background
+    ctx.fillStyle='rgba(2,1,0,0.2)'; ctx.fillRect(0,0,W,H);
+
+    // ring grid
     ctx.save();
-    ctx.strokeStyle='rgba(196,155,56,0.05)';
-    ctx.lineWidth=0.5;
-    for(var rr=0.5;rr<=3.5;rr+=0.5){
-      ctx.beginPath(); ctx.arc(cx,cy,rr*scale,0,2*Math.PI); ctx.stroke();
-    }
-    // Residue spokes
+    ctx.strokeStyle='rgba(196,155,56,0.05)'; ctx.lineWidth=0.5;
+    for(var rr=0.5;rr<=3.5;rr+=0.5){ ctx.beginPath();ctx.arc(cx,cy,rr*scale,0,2*Math.PI);ctx.stroke(); }
+    // residue spokes
     ctx.strokeStyle='rgba(196,155,56,0.04)';
     for(var ri=0;ri<p.N;ri++){
       var th=2*Math.PI*ri/p.N;
-      ctx.beginPath(); ctx.moveTo(cx,cy);
-      ctx.lineTo(cx+3.5*scale*Math.cos(th), cy+3.5*scale*Math.sin(th)); ctx.stroke();
+      ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+3.5*scale*Math.cos(th),cy-3.5*scale*Math.sin(th));ctx.stroke();
     }
-    // Residue dot labels on outer ring
-    ctx.font='7px Cinzel,serif'; ctx.fillStyle='rgba(196,155,56,0.25)';
+    // residue tick labels
+    ctx.font='6px Cinzel,serif'; ctx.fillStyle='rgba(196,155,56,0.2)';
     ctx.textAlign='center'; ctx.textBaseline='middle';
-    for(var ri=0;ri<p.N;ri++){
+    for(var ri=0;ri<p.N&&ri<64;ri++){
       var th=2*Math.PI*ri/p.N;
-      ctx.fillText(ri, cx+3.2*scale*Math.cos(th), cy-3.2*scale*Math.sin(th));
+      ctx.fillText(ri, cx+3.15*scale*Math.cos(th), cy-3.15*scale*Math.sin(th));
     }
     ctx.restore();
 
-    // Trails
+    // ── POLYGON overlay ──────────────────────────────────────────────────
+    if(overlays.poly){
+      ctx.save();
+      ctx.strokeStyle='rgba(196,155,56,0.45)'; ctx.lineWidth=1.2;
+      ctx.setLineDash([4,4]);
+      ctx.beginPath();
+      bodies.forEach(function(b,i){
+        var px=cx+b.x*scale, py=cy-b.y*scale;
+        i===0?ctx.moveTo(px,py):ctx.lineTo(px,py);
+      });
+      ctx.closePath(); ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.restore();
+    }
+
+    // ── CROSS-MOD overlay — connect bodies whose residues share factor with N ─
+    if(overlays.cross){
+      ctx.save();
+      ctx.lineWidth=1;
+      for(var i=0;i<3;i++) for(var j=i+1;j<3;j++){
+        var g12=gcdf(p.rs[i],p.N), g22=gcdf(p.rs[j],p.N);
+        var shared = gcdf(g12,g22) > 1 || (g12>1 && g22>1);
+        if(!shared) continue;
+        var px1=cx+bodies[i].x*scale, py1=cy-bodies[i].y*scale;
+        var px2=cx+bodies[j].x*scale, py2=cy-bodies[j].y*scale;
+        if(!isFinite(px1)||!isFinite(px2)) continue;
+        var grad=ctx.createLinearGradient(px1,py1,px2,py2);
+        grad.addColorStop(0, COLS[i]+'99'); grad.addColorStop(1, COLS[j]+'99');
+        ctx.strokeStyle=grad;
+        ctx.beginPath(); ctx.moveTo(px1,py1); ctx.lineTo(px2,py2); ctx.stroke();
+      }
+      ctx.restore();
+    }
+
+    // ── GAP-FORCE arcs — arc between bodies proportional to gap strength ─
+    if(overlays.gap){
+      ctx.save();
+      for(var i=0;i<3;i++) for(var j=i+1;j<3;j++){
+        var gap=primeGap(p.rs, p.N, i, j);
+        var alpha=Math.min(0.9, gap*p.gapK*6);
+        if(alpha<0.03) continue;
+        var px1=cx+bodies[i].x*scale, py1=cy-bodies[i].y*scale;
+        var px2=cx+bodies[j].x*scale, py2=cy-bodies[j].y*scale;
+        if(!isFinite(px1)||!isFinite(px2)) continue;
+        ctx.strokeStyle='rgba(249,115,22,'+alpha.toFixed(2)+')';
+        ctx.lineWidth=gap*8;
+        ctx.setLineDash([2,3]);
+        ctx.beginPath(); ctx.moveTo(px1,py1); ctx.lineTo(px2,py2); ctx.stroke();
+        ctx.setLineDash([]);
+      }
+      ctx.restore();
+    }
+
+    // trails
     bodies.forEach(function(b,i){
-      var tr=trails[i];
-      if(tr.length<2) return;
+      var tr=trails[i]; if(tr.length<2) return;
       var start=Math.max(0,tr.length-p.trail);
       var x0=cx+tr[start].x*scale, y0=cy-tr[start].y*scale;
       var x1=cx+tr[tr.length-1].x*scale, y1=cy-tr[tr.length-1].y*scale;
-      if(!isFinite(x0)||!isFinite(y0)||!isFinite(x1)||!isFinite(y1)) return;
-      ctx.beginPath();
-      ctx.moveTo(x0,y0);
+      if(!isFinite(x0)||!isFinite(x1)) return;
+      ctx.beginPath(); ctx.moveTo(x0,y0);
       for(var k=start+1;k<tr.length;k++){
-        var tx=cx+tr[k].x*scale, ty=cy-tr[k].y*scale;
+        var tx=cx+tr[k].x*scale,ty=cy-tr[k].y*scale;
         if(isFinite(tx)&&isFinite(ty)) ctx.lineTo(tx,ty);
       }
-      var ddx=x1-x0, ddy=y1-y0;
+      var ddx=x1-x0,ddy=y1-y0;
       if(ddx*ddx+ddy*ddy>0.01){
         var grad=ctx.createLinearGradient(x0,y0,x1,y1);
-        grad.addColorStop(0,'rgba(0,0,0,0)');
-        grad.addColorStop(1,COLS[i]+'bb');
+        grad.addColorStop(0,'rgba(0,0,0,0)'); grad.addColorStop(1,COLS[i]+'bb');
         ctx.strokeStyle=grad;
-      } else {
-        ctx.strokeStyle=COLS[i]+'bb';
-      }
+      } else { ctx.strokeStyle=COLS[i]+'bb'; }
       ctx.lineWidth=1.2; ctx.stroke();
     });
 
-    // Bodies
+    // bodies
     bodies.forEach(function(b,i){
-      var px=cx+b.x*scale, py=cy-b.y*scale;
+      var px=cx+b.x*scale,py=cy-b.y*scale;
       if(!isFinite(px)||!isFinite(py)) return;
       var rad=Math.max(4,b.m*4);
       var grd=ctx.createRadialGradient(px,py,0,px,py,rad*4);
       grd.addColorStop(0,GLOW[i]+'0.5)'); grd.addColorStop(1,GLOW[i]+'0)');
-      ctx.beginPath(); ctx.arc(px,py,rad*4,0,2*Math.PI);
-      ctx.fillStyle=grd; ctx.fill();
-      ctx.beginPath(); ctx.arc(px,py,rad,0,2*Math.PI);
-      ctx.fillStyle=COLS[i]; ctx.fill();
-      // Label with gcd mass
+      ctx.beginPath();ctx.arc(px,py,rad*4,0,2*Math.PI);ctx.fillStyle=grd;ctx.fill();
+      ctx.beginPath();ctx.arc(px,py,rad,0,2*Math.PI);ctx.fillStyle=COLS[i];ctx.fill();
+      // label: prime value if prime mode, else residue; plus mass
+      var lbl = 'p'+tbPrimes[i]+' r'+p.rs[i]+' m'+b.m;
       ctx.fillStyle='rgba(232,217,176,0.75)';
-      ctx.font=(Math.max(8,rad+2))+'px Cinzel,serif';
-      ctx.fillText('r'+p.rs[i]+'/m'+b.m.toFixed(0), px+rad+3, py-rad);
+      ctx.font=Math.max(8,rad+2)+'px Cinzel,serif';
+      ctx.fillText(lbl, px+rad+3, py-rad);
     });
   }
 
+  // ── ring preview ─────────────────────────────────────────────────────────
   window.tbSyncRing = function(){
     var RC=document.getElementById('tb-ring'); if(!RC) return;
     var rctx=RC.getContext('2d');
     var W=RC.width,H=RC.height,cx=W/2,cy=H/2,R=W*0.38;
-    var N=getCurrentModN();
-    var rs=[iv('tb-r1'),iv('tb-r2'),iv('tb-r3')];
+    var p=tbGetResidues(), N=p.N, rs=p.rs;
 
     rctx.clearRect(0,0,W,H);
     rctx.fillStyle='#020100'; rctx.fillRect(0,0,W,H);
-
-    // Circle
     rctx.strokeStyle='rgba(196,155,56,0.3)'; rctx.lineWidth=0.8;
-    rctx.beginPath(); rctx.arc(cx,cy,R,0,2*Math.PI); rctx.stroke();
+    rctx.beginPath();rctx.arc(cx,cy,R,0,2*Math.PI);rctx.stroke();
 
-    // All residue ticks
     for(var r=0;r<N;r++){
-      var th=2*Math.PI*r/N, px=cx+R*Math.cos(th), py=cy-R*Math.sin(th);
-      rctx.beginPath(); rctx.arc(px,py,1.2,0,2*Math.PI);
-      rctx.fillStyle='rgba(196,155,56,0.25)'; rctx.fill();
+      var th=2*Math.PI*r/N,px=cx+R*Math.cos(th),py=cy-R*Math.sin(th);
+      rctx.beginPath();rctx.arc(px,py,1.2,0,2*Math.PI);
+      rctx.fillStyle='rgba(196,155,56,0.25)';rctx.fill();
+    }
+    // polygon
+    rctx.beginPath();
+    rs.forEach(function(r,i){
+      var th=2*Math.PI*r/N;
+      i===0?rctx.moveTo(cx+R*Math.cos(th),cy-R*Math.sin(th)):rctx.lineTo(cx+R*Math.cos(th),cy-R*Math.sin(th));
+    });
+    rctx.closePath();rctx.strokeStyle='rgba(196,155,56,0.2)';rctx.lineWidth=0.8;rctx.stroke();
+
+    // cross-mod lines on ring
+    for(var i=0;i<3;i++) for(var j=i+1;j<3;j++){
+      var g1=gcdf(rs[i],N),g2=gcdf(rs[j],N);
+      if(gcdf(g1,g2)>1||(g1>1&&g2>1)){
+        var th1=2*Math.PI*rs[i]/N,th2=2*Math.PI*rs[j]/N;
+        rctx.strokeStyle='rgba(74,144,217,0.5)';rctx.lineWidth=0.7;
+        rctx.beginPath();rctx.moveTo(cx+R*Math.cos(th1),cy-R*Math.sin(th1));
+        rctx.lineTo(cx+R*Math.cos(th2),cy-R*Math.sin(th2));rctx.stroke();
+      }
     }
 
-    // Triangle
-    var pts=rs.map(function(r){
-      var th=2*Math.PI*r/N;
-      return {x:cx+R*Math.cos(th),y:cy-R*Math.sin(th)};
-    });
-    rctx.beginPath(); rctx.moveTo(pts[0].x,pts[0].y);
-    pts.forEach(function(p){rctx.lineTo(p.x,p.y);}); rctx.closePath();
-    rctx.strokeStyle='rgba(196,155,56,0.18)'; rctx.lineWidth=0.8; rctx.stroke();
-
-    // Body dots + gcd labels
+    // body dots + labels
     var gcdIds=['tb-gcd1','tb-gcd2','tb-gcd3'];
     COLS.forEach(function(col,i){
-      var r=rs[i], g=getMass(r,N);
-      var th=2*Math.PI*r/N, px=cx+R*Math.cos(th), py=cy-R*Math.sin(th);
-      rctx.beginPath(); rctx.arc(px,py,Math.max(3,g*2.5),0,2*Math.PI);
-      rctx.fillStyle=col; rctx.fill();
-      rctx.font='5px Cinzel,serif'; rctx.fillStyle='rgba(232,217,176,0.8)';
-      rctx.textAlign='center'; rctx.textBaseline='middle';
-      rctx.fillText(r+'', px, py);
-      // Update gcd label in controls
-      var el=document.getElementById(gcdIds[i]);
-      if(el) el.textContent='gcd='+g;
+      var r=rs[i],g=getMass(r,N),th=2*Math.PI*r/N;
+      var px=cx+R*Math.cos(th),py=cy-R*Math.sin(th);
+      rctx.beginPath();rctx.arc(px,py,Math.max(3,g*2.5),0,2*Math.PI);
+      rctx.fillStyle=col;rctx.fill();
+      rctx.font='5px Cinzel,serif';rctx.fillStyle='rgba(232,217,176,0.9)';
+      rctx.textAlign='center';rctx.textBaseline='middle';
+      rctx.fillText(r,px,py);
+      var el=document.getElementById(gcdIds[i]); if(el) el.textContent='g='+g;
     });
+
+    // gap annotations on ring
+    for(var i=0;i<3;i++){
+      var j=(i+1)%3;
+      var gap=primeGap(rs,N,i,j);
+      if(gap<0.01) continue;
+      var thm=(2*Math.PI*rs[i]/N+2*Math.PI*rs[j]/N)/2;
+      var rm=R*0.72;
+      rctx.font='4.5px Cinzel,serif';rctx.fillStyle='rgba(249,115,22,0.7)';
+      rctx.textAlign='center';rctx.textBaseline='middle';
+      rctx.fillText('Δ'+(gap*N).toFixed(0),cx+rm*Math.cos(thm),cy-rm*Math.sin(thm));
+    }
   };
 
+  // ── prime mode sync ───────────────────────────────────────────────────────
+  window.tbSyncPrimes = function(){
+    var N=getN();
+    var ns=[iv('tb-n1')||1, iv('tb-n2')||2, iv('tb-n3')||3];
+    tbPrimes = ns.map(nthPrime);
+    var pIds=['tb-p1-val','tb-p2-val','tb-p3-val'];
+    var rIds=['tb-r1-val','tb-r2-val','tb-r3-val'];
+    var gIds=['tb-gcd1','tb-gcd2','tb-gcd3'];
+    tbPrimes.forEach(function(p,i){
+      var r=((p%N)+N)%N, g=getMass(r,N);
+      var pe=document.getElementById(pIds[i]); if(pe) pe.textContent=p;
+      var re=document.getElementById(rIds[i]); if(re) re.textContent=r;
+      var ge=document.getElementById(gIds[i]); if(ge) ge.textContent='g='+g;
+    });
+    tbSyncRing();
+  };
+
+  window.tbToggleOverlay = function(key){
+    overlays[key]=!overlays[key];
+    var btnId='tb-btn-'+key;
+    var btn=document.getElementById(btnId); if(!btn) return;
+    var on=overlays[key];
+    var colMap={poly:'var(--gold)',cross:'#4a90d9',gap:'#f97316'};
+    var col=colMap[key]||'var(--gold)';
+    btn.style.background=on?col:'var(--parchment-dark)';
+    btn.style.color=on?'var(--parchment-dark)':col;
+  };
+
+  // ── animation loop ────────────────────────────────────────────────────────
   function tbLoop(){
     var bodyEl=document.getElementById('tb-body');
     if(!bodyEl||bodyEl.style.display==='none'){ animId=requestAnimationFrame(tbLoop); return; }
     if(running && bodies.length===3){
-      var p=tbGetParams();
-      var dt=0.001;
+      var p=tbGetParams(), dt=0.001;
       for(var s=0;s<p.speed;s++){
-        tbStep(dt, p.G, p.soft);
-        bodies.forEach(function(b,i){
-          if(isFinite(b.x)&&isFinite(b.y)) trails[i].push({x:b.x,y:b.y});
-        });
+        tbStep(dt,p);
+        bodies.forEach(function(b,i){ if(isFinite(b.x)&&isFinite(b.y)) trails[i].push({x:b.x,y:b.y}); });
       }
       var maxTr=p.trail+500;
-      trails.forEach(function(tr){if(tr.length>maxTr)tr.splice(0,tr.length-p.trail);});
+      trails.forEach(function(tr){ if(tr.length>maxTr) tr.splice(0,tr.length-p.trail); });
       tbDraw();
-      // Stats
-      var p2=tbGetParams();
       var tEl=document.getElementById('tb-t'); if(tEl) tEl.textContent=tbTime.toFixed(3);
-      var eEl=document.getElementById('tb-e'); if(eEl) eEl.textContent=tbEnergy(p2.G,p2.soft).toFixed(4);
+      var eEl=document.getElementById('tb-e'); if(eEl) eEl.textContent=tbEnergy(p).toFixed(4);
       var sEl=document.getElementById('tb-sep'); if(sEl) sEl.textContent=tbMinSep().toFixed(4);
+      // prime info bar
+      var N_inf=getN(), infoEl=document.getElementById('tb-prime-info');
+        if(infoEl) infoEl.textContent='p('+tbPrimes.join(',')+') mod '+N_inf+' = ('+tbPrimes.map(function(p){return((p%N_inf+N_inf)%N_inf);}).join(',')+')';
+    } else if(!running && bodies.length===3){
+      tbDraw(); // static redraw while paused so overlays update
     }
     animId=requestAnimationFrame(tbLoop);
   }
 
+  // ── public API ───────────────────────────────────────────────────────────
   window.tbToggle = function(){
     var body=document.getElementById('tb-body');
     var icon=document.getElementById('tb-toggle-icon');
@@ -10340,27 +10467,28 @@ function toggleTheoryPanel() {
     if(icon) icon.textContent=open?'▲':'▼';
     if(open&&!started){
       started=true;
-      tbInit();
-      tbDraw(); // show initial positions while paused
+      tbInit(); tbDraw();
       running=false;
-      var btn=document.getElementById('tb-play-btn');
-      if(btn) btn.textContent='▶ Play';
+      var btn=document.getElementById('tb-play-btn'); if(btn) btn.textContent='▶ Play';
     }
   };
-
   window.tbTogglePlay=function(){
     running=!running;
     var btn=document.getElementById('tb-play-btn');
     if(btn) btn.textContent=running?'⏸ Pause':'▶ Play';
   };
-
-  window.tbReset=function(){ tbInit(); running=false; var btn=document.getElementById('tb-play-btn'); if(btn) btn.textContent='▶ Play'; };
+  window.tbReset=function(){
+    tbSyncPrimes();
+    tbInit(); tbDraw(); running=false;
+    var btn=document.getElementById('tb-play-btn'); if(btn) btn.textContent='▶ Play';
+  };
   window.tbClearTrails=function(){ trails=[[],[],[]]; };
 
-  // Re-init when main mod N changes
-  document.addEventListener('DOMContentLoaded', function(){
+  // re-init when mod N changes
+  document.addEventListener('DOMContentLoaded',function(){
     var modEl=document.getElementById('f-mod-num');
-    if(modEl) modEl.addEventListener('change', function(){
+    if(modEl) modEl.addEventListener('change',function(){
+      tbSyncPrimes();
       if(started){ tbInit(); }
       tbSyncRing();
     });
