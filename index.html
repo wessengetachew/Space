@@ -3067,11 +3067,30 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
               </div>
               <!-- Collapsed unit circle single view -->
               <div id="farey-collapsed-view" style="display:none;text-align:center;">
-                <canvas id="fc-collapsed" width="512" height="512" style="cursor:pointer;display:block;width:100%;height:auto;aspect-ratio:1;margin:0 auto;" onclick="fareyRotate('coprime')" title="Click to rotate 90°"></canvas>
+                <canvas id="fc-collapsed" width="512" height="512" style="cursor:pointer;display:block;width:100%;height:auto;aspect-ratio:1;margin:0 auto;" title="Unit Circle · all Farey fractions collapsed to r/m angles"></canvas>
                 <div style="display:flex;justify-content:center;gap:8px;margin-top:8px;">
                   <button onclick="fareyCollapsedMode('both')"       id="fcc-both"       style="font-family:'Cinzel',serif;font-size:0.56rem;letter-spacing:0.08em;text-transform:uppercase;padding:3px 10px;border:1px solid var(--gold);background:var(--gold);color:var(--parchment);cursor:pointer;">All</button>
                   <button onclick="fareyCollapsedMode('coprime')"    id="fcc-coprime"    style="font-family:'Cinzel',serif;font-size:0.56rem;letter-spacing:0.08em;text-transform:uppercase;padding:3px 10px;border:1px solid #4a90d9;background:var(--parchment-dark);color:#4a90d9;cursor:pointer;">gcd=1</button>
                   <button onclick="fareyCollapsedMode('noncoprime')" id="fcc-noncoprime" style="font-family:'Cinzel',serif;font-size:0.56rem;letter-spacing:0.08em;text-transform:uppercase;padding:3px 10px;border:1px solid #c94040;background:var(--parchment-dark);color:#c94040;cursor:pointer;">gcd&gt;1</button>
+                  <span style="color:var(--border);">|</span>
+                  <button id="fcc-angle-toggle" onclick="if(window.fareyCollapsedAngleToggle)window.fareyCollapsedAngleToggle()" style="font-family:'Cinzel',serif;font-size:0.56rem;letter-spacing:0.08em;text-transform:uppercase;padding:3px 10px;border:1px solid #4ecdc4;background:var(--parchment-dark);color:#4ecdc4;cursor:pointer;">&#8635; Angle</button>
+                </div>
+                <!-- Angle slider panel -->
+                <div id="fcc-angle-panel" style="display:none;margin-top:10px;font-family:'Cinzel',serif;font-size:0.6rem;background:rgba(78,205,196,0.05);border:1px solid rgba(78,205,196,0.2);border-radius:4px;padding:10px 14px;">
+                  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+                    <span style="color:#9a8060;min-width:32px;">θ</span>
+                    <input id="fcc-angle-sl" type="range" min="0" max="360" step="0.5" value="0" style="flex:1;accent-color:#4ecdc4;" oninput="if(window.fareyCollapsedAngleDraw)window.fareyCollapsedAngleDraw(parseFloat(this.value))">
+                    <span id="fcc-angle-deg" style="color:#4ecdc4;min-width:40px;text-align:right;">0°</span>
+                  </div>
+                  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px 12px;text-align:left;">
+                    <div><span style="color:#4ecdc4;">sin θ</span> <span id="fcc-sin" style="color:#e8d9b0;float:right;">0.000</span></div>
+                    <div><span style="color:#e879f9;">cos θ</span> <span id="fcc-cos" style="color:#e8d9b0;float:right;">1.000</span></div>
+                    <div><span style="color:#f97316;">tan θ</span> <span id="fcc-tan" style="color:#e8d9b0;float:right;">0.000</span></div>
+                  </div>
+                  <div style="margin-top:6px;display:flex;gap:12px;font-size:0.5rem;color:#9a8060;">
+                    <span>Nearest gcd=1: <span id="fcc-nearest-cop" style="color:#4a90d9;">—</span></span>
+                    <span>Nearest gcd&gt;1: <span id="fcc-nearest-ncp" style="color:#c94040;">—</span></span>
+                  </div>
                 </div>
                 <div id="fc-collapsed-label" style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);margin-top:6px;">Unit Circle · All Points</div>
               </div>
@@ -4534,24 +4553,22 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
     if(dirOut){ dirOut.style.background='var(--parchment-dark)'; dirOut.style.color='var(--ink-mid)'; }
     if(dirIn) { dirIn.style.background='var(--parchment-dark)';  dirIn.style.color='var(--ink-mid)'; }
     _autoRotateDir = 1;
-    _combinedAngle = 90;
+    _combinedAngle = 0;
     _ringOffsets   = {};
-    // If unfold is active, resync cut angle from a/b inputs so slider + label stay correct
+    window._unfoldRectAngle = 0;
+    // If unfold is active, reset cut to 180° and redraw unfold
     if (window._unfoldOn) {
-      var num = parseFloat((document.getElementById('f-unfold-num')||{value:'1'}).value) || 1;
-      var den = parseFloat((document.getElementById('f-unfold-den')||{value:'2'}).value) || 2;
-      var deg = (num / den) * 360;
-      window._unfoldCutAngle = deg;
+      if (window._unfoldSetCut) window._unfoldSetCut(180);
+      else { window._unfoldCutAngle = 180; }
       var sl = document.getElementById('f-unfold-cut-slider');
       var lb = document.getElementById('f-unfold-deg');
-      if (sl) sl.value = deg;
-      if (lb) lb.textContent = deg.toFixed(1) + '°';
-      fareyRedraw();
-      if(_overlayGap !== null && _overlayPairs.length > 0) drawGapOverlay();
+      if (sl) sl.value = 180;
+      if (lb) lb.textContent = '180.0°';
+      if (window.fareyDrawUnfold) window.fareyDrawUnfold();
     } else {
       fareyRedraw();
-      if(_overlayGap !== null && _overlayPairs.length > 0) drawGapOverlay();
     }
+    if(_overlayGap !== null && _overlayPairs.length > 0) drawGapOverlay();
   };
 
   window.fareyToggleInspect = function(){
@@ -5318,11 +5335,11 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
   window.fareyCombinedClick = function(){
     if (_inspectMode) return;  // inspect mode: clicks select points, not rotate
     if (window._unfoldOn) {
-      // Unfold: always rotate 180° (half-turn keeps the seam consistent)
-      var stepDeg = 180;
-      _combinedAngle = (_combinedAngle + stepDeg) % 360;
-      window._unfoldRectAngle = ((window._unfoldRectAngle - stepDeg * 2) % 360 + 360) % 360;
-      drawCombined();
+      // Unfold: always rotate 180° (half-turn flips seam)
+      _combinedAngle = (_combinedAngle + 180) % 360;
+      window._unfoldRectAngle = ((window._unfoldRectAngle - 360) % 360 + 360) % 360;
+      if (window.fareyDrawUnfold) window.fareyDrawUnfold();
+      else drawCombined();
       var lbl = document.getElementById('fc-combined-label');
       if (lbl) lbl.textContent = 'Unfold \u00b7 click to flip 180\u00b0';
     } else {
@@ -8689,6 +8706,7 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
 
   // Shared helper: set cut to any degree value, update slider + label + a/b inputs
   function _unfoldSetCut(deg) {
+    window._unfoldSetCut = _unfoldSetCut;  // expose for reset
     deg = ((deg % 360) + 360) % 360;
     window._unfoldCutAngle = deg;
     var sl = document.getElementById('f-unfold-cut-slider');
@@ -9215,6 +9233,113 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
 
 
   // ── Collapse to single Unit Circle ────────────────────────────────────
+  window._collapsedAngleOn = false;
+  window._collapsedAngleDeg = 0;
+
+  window.fareyCollapsedAngleToggle = function() {
+    window._collapsedAngleOn = !window._collapsedAngleOn;
+    var panel = document.getElementById('fcc-angle-panel');
+    var btn   = document.getElementById('fcc-angle-toggle');
+    if (panel) panel.style.display = window._collapsedAngleOn ? 'block' : 'none';
+    if (btn) { btn.style.background = window._collapsedAngleOn ? '#4ecdc4' : 'var(--parchment-dark)'; btn.style.color = window._collapsedAngleOn ? '#000' : '#4ecdc4'; }
+    if (window._collapsedAngleOn) window.fareyCollapsedAngleDraw(window._collapsedAngleDeg);
+    else fareyDrawCollapsed();
+  };
+
+  window.fareyCollapsedAngleDraw = function(deg) {
+    window._collapsedAngleDeg = deg;
+    var sl = document.getElementById('fcc-angle-sl'); if (sl) sl.value = deg;
+    var cc = document.getElementById('fc-collapsed'); if (!cc) return;
+    var modN = parseInt((document.getElementById('f-mod-num')||{value:'30'}).value)||30;
+    var col1 = (document.getElementById('f-col1')||{value:'#4a90d9'}).value;
+    var col2 = (document.getElementById('f-col2')||{value:'#c94040'}).value;
+    var mode = window._collapsedMode || 'both';
+    var W = cc.width, H = cc.height, ctx = cc.getContext('2d');
+    ctx.clearRect(0,0,W,H);
+    var cx = W/2, cy = H/2, radius = Math.min(W,H)*0.42;
+
+    // Draw base unit circle ring
+    ctx.beginPath(); ctx.arc(cx,cy,radius,0,2*Math.PI);
+    ctx.strokeStyle='rgba(160,120,48,0.35)'; ctx.lineWidth=1; ctx.stroke();
+
+    // Axes
+    ctx.strokeStyle='rgba(196,155,56,0.15)'; ctx.lineWidth=0.5;
+    ctx.beginPath(); ctx.moveTo(cx-radius-10,cy); ctx.lineTo(cx+radius+10,cy); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cx,cy-radius-10); ctx.lineTo(cx,cy+radius+10); ctx.stroke();
+
+    function gcd(a,b){ while(b){var t=b;b=a%b;a=t;} return a; }
+    var ptR = Math.max(2, W*0.005);
+    for (var m=1; m<=modN; m++) {
+      for (var r=0; r<m; r++) {
+        var g = gcd(r,m);
+        if (mode==='coprime' && g!==1) continue;
+        if (mode==='noncoprime' && g===1) continue;
+        var ang = 2*Math.PI*r/m;
+        var x = cx + radius*Math.cos(ang);
+        var y = cy + radius*Math.sin(ang);
+        ctx.beginPath(); ctx.arc(x,y,ptR,0,2*Math.PI);
+        ctx.fillStyle = g===1 ? col1 : col2;
+        ctx.globalAlpha = 0.7;
+        ctx.fill();
+      }
+    }
+    ctx.globalAlpha = 1;
+
+    // Moving angle indicator
+    var rad = deg * Math.PI / 180;
+    var sinV = Math.sin(rad), cosV = Math.cos(rad), tanV = Math.tan(rad);
+    var px = cx + radius * cosV, py = cy + radius * sinV;
+
+    // Angle arc
+    ctx.beginPath(); ctx.arc(cx, cy, radius*0.18, 0, rad, rad < 0);
+    ctx.strokeStyle='rgba(78,205,196,0.6)'; ctx.lineWidth=1.5; ctx.stroke();
+
+    // cos line (horizontal)
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(px, cy);
+    ctx.strokeStyle='#e879f9'; ctx.lineWidth=1.5; ctx.setLineDash([4,3]); ctx.stroke(); ctx.setLineDash([]);
+
+    // sin line (vertical)
+    ctx.beginPath(); ctx.moveTo(px, cy); ctx.lineTo(px, py);
+    ctx.strokeStyle='#4ecdc4'; ctx.lineWidth=1.5; ctx.setLineDash([4,3]); ctx.stroke(); ctx.setLineDash([]);
+
+    // Radius line
+    ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(px,py);
+    ctx.strokeStyle='rgba(255,215,0,0.8)'; ctx.lineWidth=2; ctx.stroke();
+
+    // Moving dot
+    ctx.beginPath(); ctx.arc(px,py,6,0,2*Math.PI);
+    ctx.fillStyle='#4ecdc4'; ctx.fill();
+    ctx.strokeStyle='#fff'; ctx.lineWidth=1.5; ctx.stroke();
+
+    // Degree label near dot
+    ctx.font='bold 11px Cinzel,serif'; ctx.fillStyle='#4ecdc4'; ctx.textAlign='left'; ctx.textBaseline='bottom';
+    var lx = px + (cosV >= 0 ? 8 : -8), ly = py + (sinV >= 0 ? -6 : 14);
+    ctx.textAlign = cosV >= 0 ? 'left' : 'right';
+    ctx.fillText(deg.toFixed(1)+'°', lx, ly);
+
+    // Update readouts
+    var degEl = document.getElementById('fcc-angle-deg'); if(degEl) degEl.textContent = deg.toFixed(1)+'°';
+    var sinEl = document.getElementById('fcc-sin'); if(sinEl) sinEl.textContent = sinV.toFixed(3);
+    var cosEl = document.getElementById('fcc-cos'); if(cosEl) cosEl.textContent = cosV.toFixed(3);
+    var tanEl = document.getElementById('fcc-tan'); if(tanEl) tanEl.textContent = Math.abs(tanV)>999 ? '∞' : tanV.toFixed(3);
+
+    // Find nearest fractions
+    function nearestFrac(wantCop) {
+      var best=null, bestDist=Infinity;
+      for (var m=1; m<=modN; m++) for (var r=0; r<m; r++) {
+        var g=gcd(r,m);
+        if (wantCop && g!==1) continue;
+        if (!wantCop && g===1) continue;
+        var a=2*Math.PI*r/m, diff=Math.abs(((a-rad)%(2*Math.PI)+2*Math.PI)%(2*Math.PI));
+        if(diff>Math.PI) diff=2*Math.PI-diff;
+        if(diff<bestDist){bestDist=diff;best=r+'/'+m;}
+      }
+      return best||'—';
+    }
+    var nc=document.getElementById('fcc-nearest-cop'); if(nc) nc.textContent=nearestFrac(true);
+    var nn=document.getElementById('fcc-nearest-ncp'); if(nn) nn.textContent=nearestFrac(false);
+  };
+
   window._collapsedOn = false;
   window._collapsedMode = 'both';
 
@@ -9234,6 +9359,7 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
   };
 
   window.fareyDrawCollapsed = function() {
+    if (window._collapsedAngleOn) { window.fareyCollapsedAngleDraw(window._collapsedAngleDeg||0); return; }
     var cc = document.getElementById('fc-collapsed');
     if (!cc) return;
     var modN   = parseInt((document.getElementById('f-mod-num')||{value:'30'}).value)||30;
