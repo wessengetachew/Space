@@ -2553,6 +2553,10 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
                     <span style="color:rgba(160,120,48,0.5);">|</span>
                     <span style="color:#9a8060;">THICK</span>
                     <input id="f-dipole-thick" type="range" min="1" max="30" value="8" style="width:55px;accent-color:#e879f9;" oninput="fareyRedraw()">
+                    <span style="color:rgba(160,120,48,0.5);">|</span>
+                    <span style="color:#9a8060;">PT</span>
+                    <input type="range" min="1" max="400" value="100" style="width:60px;accent-color:#e879f9;" oninput="var v=this.value;document.getElementById('f-ptsize').value=v;document.getElementById('f-ptsize-num').value=v;document.getElementById('f-dipole-pt-val').textContent=v+'%';fareyRedraw()">
+                    <span id="f-dipole-pt-val" style="color:#e879f9;min-width:32px;">100%</span>
                   </div>
                   <button id="fcm-lifting" onclick="fareyToggleLiftMode()" title="Show residue lifting: connects gcd=1 residues across rings b, b×a, b×a²…" style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.08em;text-transform:uppercase;padding:4px 10px;border:1px solid #4ecdc4;background:var(--parchment-dark);color:#4ecdc4;cursor:pointer;">&#8593; Lifting</button>
                   <!-- Lifting tower panel -->
@@ -2577,6 +2581,12 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
                     </div>
                     <!-- Row 3: live tower sequence display -->
                     <div id="f-lift-sequence" style="color:#4ecdc4;font-size:0.55rem;letter-spacing:0.04em;line-height:1.8;"></div>
+                    <!-- Row 4: point size -->
+                    <div style="display:flex;align-items:center;gap:8px;">
+                      <span style="color:#9a8060;letter-spacing:0.08em;">PT SIZE</span>
+                      <input type="range" min="1" max="400" value="100" style="flex:1;accent-color:#4ecdc4;" oninput="var v=this.value;document.getElementById('f-ptsize').value=v;document.getElementById('f-ptsize-num').value=v;document.getElementById('f-lift-pt-val').textContent=v+'%';fareyRedraw()">
+                      <span id="f-lift-pt-val" style="color:#4ecdc4;min-width:36px;text-align:right;">100%</span>
+                    </div>
                   </div>
                 </div>
 
@@ -2624,6 +2634,15 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
 
                 <!-- Canvas sub-label -->
                 <div id="fc-combined-label" style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);margin-top:12px;">Combined · click canvas to rotate 90°</div>
+
+                <!-- ── Explorer Pin Bar ── -->
+                <div id="fc-pin-bar" style="display:none;margin-top:8px;padding:7px 12px;background:rgba(78,205,196,0.07);border:1px solid rgba(78,205,196,0.35);border-radius:4px;font-family:'Cinzel',serif;font-size:0.55rem;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                  <span id="fc-pin-label" style="color:#4ecdc4;letter-spacing:0.08em;flex:1;min-width:140px;">&#128204; Canvas Pinned</span>
+                  <button onclick="if(window.lxSendToMain)lxSendToMain()" style="padding:3px 9px;border:1px solid #4ecdc4;background:var(--parchment-dark);color:#4ecdc4;font-family:'Cinzel',serif;font-size:0.52rem;cursor:pointer;border-radius:2px;">&#8862; Laurent</button>
+                  <button onclick="if(window.rfSendToMain)rfSendToMain()" style="padding:3px 9px;border:1px solid #a855f7;background:var(--parchment-dark);color:#a855f7;font-family:'Cinzel',serif;font-size:0.52rem;cursor:pointer;border-radius:2px;">&#8862; Explicit Formula</button>
+                  <button onclick="if(window.tbSendToMain)tbSendToMain()" style="padding:3px 9px;border:1px solid #f97316;background:var(--parchment-dark);color:#f97316;font-family:'Cinzel',serif;font-size:0.52rem;cursor:pointer;border-radius:2px;">&#8862; N-Body Orbit</button>
+                  <button onclick="if(window.fcUnfreeze)fcUnfreeze()" style="padding:3px 9px;border:1px solid #c94040;background:var(--parchment-dark);color:#c94040;font-family:'Cinzel',serif;font-size:0.52rem;cursor:pointer;border-radius:2px;">&#9633; Unfreeze</button>
+                </div>
 
                 <!-- Split Data Panel -->
                 <div id="fc-splitdata-panel" style="display:none;margin-top:10px;width:100%;max-width:720px;margin-left:auto;margin-right:auto;font-family:'Cinzel',serif;font-size:0.6rem;background:rgba(168,85,247,0.05);border:1px solid rgba(168,85,247,0.25);border-radius:4px;padding:10px 14px;text-align:left;">
@@ -2900,7 +2919,7 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
                   </div>
 
     </div><!-- /card2 -->
-  <div class="f-card">
+  <div class="f-card" id="sec-mirror">
     <div class="f-card-head" onclick="fCardToggle(this)">
       <span class="f-card-title">&#9632; Connections</span>
       <span class="f-card-arrow">▶</span>
@@ -3073,24 +3092,45 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
                   <button onclick="fareyCollapsedMode('coprime')"    id="fcc-coprime"    style="font-family:'Cinzel',serif;font-size:0.56rem;letter-spacing:0.08em;text-transform:uppercase;padding:3px 10px;border:1px solid #4a90d9;background:var(--parchment-dark);color:#4a90d9;cursor:pointer;">gcd=1</button>
                   <button onclick="fareyCollapsedMode('noncoprime')" id="fcc-noncoprime" style="font-family:'Cinzel',serif;font-size:0.56rem;letter-spacing:0.08em;text-transform:uppercase;padding:3px 10px;border:1px solid #c94040;background:var(--parchment-dark);color:#c94040;cursor:pointer;">gcd&gt;1</button>
                   <span style="color:var(--border);">|</span>
+                  <button id="fcc-chi-toggle" onclick="if(window.fareyCollapsedChiToggle)window.fareyCollapsedChiToggle()" title="Color gcd=1 points by Dirichlet character value e^(2πik/φ(m))" style="font-family:'Cinzel',serif;font-size:0.56rem;letter-spacing:0.08em;text-transform:uppercase;padding:3px 10px;border:1px solid #f97316;background:var(--parchment-dark);color:#f97316;cursor:pointer;">&#967; Char</button>
+                  <input id="fcc-chi-k" type="number" min="1" value="1" style="width:32px;background:var(--parchment-deep);color:#f97316;border:1px solid #f97316;padding:2px 4px;font-family:'Cinzel',serif;font-size:0.56rem;text-align:center;display:none;" title="Character index k" oninput="if(window.fareyDrawCollapsed)fareyDrawCollapsed()">
+                  <span id="fcc-chi-k-label" style="display:none;color:#9a8060;font-size:0.54rem;">k</span>
+                  <span style="color:var(--border);">|</span>
                   <button id="fcc-angle-toggle" onclick="if(window.fareyCollapsedAngleToggle)window.fareyCollapsedAngleToggle()" style="font-family:'Cinzel',serif;font-size:0.56rem;letter-spacing:0.08em;text-transform:uppercase;padding:3px 10px;border:1px solid #4ecdc4;background:var(--parchment-dark);color:#4ecdc4;cursor:pointer;">&#8635; Angle</button>
                 </div>
                 <!-- Angle slider panel -->
                 <div id="fcc-angle-panel" style="display:none;margin-top:10px;font-family:'Cinzel',serif;font-size:0.6rem;background:rgba(78,205,196,0.05);border:1px solid rgba(78,205,196,0.2);border-radius:4px;padding:10px 14px;">
-                  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-                    <span style="color:#9a8060;min-width:32px;">θ</span>
-                    <input id="fcc-angle-sl" type="range" min="0" max="360" step="0.5" value="0" style="flex:1;accent-color:#4ecdc4;" oninput="if(window.fareyCollapsedAngleDraw)window.fareyCollapsedAngleDraw(parseFloat(this.value))">
-                    <span id="fcc-angle-deg" style="color:#4ecdc4;min-width:40px;text-align:right;">0°</span>
+                  <!-- Slider row with prev/next -->
+                  <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+                    <button onclick="if(window.fccStep)window.fccStep(-1)" style="font-family:'Cinzel',serif;font-size:0.7rem;padding:2px 8px;border:1px solid rgba(78,205,196,0.4);background:var(--parchment-dark);color:#4ecdc4;cursor:pointer;">&#9664;</button>
+                    <input id="fcc-angle-sl" type="range" min="0" max="359.99" step="0.1" value="0" style="flex:1;accent-color:#4ecdc4;" oninput="if(window.fareyCollapsedAngleDraw)window.fareyCollapsedAngleDraw(parseFloat(this.value),false)">
+                    <button onclick="if(window.fccStep)window.fccStep(1)"  style="font-family:'Cinzel',serif;font-size:0.7rem;padding:2px 8px;border:1px solid rgba(78,205,196,0.4);background:var(--parchment-dark);color:#4ecdc4;cursor:pointer;">&#9654;</button>
+                    <span id="fcc-angle-deg" style="color:#4ecdc4;min-width:48px;text-align:right;">0.0&#176;</span>
                   </div>
-                  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px 12px;text-align:left;">
-                    <div><span style="color:#4ecdc4;">sin θ</span> <span id="fcc-sin" style="color:#e8d9b0;float:right;">0.000</span></div>
-                    <div><span style="color:#e879f9;">cos θ</span> <span id="fcc-cos" style="color:#e8d9b0;float:right;">1.000</span></div>
-                    <div><span style="color:#f97316;">tan θ</span> <span id="fcc-tan" style="color:#e8d9b0;float:right;">0.000</span></div>
+                  <!-- Snap toggle + radius -->
+                  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;">
+                    <label style="display:flex;align-items:center;gap:5px;cursor:pointer;color:#9a8060;">
+                      <input type="checkbox" id="fcc-snap-on" checked style="accent-color:#4ecdc4;" onchange="if(window.fareyCollapsedAngleDraw)window.fareyCollapsedAngleDraw(parseFloat(document.getElementById('fcc-angle-sl').value),false)">
+                      Snap to points
+                    </label>
+                    <span style="color:rgba(154,128,96,0.3);">|</span>
+                    <span style="color:#9a8060;">Radius</span>
+                    <input type="range" id="fcc-snap-r" min="1" max="20" value="5" style="width:55px;accent-color:#4ecdc4;" oninput="document.getElementById('fcc-snap-r-val').textContent=this.value+'&#176;';if(window.fareyCollapsedAngleDraw)window.fareyCollapsedAngleDraw(parseFloat(document.getElementById('fcc-angle-sl').value),false)">
+                    <span id="fcc-snap-r-val" style="color:#4ecdc4;min-width:24px;">5&#176;</span>
                   </div>
-                  <div style="margin-top:6px;display:flex;gap:12px;font-size:0.5rem;color:#9a8060;">
-                    <span>Nearest gcd=1: <span id="fcc-nearest-cop" style="color:#4a90d9;">—</span></span>
-                    <span>Nearest gcd&gt;1: <span id="fcc-nearest-ncp" style="color:#c94040;">—</span></span>
+                  <!-- Trig row -->
+                  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px 12px;text-align:left;margin-bottom:8px;border-bottom:1px solid rgba(196,155,56,0.1);padding-bottom:8px;">
+                    <div><span style="color:#4ecdc4;">sin &#952;</span> <span id="fcc-sin" style="color:#e8d9b0;float:right;">0.000</span></div>
+                    <div><span style="color:#e879f9;">cos &#952;</span> <span id="fcc-cos" style="color:#e8d9b0;float:right;">1.000</span></div>
+                    <div><span style="color:#f97316;">tan &#952;</span> <span id="fcc-tan" style="color:#e8d9b0;float:right;">0.000</span></div>
                   </div>
+                  <!-- Point detail (shown when snapped) -->
+                  <div id="fcc-point-detail" style="display:none;">
+                    <div id="fcc-point-heading" style="color:#4ecdc4;font-weight:700;letter-spacing:0.12em;margin-bottom:5px;font-size:0.65rem;text-transform:uppercase;"></div>
+                    <div id="fcc-point-body" style="display:grid;grid-template-columns:1fr 1fr;gap:2px 16px;line-height:1.9;color:var(--ink-mid);"></div>
+                    <div id="fcc-cohabit" style="margin-top:6px;font-size:0.55rem;color:#9a8060;"></div>
+                  </div>
+                  <div id="fcc-no-snap" style="color:#9a8060;font-size:0.55rem;padding-top:4px;display:none;">Between points &#183; use &#9664; &#9654; to jump</div>
                 </div>
                 <div id="fc-collapsed-label" style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);margin-top:6px;">Unit Circle · All Points</div>
               </div>
@@ -3118,15 +3158,52 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
 
 <!-- ══ N-BODY PRIME / ELEMENT RESIDUE ORBITS ══ -->
 <div id="threebody-section" style="margin-top:8px;background:var(--parchment-dark);border:1px solid var(--panel-border);border-radius:4px;">
-  <div onclick="if(window.tbToggle)window.tbToggle();" style="display:flex;align-items:center;justify-content:space-between;padding:8px 14px;cursor:pointer;user-select:none;">
-    <span style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);">&#9632; Residue N-Body Orbits <span style="color:#9a8060;font-size:0.5rem;">— prime or element bodies</span></span>
-    <span id="tb-toggle-icon" style="color:var(--gold);font-size:0.7rem;">&#9660;</span>
+  <!-- Header row: title + quick controls + toggle -->
+  <div style="display:flex;align-items:center;gap:6px;padding:6px 10px;flex-wrap:wrap;">
+    <!-- Title (clickable to toggle) -->
+    <div onclick="if(window.tbToggle)window.tbToggle();" style="display:flex;align-items:center;gap:6px;cursor:pointer;user-select:none;flex-shrink:0;">
+      <span style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);">&#9632; N-Body Orbits</span>
+      <span id="tb-toggle-icon" style="color:var(--gold);font-size:0.7rem;">&#9660;</span>
+    </div>
+    <!-- Divider -->
+    <span style="color:rgba(160,120,48,0.3);font-size:0.8rem;flex-shrink:0;">|</span>
+    <!-- Play / Reset -->
+    <button id="tb-play-btn-hdr" onclick="if(window.tbTogglePlay)window.tbTogglePlay()" style="font-family:'Cinzel',serif;font-size:0.48rem;letter-spacing:0.07em;text-transform:uppercase;padding:3px 10px;border:1px solid var(--gold);background:var(--gold);color:var(--parchment-dark);cursor:pointer;border-radius:2px;font-weight:700;flex-shrink:0;">&#9654; Play</button>
+    <button onclick="if(window.tbReset)window.tbReset()" style="font-family:'Cinzel',serif;font-size:0.48rem;letter-spacing:0.07em;text-transform:uppercase;padding:3px 8px;border:1px solid var(--gold);background:var(--parchment-dark);color:var(--gold);cursor:pointer;border-radius:2px;flex-shrink:0;">&#11119; Reset</button>
+    <button onclick="if(window.tbClearTrails)window.tbClearTrails()" style="font-family:'Cinzel',serif;font-size:0.48rem;letter-spacing:0.07em;text-transform:uppercase;padding:3px 8px;border:1px solid #4ecdc4;background:var(--parchment-dark);color:#4ecdc4;cursor:pointer;border-radius:2px;flex-shrink:0;">&#9003; Trace</button>
+    <!-- Divider -->
+    <span style="color:rgba(160,120,48,0.3);font-size:0.8rem;flex-shrink:0;">|</span>
+    <!-- K bodies quick input -->
+    <span style="font-family:'Cinzel',serif;font-size:0.47rem;color:#9a8060;flex-shrink:0;">K=</span>
+    <input id="tb-K-hdr" type="number" min="1" max="30" value="3" style="width:36px;background:#020100;color:var(--ink);border:1px solid var(--gold);padding:2px 4px;font-family:'Cinzel',serif;font-size:0.52rem;text-align:center;border-radius:2px;flex-shrink:0;" oninput="document.getElementById('tb-K').value=this.value;if(window.tbSyncBodies)window.tbSyncBodies();">
+    <!-- Speed quick slider -->
+    <span style="font-family:'Cinzel',serif;font-size:0.47rem;color:#9a8060;flex-shrink:0;">Spd</span>
+    <input type="range" min="1" max="40" step="1" value="10" style="width:55px;accent-color:var(--gold);flex-shrink:0;" oninput="document.getElementById('tb-speed').value=this.value;document.getElementById('tb-speedv').textContent=this.value;document.getElementById('tb-spd-hdr-val').textContent=this.value;" id="tb-spd-hdr">
+    <span id="tb-spd-hdr-val" style="font-family:'Cinzel',serif;font-size:0.47rem;color:var(--gold);min-width:14px;flex-shrink:0;">10</span>
+    <!-- Divider -->
+    <span style="color:rgba(160,120,48,0.3);font-size:0.8rem;flex-shrink:0;">|</span>
+    <!-- Quick presets -->
+    <span style="font-family:'Cinzel',serif;font-size:0.44rem;color:#9a8060;flex-shrink:0;">Preset:</span>
+    <button onclick="if(window.tbPreset)window.tbPreset({mode:'prime',N:12,K:3,G:1,gapK:0,R:1.5,soft:0.04,speed:10,trail:1500,overlays:{poly:true,cross:false,gap:false}})" style="font-family:'Cinzel',serif;font-size:0.44rem;padding:2px 6px;border:1px solid var(--gold);background:var(--parchment-dark);color:var(--gold);cursor:pointer;border-radius:2px;flex-shrink:0;">Trinity</button>
+    <button onclick="if(window.tbPreset)window.tbPreset({mode:'prime',N:30,K:5,G:1,gapK:0,R:1.5,soft:0.05,speed:8,trail:2000,overlays:{poly:true,cross:false,gap:false}})" style="font-family:'Cinzel',serif;font-size:0.44rem;padding:2px 6px;border:1px solid var(--gold);background:var(--parchment-dark);color:var(--gold);cursor:pointer;border-radius:2px;flex-shrink:0;">Pentagon</button>
+    <button onclick="if(window.tbPreset)window.tbPreset({mode:'prime',N:12,K:3,G:1,gapK:1.2,R:1.5,soft:0.04,speed:10,trail:2000,overlays:{poly:true,cross:false,gap:true}})" style="font-family:'Cinzel',serif;font-size:0.44rem;padding:2px 6px;border:1px solid #f97316;background:var(--parchment-dark);color:#f97316;cursor:pointer;border-radius:2px;flex-shrink:0;">Gap Dance</button>
+    <button onclick="if(window.tbPreset)window.tbPreset({mode:'prime',N:210,K:4,G:2,gapK:0,R:1.5,soft:0.03,speed:12,trail:3000,overlays:{poly:true,cross:false,gap:false}})" style="font-family:'Cinzel',serif;font-size:0.44rem;padding:2px 6px;border:1px solid var(--gold);background:var(--parchment-dark);color:var(--gold);cursor:pointer;border-radius:2px;flex-shrink:0;">Q210</button>
+    <!-- Live stream to main canvas -->
+    <span style="color:rgba(160,120,48,0.3);font-size:0.8rem;flex-shrink:0;">|</span>
+    <button id="tb-stream-btn-hdr" onclick="if(window.tbToggleStream)window.tbToggleStream()" style="font-family:'Cinzel',serif;font-size:0.44rem;letter-spacing:0.06em;text-transform:uppercase;padding:3px 8px;border:1px solid #f97316;background:var(--parchment-dark);color:#f97316;cursor:pointer;border-radius:2px;flex-shrink:0;">&#8862; Stream</button>
   </div>
   <div id="tb-body" style="display:none;padding:0 12px 12px;">
     <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-start;">
       <div style="flex:1;min-width:200px;">
         <canvas id="tb-canvas" width="500" height="500" style="width:100%;height:auto;aspect-ratio:1;background:#020100;border:1px solid var(--border);border-radius:3px;display:block;cursor:crosshair;"></canvas>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;padding:3px 0;font-family:'Cinzel',serif;font-size:0.5rem;color:var(--ink-mid);">
+        <!-- Play controls directly below orbit canvas -->
+        <div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:5px;">
+          <button id="tb-play-btn2" onclick="if(window.tbTogglePlay)window.tbTogglePlay()" style="font-family:'Cinzel',serif;font-size:0.52rem;letter-spacing:0.08em;text-transform:uppercase;padding:4px 12px;border:1px solid var(--gold);background:var(--gold);color:var(--parchment-dark);cursor:pointer;border-radius:2px;font-weight:700;">&#9654; Play</button>
+          <button onclick="if(window.tbReset)window.tbReset()" style="font-family:'Cinzel',serif;font-size:0.52rem;letter-spacing:0.08em;text-transform:uppercase;padding:4px 10px;border:1px solid var(--gold);background:var(--parchment-dark);color:var(--gold);cursor:pointer;border-radius:2px;">&#11119; Reset</button>
+          <button onclick="if(window.tbClearTrails)window.tbClearTrails()" style="font-family:'Cinzel',serif;font-size:0.52rem;letter-spacing:0.08em;text-transform:uppercase;padding:4px 10px;border:1px solid #4ecdc4;background:var(--parchment-dark);color:#4ecdc4;cursor:pointer;border-radius:2px;">&#9003; Trace</button>
+          <button id="tb-stream-btn" onclick="if(window.tbToggleStream)window.tbToggleStream()" title="Live-stream orbit to main canvas at full resolution" style="font-family:'Cinzel',serif;font-size:0.52rem;letter-spacing:0.08em;text-transform:uppercase;padding:4px 10px;border:1px solid #f97316;background:var(--parchment-dark);color:#f97316;cursor:pointer;border-radius:2px;">&#8862; Live Stream</button>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;padding:3px 0;font-family:'Cinzel',serif;font-size:0.5rem;color:var(--ink-mid);margin-top:3px;">
           <span>t=<span id="tb-t" style="color:var(--gold);">0.000</span></span>
           <span>E=<span id="tb-e" style="color:var(--gold);">—</span></span>
           <span>sep=<span id="tb-sep" style="color:var(--gold);">—</span></span>
@@ -3197,12 +3274,7 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
             <button onclick="if(window.tbPreset)window.tbPreset({mode:'element',N:36,Zstart:1,Zcount:8,elemMass:'atomic',G:0.7,gapK:0.4,R:1.5,soft:0.05,speed:7,trail:2000,overlays:{poly:true,cross:true,gap:false}})" style="font-family:'Cinzel',serif;font-size:0.43rem;padding:2px 5px;border:1px solid #34d399;background:var(--parchment-dark);color:#34d399;cursor:pointer;border-radius:2px;">Row 1-8</button>
           </div>
         </div>
-        <div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:2px;">
-          <button id="tb-play-btn" onclick="if(window.tbTogglePlay)window.tbTogglePlay()" style="font-family:'Cinzel',serif;font-size:0.48rem;letter-spacing:0.08em;text-transform:uppercase;padding:3px 8px;border:1px solid var(--gold);background:var(--parchment-dark);color:var(--gold);cursor:pointer;border-radius:2px;">&#9654; Play</button>
-          <button onclick="if(window.tbReset)window.tbReset()" style="font-family:'Cinzel',serif;font-size:0.48rem;letter-spacing:0.08em;text-transform:uppercase;padding:3px 8px;border:1px solid var(--gold);background:var(--parchment-dark);color:var(--gold);cursor:pointer;border-radius:2px;">&#11119; Reset</button>
-          <button onclick="if(window.tbClearTrails)window.tbClearTrails()" style="font-family:'Cinzel',serif;font-size:0.48rem;letter-spacing:0.08em;text-transform:uppercase;padding:3px 8px;border:1px solid #4ecdc4;background:var(--parchment-dark);color:#4ecdc4;cursor:pointer;border-radius:2px;">&#9003; Trace</button>
-        </div>
-        <div style="font-family:'Cinzel',serif;font-size:0.44rem;color:#9a8060;line-height:1.6;margin-top:2px;">prime: gcd=1 filter · element: Z mod N · gap=Farey density · mass=selected property</div>
+        <div style="font-family:'Cinzel',serif;font-size:0.44rem;color:#9a8060;line-height:1.6;margin-top:4px;">prime: gcd=1 filter · element: Z mod N · gap=Farey density · mass=selected property</div>
       </div>
     </div>
   </div>
@@ -3362,11 +3434,11 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
                 <p>As M grows through primorial extensions, admissible twin-prime ray pairs lift to the refined lattice. The candidate directions are preserved through sieve refinement &mdash; visible as parallel chord pairs in the gap overlay.</p>
             </div>
 
-            <div class="theory-card">
+            <div class="theory-card" id="sec-farey-discrepancy">
                 <h4>&#167;6 &mdash; Farey Discrepancy &amp; RH</h4>
                 <p>By the Franel&ndash;Landau theorem, the Riemann Hypothesis is equivalent to the Farey discrepancy satisfying:</p>
                 <div class="theory-math" data-math="D_N = O\!\left(N^{-\tfrac{1}{2}}\log N\right)"></div>
-                <p>The near-uniform angular distribution visible at finite N is consistent with RH. It is not a proof &mdash; only a geometric shadow of the analytic statement.</p>
+                <p>The near-uniform angular distribution visible at finite N is consistent with RH. It is not a proof &mdash; only a geometric shadow of the analytic statement. The <a href="#sec-nbody" onclick="return fareyTheoryAnchor('sec-nbody')" style="color:#4ecdc4;text-decoration:none;border-bottom:1px dotted #4ecdc4;">N-body panel</a> and <a href="#sec-advanced" onclick="return fareyTheoryAnchor('sec-advanced')" style="color:var(--gold);text-decoration:none;border-bottom:1px dotted var(--gold);">gap overlay</a> make the discrepancy geometry directly visible.</p>
             </div>
 
             <div class="theory-card">
@@ -3380,7 +3452,7 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
                 <p>The ring structure is the discrete skeleton of a Laurent series. For a rational function with poles at coprime prime residues r&#8321;,r&#8322;,&#8230; mod N, the complex plane splits into annular convergence regions &mdash; one per gap between consecutive pole radii.</p>
                 <p><span style="color:#4a90d9;">gcd(r,m)=1 points</span> are <em>independent</em> Laurent terms: irreducible partial fractions that generate new series coefficients. <span style="color:#c94040;">gcd(r,m)&gt;1 points</span> are <em>reducible</em> &mdash; they collapse to lower-denominator rings, contributing no new terms, exactly as reducible fractions cancel in partial fraction decomposition. The 6/&pi;&sup2; coprime density is therefore also the fraction of <em>independent</em> Laurent basis elements across all rings.</p>
                 <div class="theory-math" data-math="f(z)=\sum_k \frac{A_k}{z-r_k},\quad r_k = p_k \bmod N,\quad \gcd(r_k,N)=1"></div>
-                <p>The N-body panel uses these same r&#8342; as orbit positions &mdash; bodies in the annular band between poles. Use the explorer below to see the decomposition live as you change N.</p>
+                <p>The <a href="#sec-nbody" onclick="return fareyTheoryAnchor('sec-nbody')" style="color:#4ecdc4;text-decoration:none;border-bottom:1px dotted #4ecdc4;">N-body panel</a> uses these same r&#8342; as orbit positions &mdash; bodies in the annular band between poles. The explorer below shows the decomposition live as N changes.</p>
                 <!-- Live Laurent explorer -->
                 <div id="laurent-explorer" style="margin-top:10px;background:rgba(0,0,0,0.35);border:1px solid rgba(196,155,56,0.25);border-radius:4px;padding:10px 12px;">
                   <div style="font-family:'Cinzel',serif;font-size:0.5rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;">&#9632; Laurent Explorer &mdash; live with mod N slider</div>
@@ -3398,6 +3470,7 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
                         <button onclick="lxSyncToNBody()" style="font-family:'Cinzel',serif;font-size:0.43rem;padding:2px 6px;border:1px solid #a855f7;background:var(--parchment-dark);color:#a855f7;cursor:pointer;border-radius:2px;">&#8594; N-Body</button>
                         <button onclick="lxToggleGcd()" id="lx-gcd-btn" style="font-family:'Cinzel',serif;font-size:0.43rem;padding:2px 6px;border:1px solid #c94040;background:var(--parchment-dark);color:#c94040;cursor:pointer;border-radius:2px;">Show gcd&gt;1</button>
                         <button onclick="lxDraw()" style="font-family:'Cinzel',serif;font-size:0.43rem;padding:2px 6px;border:1px solid var(--gold);background:var(--parchment-dark);color:var(--gold);cursor:pointer;border-radius:2px;">&#8635; Refresh</button>
+                        <button onclick="if(window.lxSendToMain)lxSendToMain()" title="Render Laurent Explorer at full canvas resolution" style="font-family:'Cinzel',serif;font-size:0.43rem;padding:2px 6px;border:1px solid #4ecdc4;background:var(--parchment-dark);color:#4ecdc4;cursor:pointer;border-radius:2px;">&#8862; Main Canvas</button>
                       </div>
                     </div>
                   </div>
@@ -3407,7 +3480,7 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
                 <h4>&#167;9 &mdash; Riemann&rsquo;s Explicit Formula</h4>
                 <p>The exact prime counting function is given by the explicit formula, where each nontrivial zero &rho; = &frac12; + i&gamma;<sub>n</sub> of &zeta;(s) contributes one oscillatory correction:</p>
                 <div class="theory-math" data-math="\pi(x) = \operatorname{Li}(x) - \sum_{\rho}\operatorname{Li}(x^\rho) - \log 2 + \int_x^\infty \frac{dt}{t(t^2-1)\log t}"></div>
-                <p>Each conjugate pair &rho;, &rho;&macr; produces a real cosine wave of frequency &gamma;<sub>n</sub> log x. Your Farey discrepancy D<sub>N</sub> measures whether these oscillations stay bounded &mdash; the Franel&ndash;Landau equivalence to RH. The N-body panel places bodies at the residue positions r<sub>k</sub> = p<sub>k</sub> mod N, which are the discrete analog of the x<sup>&rho;</sup> phase evaluations. Each conjugate zero pair (&gamma;<sub>n</sub>, &minus;&gamma;<sub>n</sub>) mirrors the (r, N&minus;r) mirror involution on your coprime ring.</p>
+                <p>Each conjugate pair &rho;, &rho;&macr; produces a real cosine wave of frequency &gamma;<sub>n</sub> log x. The <a href="#sec-farey-discrepancy" onclick="return fareyTheoryAnchor('sec-farey-discrepancy')" style="color:#c4b5fd;text-decoration:none;border-bottom:1px dotted #c4b5fd;">Farey discrepancy D<sub>N</sub></a> measures whether these oscillations stay bounded &mdash; the Franel&ndash;Landau equivalence to RH (<a href="#sec-farey-discrepancy" onclick="return fareyTheoryAnchor('sec-farey-discrepancy')" style="color:#c4b5fd;font-size:0.85em;text-decoration:none;">§6</a>). The <a href="#sec-nbody" onclick="return fareyTheoryAnchor('sec-nbody')" style="color:#4ecdc4;text-decoration:none;border-bottom:1px dotted #4ecdc4;">N-body panel</a> places bodies at residue positions r<sub>k</sub> = p<sub>k</sub> mod N, the discrete analog of the x<sup>&rho;</sup> phase evaluations. Each conjugate zero pair (&gamma;<sub>n</sub>, &minus;&gamma;<sub>n</sub>) mirrors the (r, N&minus;r) <a href="#sec-mirror" onclick="return fareyTheoryAnchor('sec-mirror')" style="color:#e879f9;text-decoration:none;border-bottom:1px dotted #e879f9;">mirror involution</a> on the coprime ring.</p>
 
                 <!-- Live Explicit Formula Explorer -->
                 <div id="rf-explorer" style="margin-top:10px;background:rgba(0,0,0,0.35);border:1px solid rgba(168,85,247,0.3);border-radius:4px;padding:10px 12px;">
@@ -3449,6 +3522,7 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
                       <div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:4px;">
                         <button onclick="rfSyncToNBody()" style="font-family:'Cinzel',serif;font-size:0.43rem;padding:2px 6px;border:1px solid #a855f7;background:var(--parchment-dark);color:#a855f7;cursor:pointer;border-radius:2px;">&#8594; N-Body (K zeros)</button>
                         <button onclick="rfDraw()" style="font-family:'Cinzel',serif;font-size:0.43rem;padding:2px 6px;border:1px solid var(--gold);background:var(--parchment-dark);color:var(--gold);cursor:pointer;border-radius:2px;">&#8635; Refresh</button>
+                        <button onclick="if(window.rfSendToMain)rfSendToMain()" title="Render Explicit Formula Explorer at full canvas resolution" style="font-family:'Cinzel',serif;font-size:0.43rem;padding:2px 6px;border:1px solid #a855f7;background:var(--parchment-dark);color:#a855f7;cursor:pointer;border-radius:2px;">&#8862; Main Canvas</button>
                       </div>
                     </div>
                   </div>
@@ -3530,8 +3604,11 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
   window.gcd             = gcd;
   window.getPointColor   = getPointColor;
   window.drawCombined    = function(ov) { drawCombined(ov); };
+  window.fareyUpdateLiveStats = function() { fareyUpdateLiveStats(); };
 
   window.fareyRedraw = function(){
+    // Freeze guard: if canvas is pinned to an explorer, block redraws
+    if (window._canvasFrozen) return;
     // Debounce: cancel any pending frame before scheduling a new one
     if (window._fareyRedrawRaf) { cancelAnimationFrame(window._fareyRedrawRaf); window._fareyRedrawRaf = null; }
     _invalidateFracCache();
@@ -3814,8 +3891,8 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
       html += row('Avg φ(m) / m', _dp(copRatio));
       html += row('mod N', '' + modN);
       html += divider();
-      html += row('Total r/m  (N·(N+1)/2)', (verified?'✓ ':'! ') + triangleTotal, teal);
-      html += row('Adjusted  (−(N−1) dupes)', ''+adjustedTotal, '#a8e6cf');
+      html += row('T('+modN+') = Σ m, m=1…'+modN+'  (triangular)', (verified?'✓ ':'! ') + triangleTotal.toLocaleString(), teal);
+      html += row('Unique r/m  (T(N) − (N−1) boundary dupes)', ''+adjustedTotal.toLocaleString(), '#a8e6cf');
       html += divider();
 
       // Point list: all GCD=1 fractions grouped in columns
@@ -3857,8 +3934,8 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
         html2 += row('+' + (gcdList.length-showN) + ' more gcd values', rem + ' pts', '#9a8060');
       }
       html2 += divider();
-      html2 += row('Total r/m  (N·(N+1)/2)', (verified?'✓ ':'! ') + triangleTotal, teal);
-      html2 += row('Adjusted  (−(N−1) dupes)', ''+adjustedTotal, '#a8e6cf');
+      html2 += row('T('+modN+') = Σ m, m=1…'+modN+'  (triangular)', (verified?'✓ ':'! ') + triangleTotal.toLocaleString(), teal);
+      html2 += row('Unique r/m  (T(N) − (N−1) boundary dupes)', ''+adjustedTotal.toLocaleString(), '#a8e6cf');
       html2 += divider();
 
       // Point list
@@ -6940,8 +7017,8 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
       ['Avg φ(m) / m', copRatio.toFixed(4)],
       ['mod N', ''+modN],
       ['---'],
-      ['Total r/m  (N·(N+1)/2)', verifyStr, tealColor],
-      ['Adjusted  (\u2212(N\u22121) dupes)', ''+adjustedTotal, '#a8e6cf'],
+      ['T('+modN+') = Σ m, m=1…'+modN+' (triangular)', verifyStr, tealColor],
+      ['Unique r/m  (T(N) \u2212 (N\u22121) dupes)', ''+adjustedTotal.toLocaleString(), '#a8e6cf'],
     ]);
     // List all coprime points grouped by ring m
     var allCop = [];
@@ -6971,8 +7048,8 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
       ncpRows.push(['+ '+remaining+' more gcd values', remainingCount+' pts']);
     }
     ncpRows.push(['---']);
-    ncpRows.push(['Total r/m  (N·(N+1)/2)', verifyStr, tealColor]);
-    ncpRows.push(['Adjusted  (−(N−1) dupes)', ''+adjustedTotal, '#a8e6cf']);
+    ncpRows.push(['T('+modN+') = Σ m, m=1…'+modN+' (triangular)', verifyStr, tealColor]);
+    ncpRows.push(['Unique r/m  (T(N) − (N−1) dupes)', ''+adjustedTotal.toLocaleString(), '#a8e6cf']);
     var rightUsedY = drawStats(rightPanX, combY, SIDE_W, STATS_H, 'GCD(R,M) > 1  ·  NON-COPRIME', col2, ncpRows);
     // List all non-coprime points
     var allNcp = [];
@@ -9246,98 +9323,280 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
     else fareyDrawCollapsed();
   };
 
-  window.fareyCollapsedAngleDraw = function(deg) {
+  window.fareyCollapsedAngleDraw = function(sliderDeg, fromStep) {
+    var snapOn = (document.getElementById('fcc-snap-on')||{checked:true}).checked;
+    var snapR  = parseFloat((document.getElementById('fcc-snap-r')||{value:'5'}).value) || 5;
+    var modN   = parseInt((document.getElementById('f-mod-num')||{value:'30'}).value) || 30;
+    var col1   = (document.getElementById('f-col1')||{value:'#4a90d9'}).value;
+    var col2   = (document.getElementById('f-col2')||{value:'#c94040'}).value;
+    var mode   = window._collapsedMode || 'both';
+
+    function gcd(a,b){ while(b){var t=b;b=a%b;a=t;} return a; }
+    function phi(n){ var r=n,k=n; for(var p=2;p*p<=k;p++){if(k%p===0){r-=r/p;while(k%p===0)k/=p;}} if(k>1)r-=r/k; return Math.round(r); }
+
+    // Build all points sorted by angle (degrees 0–360)
+    var pts = [];
+    for (var m=1; m<=modN; m++) {
+      for (var r=0; r<m; r++) {
+        var g = gcd(r,m);
+        if (mode==='coprime'    && g!==1) continue;
+        if (mode==='noncoprime' && g===1) continue;
+        var angDeg = (r/m)*360;
+        pts.push({ r:r, m:m, g:g, deg:angDeg });
+      }
+    }
+    pts.sort(function(a,b){ return a.deg-b.deg; });
+
+    // Find snap target
+    var snapPt = null;
+    if (snapOn && pts.length) {
+      var best = null, bestDist = Infinity;
+      pts.forEach(function(p) {
+        var d = Math.abs(p.deg - sliderDeg);
+        if (d > 180) d = 360 - d;
+        if (d < bestDist) { bestDist = d; best = p; }
+      });
+      if (bestDist <= snapR) snapPt = best;
+    }
+
+    var deg = snapPt ? snapPt.deg : sliderDeg;
     window._collapsedAngleDeg = deg;
-    var sl = document.getElementById('fcc-angle-sl'); if (sl) sl.value = deg;
+
+    // Update slider position
+    var sl = document.getElementById('fcc-angle-sl');
+    if (sl && !fromStep) sl.value = sliderDeg;
+
+    // DRAW
     var cc = document.getElementById('fc-collapsed'); if (!cc) return;
-    var modN = parseInt((document.getElementById('f-mod-num')||{value:'30'}).value)||30;
-    var col1 = (document.getElementById('f-col1')||{value:'#4a90d9'}).value;
-    var col2 = (document.getElementById('f-col2')||{value:'#c94040'}).value;
-    var mode = window._collapsedMode || 'both';
     var W = cc.width, H = cc.height, ctx = cc.getContext('2d');
     ctx.clearRect(0,0,W,H);
     var cx = W/2, cy = H/2, radius = Math.min(W,H)*0.42;
 
-    // Draw base unit circle ring
+    // Axes
+    ctx.strokeStyle='rgba(196,155,56,0.12)'; ctx.lineWidth=0.5;
+    ctx.beginPath(); ctx.moveTo(cx-radius-12,cy); ctx.lineTo(cx+radius+12,cy); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cx,cy-radius-12); ctx.lineTo(cx,cy+radius+12); ctx.stroke();
+
+    // Unit circle ring
+    ctx.beginPath(); ctx.arc(cx,cy,radius,0,2*Math.PI);
+    ctx.strokeStyle='rgba(160,120,48,0.4)'; ctx.lineWidth=1; ctx.stroke();
+
+    // Draw all points
+    var ptR = Math.max(2.5, W*0.005);
+    pts.forEach(function(p) {
+      var a = p.deg * Math.PI/180;
+      var x = cx + radius*Math.cos(a), y = cy + radius*Math.sin(a);
+      // Highlight snapped point
+      var isSnap = snapPt && p.r===snapPt.r && p.m===snapPt.m;
+      ctx.beginPath(); ctx.arc(x,y, isSnap ? ptR*2.2 : ptR, 0,2*Math.PI);
+      ctx.fillStyle = p.g===1 ? col1 : col2;
+      ctx.globalAlpha = isSnap ? 1 : 0.7;
+      ctx.fill();
+      if (isSnap) {
+        ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.stroke();
+      }
+    });
+    ctx.globalAlpha = 1;
+
+    // Trig lines
+    var rad = deg * Math.PI/180;
+    var sinV = Math.sin(rad), cosV = Math.cos(rad), tanV = Math.tan(rad);
+    var px = cx + radius*cosV, py = cy + radius*sinV;
+
+    // Angle arc
+    ctx.beginPath(); ctx.arc(cx,cy,radius*0.15,0,rad,deg<0);
+    ctx.strokeStyle='rgba(78,205,196,0.55)'; ctx.lineWidth=1.5; ctx.stroke();
+
+    // cos dashed line
+    ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(px,cy);
+    ctx.strokeStyle='#e879f9'; ctx.lineWidth=1.5; ctx.setLineDash([4,3]); ctx.stroke(); ctx.setLineDash([]);
+
+    // sin dashed line
+    ctx.beginPath(); ctx.moveTo(px,cy); ctx.lineTo(px,py);
+    ctx.strokeStyle='#4ecdc4'; ctx.lineWidth=1.5; ctx.setLineDash([4,3]); ctx.stroke(); ctx.setLineDash([]);
+
+    // Radius line
+    ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(px,py);
+    ctx.strokeStyle = snapPt ? 'rgba(255,215,0,0.95)' : 'rgba(255,215,0,0.6)';
+    ctx.lineWidth=2; ctx.stroke();
+
+    // Cursor dot
+    ctx.beginPath(); ctx.arc(px,py,5,0,2*Math.PI);
+    ctx.fillStyle = snapPt ? '#ffd700' : '#4ecdc4'; ctx.fill();
+    ctx.strokeStyle='#fff'; ctx.lineWidth=1.5; ctx.stroke();
+
+    // Angle label
+    ctx.font='bold 10px Cinzel,serif';
+    ctx.fillStyle = snapPt ? '#ffd700' : '#4ecdc4';
+    ctx.textAlign = cosV>=0 ? 'left' : 'right';
+    ctx.textBaseline = sinV>=0 ? 'top' : 'bottom';
+    ctx.fillText(deg.toFixed(2)+'\u00b0', px+(cosV>=0?8:-8), py+(sinV>=0?4:-4));
+
+    // UPDATE READOUTS
+    var dp3 = function(v){ return v.toFixed(3); };
+    var degEl=document.getElementById('fcc-angle-deg'); if(degEl) degEl.textContent=deg.toFixed(2)+'\u00b0';
+    var sinEl=document.getElementById('fcc-sin'); if(sinEl) sinEl.textContent=dp3(sinV);
+    var cosEl=document.getElementById('fcc-cos'); if(cosEl) cosEl.textContent=dp3(cosV);
+    var tanEl=document.getElementById('fcc-tan'); if(tanEl) tanEl.textContent=Math.abs(tanV)>999?'\u221e':dp3(tanV);
+
+    // Point detail
+    var det=document.getElementById('fcc-point-detail');
+    var ns=document.getElementById('fcc-no-snap');
+    if (snapPt) {
+      if(det) det.style.display='block';
+      if(ns)  ns.style.display='none';
+
+      var head=document.getElementById('fcc-point-heading');
+      var body=document.getElementById('fcc-point-body');
+      var cohabit=document.getElementById('fcc-cohabit');
+      var col = snapPt.g===1 ? '#4a90d9' : '#c94040';
+
+      if(head) head.innerHTML='<span style="color:'+col+'">'+snapPt.r+'/'+snapPt.m+'</span>'
+        +' &nbsp;<span style="color:#9a8060;font-size:0.55rem;font-weight:400;">'+(snapPt.g===1?'gcd = 1':'gcd = '+snapPt.g)+'</span>';
+
+      function row(label,val,c){
+        return '<div style="display:flex;justify-content:space-between;border-bottom:1px solid rgba(196,155,56,0.07);padding:1px 0;">'
+          +'<span style="color:#9a8060;">'+label+'</span>'
+          +'<span style="color:'+(c||'#e8d9b0')+';font-weight:600;">'+val+'</span></div>';
+      }
+      var radV = snapPt.deg*Math.PI/180;
+      var html='';
+      html+=row('r / m', snapPt.r+' / '+snapPt.m, col);
+      html+=row('gcd(r,m)', ''+snapPt.g, snapPt.g===1?'#4ecdc4':'#f97316');
+      html+=row('angle', snapPt.deg.toFixed(4)+'\u00b0', '#4ecdc4');
+      html+=row('radian', (radV).toFixed(5)+' rad', '#9a8060');
+      html+=row('decimal r/m', (snapPt.r/snapPt.m).toFixed(6), '#e8d9b0');
+      html+=row('sin', Math.sin(radV).toFixed(5), '#4ecdc4');
+      html+=row('cos', Math.cos(radV).toFixed(5), '#e879f9');
+      html+=row('\u03c6(m)', ''+phi(snapPt.m), '#c49b38');
+      html+=row('\u03c6(m)/m', (phi(snapPt.m)/snapPt.m).toFixed(4), '#c49b38');
+      if(body) body.innerHTML=html;
+
+      // Cohabitants: other r'/m' with same angle (rational multiples)
+      var coList=[];
+      pts.forEach(function(p){
+        if(p.r===snapPt.r&&p.m===snapPt.m) return;
+        if(Math.abs(p.deg-snapPt.deg)<0.001) coList.push(p);
+      });
+      if(cohabit){
+        if(coList.length){
+          var ch='<div style="color:#9a8060;margin-bottom:2px;">Shares angle with:</div><div style="display:flex;flex-wrap:wrap;gap:3px;">';
+          coList.forEach(function(p){
+            var gc=p.g===1?'#4a90d9':'#c94040';
+            ch+='<span style="color:'+gc+';background:rgba(0,0,0,0.2);padding:1px 5px;border-radius:2px;">'+p.r+'/'+p.m+'</span>';
+          });
+          ch+='</div>';
+          cohabit.innerHTML=ch;
+        } else {
+          cohabit.innerHTML='<span style="color:#9a8060;font-size:0.5rem;">Unique angle in mod 1\u2026'+modN+'</span>';
+        }
+      }
+    } else {
+      if(det) det.style.display='none';
+      if(ns)  ns.style.display = snapOn ? 'block' : 'none';
+    }
+  };
+
+  // Step to prev/next point
+  window.fccStep = function(dir) {
+    var modN = parseInt((document.getElementById('f-mod-num')||{value:'30'}).value)||30;
+    var mode = window._collapsedMode||'both';
+    function gcd(a,b){while(b){var t=b;b=a%b;a=t;}return a;}
+    var pts=[];
+    for(var m=1;m<=modN;m++) for(var r=0;r<m;r++){
+      var g=gcd(r,m);
+      if(mode==='coprime'&&g!==1) continue;
+      if(mode==='noncoprime'&&g===1) continue;
+      pts.push((r/m)*360);
+    }
+    pts=pts.filter(function(v,i,a){return a.indexOf(v)===i;});
+    pts.sort(function(a,b){return a-b;});
+    if(!pts.length) return;
+    var cur=window._collapsedAngleDeg||0;
+    var idx=-1, bestDist=Infinity;
+    pts.forEach(function(d,i){var dd=Math.abs(d-cur);if(dd<bestDist){bestDist=dd;idx=i;}});
+    var next=(idx+dir+pts.length)%pts.length;
+    var sl=document.getElementById('fcc-angle-sl'); if(sl) sl.value=pts[next];
+    window.fareyCollapsedAngleDraw(pts[next],true);
+  };
+
+
+  // ── Dirichlet Character coloring ─────────────────────────────────────────
+  window._chiOn = false;
+
+  window.fareyCollapsedChiToggle = function() {
+    window._chiOn = !window._chiOn;
+    var btn   = document.getElementById('fcc-chi-toggle');
+    var kinp  = document.getElementById('fcc-chi-k');
+    var klbl  = document.getElementById('fcc-chi-k-label');
+    if (btn)  { btn.style.background  = window._chiOn ? '#f97316' : 'var(--parchment-dark)'; btn.style.color = window._chiOn ? '#000' : '#f97316'; }
+    if (kinp) kinp.style.display = window._chiOn ? 'inline-block' : 'none';
+    if (klbl) klbl.style.display = window._chiOn ? 'inline' : 'none';
+    fareyDrawCollapsed();
+  };
+
+  // Hook chi coloring into fareyDrawCollapsed
+  var _origFareyDrawCollapsed = window.fareyDrawCollapsed;
+  window.fareyDrawCollapsed = function() {
+    if (window._collapsedAngleOn) { window.fareyCollapsedAngleDraw(window._collapsedAngleDeg||0); return; }
+    var cc = document.getElementById('fc-collapsed'); if (!cc) return;
+    var modN   = parseInt((document.getElementById('f-mod-num')||{value:'30'}).value)||30;
+    var col1   = (document.getElementById('f-col1')||{value:'#4a90d9'}).value;
+    var col2   = (document.getElementById('f-col2')||{value:'#c94040'}).value;
+    var mode   = window._collapsedMode || 'both';
+    var W = cc.width, H = cc.height, ctx = cc.getContext('2d');
+    ctx.clearRect(0,0,W,H);
+    var cx = W/2, cy = H/2, radius = Math.min(W,H)*0.42;
+
     ctx.beginPath(); ctx.arc(cx,cy,radius,0,2*Math.PI);
     ctx.strokeStyle='rgba(160,120,48,0.35)'; ctx.lineWidth=1; ctx.stroke();
 
-    // Axes
-    ctx.strokeStyle='rgba(196,155,56,0.15)'; ctx.lineWidth=0.5;
-    ctx.beginPath(); ctx.moveTo(cx-radius-10,cy); ctx.lineTo(cx+radius+10,cy); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(cx,cy-radius-10); ctx.lineTo(cx,cy+radius+10); ctx.stroke();
-
     function gcd(a,b){ while(b){var t=b;b=a%b;a=t;} return a; }
+    function phi(n){ var r=n,k=n; for(var p=2;p*p<=k;p++){if(k%p===0){r-=r/p;while(k%p===0)k/=p;}} if(k>1)r-=r/k; return Math.round(r); }
+
+    var chiOn = window._chiOn;
+    var chiK  = parseInt((document.getElementById('fcc-chi-k')||{value:'1'}).value)||1;
+
+    // HSL wheel helper
+    function hslStr(h,s,l){ return 'hsl('+Math.round(h)+','+s+'%,'+l+'%)'; }
+
     var ptR = Math.max(2, W*0.005);
     for (var m=1; m<=modN; m++) {
       for (var r=0; r<m; r++) {
         var g = gcd(r,m);
-        if (mode==='coprime' && g!==1) continue;
+        if (mode==='coprime'    && g!==1) continue;
         if (mode==='noncoprime' && g===1) continue;
         var ang = 2*Math.PI*r/m;
-        var x = cx + radius*Math.cos(ang);
-        var y = cy + radius*Math.sin(ang);
+        var x = cx + radius*Math.cos(ang), y = cy + radius*Math.sin(ang);
+        var fillColor;
+        if (chiOn && g===1) {
+          // χ_k(r mod m): character of order φ(m), index k
+          // value = e^(2πi·k·ord(r)/φ(m)) where ord is discrete log
+          // Approximate: use angle 2π·k·r/φ(m) mapped to hue
+          var phiM = phi(m);
+          var hue = ((chiK * r / phiM) % 1 + 1) % 1 * 360;
+          fillColor = hslStr(hue, 90, 60);
+        } else {
+          fillColor = g===1 ? col1 : col2;
+        }
         ctx.beginPath(); ctx.arc(x,y,ptR,0,2*Math.PI);
-        ctx.fillStyle = g===1 ? col1 : col2;
-        ctx.globalAlpha = 0.7;
+        ctx.fillStyle = fillColor;
+        ctx.globalAlpha = chiOn && g===1 ? 0.95 : 0.85;
         ctx.fill();
       }
     }
     ctx.globalAlpha = 1;
 
-    // Moving angle indicator
-    var rad = deg * Math.PI / 180;
-    var sinV = Math.sin(rad), cosV = Math.cos(rad), tanV = Math.tan(rad);
-    var px = cx + radius * cosV, py = cy + radius * sinV;
-
-    // Angle arc
-    ctx.beginPath(); ctx.arc(cx, cy, radius*0.18, 0, rad, rad < 0);
-    ctx.strokeStyle='rgba(78,205,196,0.6)'; ctx.lineWidth=1.5; ctx.stroke();
-
-    // cos line (horizontal)
-    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(px, cy);
-    ctx.strokeStyle='#e879f9'; ctx.lineWidth=1.5; ctx.setLineDash([4,3]); ctx.stroke(); ctx.setLineDash([]);
-
-    // sin line (vertical)
-    ctx.beginPath(); ctx.moveTo(px, cy); ctx.lineTo(px, py);
-    ctx.strokeStyle='#4ecdc4'; ctx.lineWidth=1.5; ctx.setLineDash([4,3]); ctx.stroke(); ctx.setLineDash([]);
-
-    // Radius line
-    ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(px,py);
-    ctx.strokeStyle='rgba(255,215,0,0.8)'; ctx.lineWidth=2; ctx.stroke();
-
-    // Moving dot
-    ctx.beginPath(); ctx.arc(px,py,6,0,2*Math.PI);
-    ctx.fillStyle='#4ecdc4'; ctx.fill();
-    ctx.strokeStyle='#fff'; ctx.lineWidth=1.5; ctx.stroke();
-
-    // Degree label near dot
-    ctx.font='bold 11px Cinzel,serif'; ctx.fillStyle='#4ecdc4'; ctx.textAlign='left'; ctx.textBaseline='bottom';
-    var lx = px + (cosV >= 0 ? 8 : -8), ly = py + (sinV >= 0 ? -6 : 14);
-    ctx.textAlign = cosV >= 0 ? 'left' : 'right';
-    ctx.fillText(deg.toFixed(1)+'°', lx, ly);
-
-    // Update readouts
-    var degEl = document.getElementById('fcc-angle-deg'); if(degEl) degEl.textContent = deg.toFixed(1)+'°';
-    var sinEl = document.getElementById('fcc-sin'); if(sinEl) sinEl.textContent = sinV.toFixed(3);
-    var cosEl = document.getElementById('fcc-cos'); if(cosEl) cosEl.textContent = cosV.toFixed(3);
-    var tanEl = document.getElementById('fcc-tan'); if(tanEl) tanEl.textContent = Math.abs(tanV)>999 ? '∞' : tanV.toFixed(3);
-
-    // Find nearest fractions
-    function nearestFrac(wantCop) {
-      var best=null, bestDist=Infinity;
-      for (var m=1; m<=modN; m++) for (var r=0; r<m; r++) {
-        var g=gcd(r,m);
-        if (wantCop && g!==1) continue;
-        if (!wantCop && g===1) continue;
-        var a=2*Math.PI*r/m, diff=Math.abs(((a-rad)%(2*Math.PI)+2*Math.PI)%(2*Math.PI));
-        if(diff>Math.PI) diff=2*Math.PI-diff;
-        if(diff<bestDist){bestDist=diff;best=r+'/'+m;}
-      }
-      return best||'—';
+    // Chi legend (shown when chi is on)
+    if (chiOn) {
+      var lx=12, ly=H-12, bw=120, bh=8;
+      var grad=ctx.createLinearGradient(lx,0,lx+bw,0);
+      for(var i=0;i<=10;i++) grad.addColorStop(i/10,'hsl('+(i*36)+',90%,60%)');
+      ctx.fillStyle=grad; ctx.fillRect(lx,ly,bw,bh);
+      ctx.strokeStyle='rgba(196,155,56,0.3)'; ctx.lineWidth=0.5; ctx.strokeRect(lx,ly,bw,bh);
+      ctx.font='8px Cinzel,serif'; ctx.fillStyle='#9a8060'; ctx.textAlign='left'; ctx.textBaseline='top';
+      ctx.fillText('χ_'+chiK+'(r) color  e^(2πi·k·r/φ(m))', lx, ly+bh+2);
     }
-    var nc=document.getElementById('fcc-nearest-cop'); if(nc) nc.textContent=nearestFrac(true);
-    var nn=document.getElementById('fcc-nearest-ncp'); if(nn) nn.textContent=nearestFrac(false);
   };
 
   window._collapsedOn = false;
@@ -9355,43 +9614,9 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
     if (btn_cop)  { btn_cop.style.background  = mode==='coprime' ? '#4a90d9' : 'var(--parchment-dark)'; btn_cop.style.color  = mode==='coprime' ? 'var(--parchment)' : '#4a90d9'; }
     if (btn_non)  { btn_non.style.background  = mode==='noncoprime' ? '#c94040' : 'var(--parchment-dark)'; btn_non.style.color  = mode==='noncoprime' ? 'var(--parchment)' : '#c94040'; }
     if (lbl) lbl.textContent = labels[mode] || labels.both;
-    fareyDrawCollapsed();
+    window.fareyDrawCollapsed();
   };
 
-  window.fareyDrawCollapsed = function() {
-    if (window._collapsedAngleOn) { window.fareyCollapsedAngleDraw(window._collapsedAngleDeg||0); return; }
-    var cc = document.getElementById('fc-collapsed');
-    if (!cc) return;
-    var modN   = parseInt((document.getElementById('f-mod-num')||{value:'30'}).value)||30;
-    var col1   = (document.getElementById('f-col1')||{value:'#4a90d9'}).value;
-    var col2   = (document.getElementById('f-col2')||{value:'#c94040'}).value;
-    var mode   = window._collapsedMode || 'both';
-    var W = cc.width, H = cc.height;
-    var ctx = cc.getContext('2d');
-    ctx.clearRect(0,0,W,H);
-    var cx = W/2, cy = H/2;
-    var radius = Math.min(W,H)*0.42;
-    // Draw unit circle ring
-    ctx.beginPath(); ctx.arc(cx,cy,radius,0,2*Math.PI);
-    ctx.strokeStyle = 'rgba(160,120,48,0.35)'; ctx.lineWidth = 1; ctx.stroke();
-    function gcd(a,b){ while(b){var t=b;b=a%b;a=t;} return a; }
-    var ptR = Math.max(2, W*0.005);
-    for (var m=1; m<=modN; m++) {
-      for (var r=0; r<m; r++) {
-        var g = gcd(r,m);
-        if (mode==='coprime' && g!==1) continue;
-        if (mode==='noncoprime' && g===1) continue;
-        var ang = 2*Math.PI*r/m;
-        var x = cx + radius*Math.cos(ang);
-        var y = cy + radius*Math.sin(ang);
-        ctx.beginPath(); ctx.arc(x,y,ptR,0,2*Math.PI);
-        ctx.fillStyle = g===1 ? col1 : col2;
-        ctx.globalAlpha = 0.85;
-        ctx.fill();
-      }
-    }
-    ctx.globalAlpha = 1;
-  };
 
   window.fareyToggleCollapse = function() {
     window._collapsedOn = !window._collapsedOn;
@@ -9691,6 +9916,7 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
   function patchFareyDraw() {
     var origRedraw = window.fareyRedraw;
     window.fareyRedraw = function () {
+      if (window._canvasFrozen) return;
       origRedraw.apply(this, arguments);
       // Update mirror panel when active
       if (window._showMirrorActive && window._showMirrorActive()) {
@@ -10565,26 +10791,292 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
 
 <script>
 function toggleTheoryPanel() {
+    try {
     var bar   = document.getElementById('theory-toggle-bar');
     var panel = document.getElementById('theory-panel');
     if (!bar || !panel) return;
     var open = panel.classList.toggle('open');
     bar.classList.toggle('open', open);
     bar.setAttribute('aria-expanded', open);
-    if (open && window.renderMathInElement) {
-        renderMathInElement(panel, {
-            delimiters: [],
-            throwOnError: false
-        });
+    if (open && window.katex) {
         panel.querySelectorAll('.theory-math[data-math]').forEach(function(el) {
             if (el.dataset.rendered) return;
             try {
                 katex.render(el.getAttribute('data-math'), el, { throwOnError: false, displayMode: true });
                 el.dataset.rendered = '1';
-            } catch(e) {}
+            } catch(e) { console.warn('KaTeX render failed:', e); }
         });
     }
+    } catch(e) { console.error('toggleTheoryPanel error:', e); }
 }
+
+// Cross-section anchor navigation from theory panel links
+window.fareyTheoryAnchor = function(id) {
+    // Map anchor ids to page element ids
+    var targets = {
+        'sec-farey-discrepancy': 'theory-toggle-bar',  // reopen theory panel at §6
+        'sec-nbody': 'threebody-section',
+        'sec-mirror': 'farey-panel',                   // advanced panel contains mirror
+        'sec-advanced': 'farey-panel'
+    };
+    var targetId = targets[id] || id;
+    var el = document.getElementById(targetId);
+    if (!el) return false;
+
+    // Scroll to element
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    // Flash highlight
+    var orig = el.style.outline;
+    el.style.outline = '2px solid #c4b5fd';
+    el.style.outlineOffset = '3px';
+    setTimeout(function() { el.style.outline = orig; el.style.outlineOffset = ''; }, 1800);
+
+    // If targeting N-body, open it
+    if (id === 'sec-nbody' && window.tbToggle) {
+        var tb = document.getElementById('tb-body');
+        if (tb && tb.style.display === 'none') window.tbToggle();
+    }
+    // If targeting mirror/advanced, open the advanced panel
+    if ((id === 'sec-mirror' || id === 'sec-advanced') && document.getElementById('farey-panel')) {
+        var fp = document.getElementById('farey-canvas-wrap');
+        if (fp && fp.style.display === 'none') {
+            if (window.toggleFareyPanel) window.toggleFareyPanel();
+        }
+    }
+    return false;
+};
+
+// ── Send-to-Main-Canvas helpers ───────────────────────────────────────────
+// Ensure Advanced panel is open and fc-combined is visible, then return canvas
+function _getMainCanvas(callback) {
+    var c = document.getElementById('fc-combined');
+    var wrap = document.getElementById('farey-canvas-wrap');
+    var isOpen = wrap && wrap.style.display !== 'none';
+
+    if (!isOpen) {
+        // Open the Advanced panel
+        if (window.toggleFareyPanel) window.toggleFareyPanel();
+        // toggleFareyPanel triggers fareyRedraw async — wait one frame then proceed
+        requestAnimationFrame(function() {
+            requestAnimationFrame(function() {
+                var c2 = document.getElementById('fc-combined');
+                if (c2) {
+                    c2.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    // Give the canvas a moment to render before stamping
+                    setTimeout(function() { if (callback) callback(c2); }, 120);
+                }
+            });
+        });
+        return null; // caller must use callback pattern
+    }
+
+    // Already open — scroll to it
+    c.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    if (callback) { callback(c); return null; }
+    return c;
+}
+
+// Freeze / unfreeze
+window._canvasFrozen = false;
+window.fcUnfreeze = function() {
+    window._canvasFrozen = false;
+    var bar = document.getElementById('fc-pin-bar');
+    if (bar) bar.style.display = 'none';
+    var lbl = document.getElementById('fc-combined-label');
+    if (lbl) lbl.style.color = 'var(--gold)';
+    if (window.fareyRedraw) { window._canvasFrozen = false; window.fareyRedraw(); }
+};
+
+// Stamp src canvas onto main canvas, scaled to fill, with overlay label
+function _stampToMain(srcCanvas, label, tint, mainCanvas) {
+    var main = mainCanvas || document.getElementById('fc-combined');
+    if (!main) return;
+    var ctx = main.getContext('2d');
+    var W = main.width, H = main.height;
+    ctx.save();
+    ctx.globalAlpha = 1;
+    ctx.drawImage(srcCanvas, 0, 0, W, H);
+    // Corner label
+    ctx.fillStyle = 'rgba(2,1,0,0.55)';
+    ctx.fillRect(0, H - 22, 320, 22);
+    ctx.fillStyle = tint || '#4ecdc4';
+    ctx.font = 'bold ' + Math.round(W * 0.013) + 'px Cinzel,serif';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(label + '  ·  N=' + (parseInt((document.getElementById('f-mod-num')||{value:'?'}).value)||'?'), 8, H - 11);
+    ctx.restore();
+    // Freeze canvas so slider doesn't wipe it
+    window._canvasFrozen = true;
+    // Show pin bar
+    var bar = document.getElementById('fc-pin-bar');
+    if (bar) { bar.style.display = 'flex'; }
+    var pinLbl = document.getElementById('fc-pin-label');
+    if (pinLbl) { pinLbl.textContent = '\uD83D\uDCCC Pinned: ' + label; pinLbl.style.color = tint || '#4ecdc4'; }
+    var clbl = document.getElementById('fc-combined-label');
+    if (clbl) { clbl.style.color = tint || '#4ecdc4'; }
+    // Flash border
+    main.style.outline = '2px solid ' + (tint || '#4ecdc4');
+    setTimeout(function(){ main.style.outline = ''; }, 1200);
+}
+
+// Laurent → Main Canvas
+window.lxSendToMain = function() {
+    _getMainCanvas(function(main) {
+        var W = main.width, H = main.height;
+        var off = document.createElement('canvas');
+        off.width = W; off.height = H;
+        var ctx = off.getContext('2d');
+        ctx.fillStyle = '#020100'; ctx.fillRect(0, 0, W, H);
+
+        var N = parseInt((document.getElementById('f-mod-num')||{value:'30'}).value) || 30;
+        function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){var t=b;b=a%b;a=t;}return a||1;}
+        var PRIMES=(function(){var s=[],p=[];for(var i=0;i<=500;i++)s[i]=true;s[0]=s[1]=false;for(var i=2;i<=500;i++)if(s[i]){p.push(i);for(var j=i*i;j<=500;j+=i)s[j]=false;}return p;})();
+
+        var poles=[], i=0;
+        while(poles.length<8&&i<PRIMES.length){var p=PRIMES[i++],r=((p%N)+N)%N;if(r>0&&gcd(r,N)===1)poles.push({p:p,r:r});}
+        var sortedR=poles.map(function(p){return p.r;}).sort(function(a,b){return a-b;});
+        var maxR=Math.max(N,sortedR[sortedR.length-1]||1);
+        var cx=W/2, cy=H/2;
+        var scale=(W*0.44)/maxR;
+
+        var bandCols=['rgba(74,144,217,0.12)','rgba(196,155,56,0.10)','rgba(168,85,247,0.10)',
+                      'rgba(52,211,153,0.10)','rgba(249,115,22,0.10)','rgba(232,121,249,0.10)',
+                      'rgba(78,205,196,0.10)','rgba(234,179,8,0.10)','rgba(239,68,68,0.10)'];
+        var boundaries=[0].concat(sortedR).concat([maxR]);
+        for(var b=0;b<boundaries.length-1;b++){
+            var r0=boundaries[b]*scale, r1=boundaries[b+1]*scale;
+            ctx.fillStyle=bandCols[b%bandCols.length];
+            ctx.beginPath();ctx.arc(cx,cy,r1,0,2*Math.PI);ctx.arc(cx,cy,Math.max(0,r0),0,2*Math.PI,true);ctx.fill();
+            var rMid=(r0+r1)/2;
+            ctx.save();
+            ctx.fillStyle='rgba(196,155,56,0.5)';
+            ctx.font=Math.max(10,Math.round(W*0.011))+'px Cinzel,serif';
+            ctx.textAlign='center';ctx.textBaseline='middle';
+            ctx.fillText('A'+(b+1),cx+rMid,cy);
+            ctx.restore();
+        }
+        ctx.strokeStyle='rgba(196,155,56,0.2)';ctx.lineWidth=1;
+        ctx.beginPath();ctx.arc(cx,cy,N*scale,0,2*Math.PI);ctx.stroke();
+        var PAL=['#4a90d9','#f97316','#a855f7','#34d399','#e879f9','#fb923c','#60a5fa','#f472b6'];
+        poles.forEach(function(pole,pi){
+            var col=PAL[pi%PAL.length];
+            var pr=pole.r*scale;
+            var grd=ctx.createRadialGradient(cx,cy,Math.max(0,pr-2),cx,cy,pr+3);
+            grd.addColorStop(0,col+'55');grd.addColorStop(1,col+'00');
+            ctx.strokeStyle=grd;ctx.lineWidth=4;
+            ctx.beginPath();ctx.arc(cx,cy,pr,0,2*Math.PI);ctx.stroke();
+            ctx.strokeStyle=col;ctx.lineWidth=1.5;
+            ctx.beginPath();ctx.arc(cx,cy,pr,0,2*Math.PI);ctx.stroke();
+            var fontSize=Math.max(11,Math.round(W*0.013));
+            ctx.font='bold '+fontSize+'px Cinzel,serif';
+            ctx.fillStyle=col;ctx.textAlign='center';ctx.textBaseline='middle';
+            ctx.fillText('p'+pole.p+'\u2261'+pole.r+'('+N+')',cx,cy-pr-fontSize*0.7);
+        });
+        ctx.fillStyle='rgba(196,155,56,0.55)';
+        ctx.font=Math.max(12,Math.round(W*0.015))+'px Cinzel,serif';
+        ctx.textAlign='center';ctx.textBaseline='middle';
+        ctx.fillText('Laurent Annuli \xb7 N='+N,cx,cy);
+
+        _stampToMain(off, 'Laurent Annuli Explorer', '#4ecdc4', main);
+    });
+};
+
+// Explicit Formula → Main Canvas
+window.rfSendToMain = function() {
+    _getMainCanvas(function(main) {
+        var W = main.width, H = main.height;
+        var off = document.createElement('canvas');
+        off.width = W; off.height = H;
+        var ctx = off.getContext('2d');
+        ctx.fillStyle = '#020100'; ctx.fillRect(0, 0, W, H);
+
+        var kEl = document.getElementById('rf-k');
+        var xEl = document.getElementById('rf-x');
+        var K = kEl ? Math.min(50, Math.max(1, parseInt(kEl.value)||5)) : 5;
+        var x = xEl ? Math.max(3, parseFloat(xEl.value)||50) : 50;
+        var N = parseInt((document.getElementById('f-mod-num')||{value:'30'}).value)||30;
+        var RZ=[14.134725,21.022040,25.010858,30.424876,32.935062,37.586178,40.918719,43.327073,
+                48.005151,49.773832,52.970321,56.446247,59.347044,60.831779,65.112544,67.079811,
+                69.546401,72.067157,75.704691,77.144840,79.337375,82.910381,84.735493,87.425274,
+                88.809111,92.491899,94.651344,95.870634,98.831194,101.317851];
+        var zeros = RZ.slice(0, K);
+        var cx = W*0.35, cy = H/2;
+        var maxG = Math.max(zeros[zeros.length-1]*1.15, 20);
+        var scaleR = W*0.22;
+        var scaleI = H*0.46 / maxG;
+        var PAL=['#4a90d9','#f97316','#a855f7','#34d399','#e879f9','#fb923c','#60a5fa','#f472b6',
+                 '#facc15','#a3e635','#2dd4bf','#c084fc','#fb7185','#fdba74','#86efac','#67e8f9',
+                 '#f0abfc','#fcd34d','#6ee7b7','#93c5fd'];
+
+        ctx.strokeStyle='rgba(196,155,56,0.2)';ctx.lineWidth=1;
+        ctx.beginPath();ctx.moveTo(cx,20);ctx.lineTo(cx,H-20);ctx.stroke();
+        ctx.beginPath();ctx.moveTo(20,cy);ctx.lineTo(W-20,cy);ctx.stroke();
+
+        var critX=cx+0.5*scaleR;
+        ctx.strokeStyle='rgba(168,85,247,0.45)';ctx.lineWidth=1.5;ctx.setLineDash([6,4]);
+        ctx.beginPath();ctx.moveTo(critX,20);ctx.lineTo(critX,H-20);ctx.stroke();
+        ctx.setLineDash([]);
+
+        ctx.strokeStyle='rgba(120,200,80,0.55)';ctx.lineWidth=2;
+        ctx.beginPath();
+        for(var ti=0;ti<=300;ti++){var tt=2*Math.PI*ti/300;var rx=1+2*Math.cos(tt),ry=maxG*0.88*Math.sin(tt);var sx=cx+rx*scaleR,sy=cy-ry*scaleI;ti===0?ctx.moveTo(sx,sy):ctx.lineTo(sx,sy);}
+        ctx.stroke();
+
+        var lf=Math.max(14,Math.round(W*0.015));
+        ctx.fillStyle='rgba(196,155,56,0.5)';ctx.font=lf+'px Cinzel,serif';
+        ctx.textAlign='center';ctx.fillText('Re(z)',W-40,cy-8);
+        ctx.fillText('Im(z)',cx+10,24);
+        ctx.fillStyle='rgba(168,85,247,0.7)';ctx.fillText('\xbd',critX,cy+lf*1.2);
+
+        zeros.forEach(function(g,i){
+            var col=PAL[i%PAL.length];
+            var sx=cx+0.5*scaleR, syP=cy-g*scaleI, syN=cy+g*scaleI;
+            var dotR=Math.max(4,W*0.005);
+            [[sx,syP,1],[sx,syN,0.6]].forEach(function(pt){
+                var grd=ctx.createRadialGradient(pt[0],pt[1],0,pt[0],pt[1],dotR*3);
+                grd.addColorStop(0,col+(pt[2]===1?'cc':'88'));grd.addColorStop(1,col+'00');
+                ctx.beginPath();ctx.arc(pt[0],pt[1],dotR*3,0,2*Math.PI);ctx.fillStyle=grd;ctx.fill();
+                ctx.beginPath();ctx.arc(pt[0],pt[1],dotR,0,2*Math.PI);ctx.fillStyle=col+(pt[2]===1?'':'aa');ctx.fill();
+            });
+            if(i<10){
+                ctx.fillStyle='rgba(232,217,176,0.8)';ctx.font=Math.max(10,Math.round(W*0.012))+'px Cinzel,serif';
+                ctx.textAlign='left';ctx.textBaseline='middle';
+                ctx.fillText('\u03b3'+(i+1)+'='+g.toFixed(3),sx+dotR+3,syP);
+            }
+        });
+
+        var bx=W*0.72, by=40, bline=Math.max(18,Math.round(H*0.022));
+        ctx.fillStyle='rgba(2,1,0,0.7)';ctx.fillRect(bx-8,by-8,W*0.26+16,(Math.min(K,12)+4)*bline);
+        ctx.strokeStyle='rgba(196,155,56,0.25)';ctx.lineWidth=0.5;ctx.strokeRect(bx-8,by-8,W*0.26+16,(Math.min(K,12)+4)*bline);
+        ctx.fillStyle='rgba(196,155,56,0.7)';ctx.font='bold '+Math.max(12,Math.round(W*0.014))+'px Cinzel,serif';
+        ctx.textAlign='left';ctx.textBaseline='top';
+        ctx.fillText('\u03b6(s) Zeros  K='+K+',  x='+x,bx,by);
+        ctx.fillText('N='+N+' (mod connection)',bx,by+bline);
+        zeros.slice(0,12).forEach(function(g,i){
+            ctx.fillStyle=PAL[i%PAL.length];
+            ctx.font=Math.max(10,Math.round(W*0.011))+'px Cinzel,serif';
+            ctx.fillText('\u03b3'+(i+1)+'= '+g.toFixed(6),bx,by+(i+2)*bline);
+        });
+
+        _stampToMain(off, 'Explicit Formula Explorer  \u03b6(s)', '#a855f7', main);
+    });
+};
+
+// N-Body Orbits → Main Canvas (snapshot current tb-canvas frame)
+window.tbSendToMain = function() {
+    var src = document.getElementById('tb-canvas');
+    if (!src) { alert('Open the N-Body panel first.'); return; }
+    _getMainCanvas(function(main) {
+        var W = main.width, H = main.height;
+        var off = document.createElement('canvas');
+        off.width = W; off.height = H;
+        var ctx = off.getContext('2d');
+        ctx.fillStyle = '#020100'; ctx.fillRect(0, 0, W, H);
+        ctx.drawImage(src, 0, 0, W, H);
+        _stampToMain(off, 'N-Body Residue Orbits', '#f97316', main);
+    });
+};
 </script>
 
 <script>
@@ -11127,6 +11619,9 @@ function toggleTheoryPanel() {
 
     tbSyncRing();
     if(typeof tbRebuildCamButtons==='function') tbRebuildCamButtons();
+    // Keep header K in sync
+    var hdrK=document.getElementById('tb-K-hdr');
+    if(hdrK) hdrK.value=document.getElementById('tb-K').value;
   };
 
   // keep old name as alias for presets/compat
@@ -11460,7 +11955,10 @@ function toggleTheoryPanel() {
     // overlays
     if(cfg.overlays) Object.keys(cfg.overlays).forEach(function(k){if(overlays[k]!==cfg.overlays[k])tbToggleOverlay(k);});
     tbInit(); tbDraw(); running=false;
-    var btn=document.getElementById('tb-play-btn');if(btn)btn.textContent='▶ Play';
+    _syncPlayBtns();
+    // Sync header quick controls
+    var hK=document.getElementById('tb-K-hdr'); if(hK) hK.value=document.getElementById('tb-K').value;
+    var hSpd=document.getElementById('tb-spd-hdr'); if(hSpd){hSpd.value=document.getElementById('tb-speed').value;document.getElementById('tb-spd-hdr-val').textContent=hSpd.value;}
   };
 
   // ── public API ────────────────────────────────────────────────────────
@@ -11470,14 +11968,83 @@ function toggleTheoryPanel() {
     var open=body.style.display==='none';
     body.style.display=open?'block':'none';
     if(icon)icon.textContent=open?'▲':'▼';
-    if(open&&!started){started=true;tbInit();tbDraw();var btn=document.getElementById('tb-play-btn');if(btn)btn.textContent='▶ Play';}
+    if(open&&!started){started=true;tbInit();tbDraw();_syncPlayBtns();}
   };
+  function _syncPlayBtns(){
+    var lbl=running?'⏸ Pause':'▶ Play';
+    ['tb-play-btn2','tb-play-btn-hdr'].forEach(function(id){var b=document.getElementById(id);if(b)b.textContent=lbl;});
+    ['tb-play-btn2','tb-play-btn-hdr'].forEach(function(id){
+      var b=document.getElementById(id);if(!b)return;
+      b.style.background=running?'var(--gold)':'var(--parchment-dark)';
+      b.style.color=running?'var(--parchment-dark)':'var(--gold)';
+    });
+  }
   window.tbTogglePlay=function(){
-    running=!running;var btn=document.getElementById('tb-play-btn');
-    if(btn)btn.textContent=running?'⏸ Pause':'▶ Play';
+    running=!running;
+    _syncPlayBtns();
   };
-  window.tbReset=function(){tbInit();tbDraw();running=false;var btn=document.getElementById('tb-play-btn');if(btn)btn.textContent='▶ Play';};
+  window.tbReset=function(){tbInit();tbDraw();running=false;_syncPlayBtns();};
   window.tbClearTrails=function(){trails=bodies.map(function(){return[];});};
+  window.tbClearTrails=function(){trails=bodies.map(function(){return[];});};
+  // ── Live stream to main canvas ────────────────────────────────────────
+  var _tbStreaming = false;
+  window.tbToggleStream = function() {
+    _tbStreaming = !_tbStreaming;
+    var btn = document.getElementById('tb-stream-btn');
+    var btnH = document.getElementById('tb-stream-btn-hdr');
+    if (btn) {
+      btn.style.background = _tbStreaming ? '#f97316' : 'var(--parchment-dark)';
+      btn.style.color = _tbStreaming ? '#000' : '#f97316';
+      btn.textContent = _tbStreaming ? '⊡ Streaming' : '⊞ Live Stream';
+    }
+    if (btnH) {
+      btnH.style.background = _tbStreaming ? '#f97316' : 'var(--parchment-dark)';
+      btnH.style.color = _tbStreaming ? '#000' : '#f97316';
+      btnH.textContent = _tbStreaming ? '⊡ Live' : '⊞ Stream';
+    }
+    if (_tbStreaming) {
+      // Ensure Advanced panel is open
+      var wrap = document.getElementById('farey-canvas-wrap');
+      if (!wrap || wrap.style.display === 'none') {
+        if (window.toggleFareyPanel) window.toggleFareyPanel();
+      }
+      // Freeze main canvas from fareyRedraw
+      window._canvasFrozen = true;
+      var bar = document.getElementById('fc-pin-bar');
+      if (bar) bar.style.display = 'flex';
+      var pinLbl = document.getElementById('fc-pin-label');
+      if (pinLbl) { pinLbl.textContent = '📡 Live: N-Body Orbit'; pinLbl.style.color = '#f97316'; }
+    } else {
+      window._canvasFrozen = false;
+      var bar2 = document.getElementById('fc-pin-bar');
+      if (bar2) bar2.style.display = 'none';
+      if (window.fareyRedraw) window.fareyRedraw();
+    }
+  };
+
+  // Patch tbDraw to mirror to fc-combined when streaming
+  var _origTbDraw = tbDraw;
+  tbDraw = function() {
+    _origTbDraw();
+    if (_tbStreaming) {
+      var main = document.getElementById('fc-combined');
+      var src  = document.getElementById('tb-canvas');
+      if (main && src) {
+        var ctx = main.getContext('2d');
+        var W = main.width, H = main.height;
+        ctx.fillStyle = '#020100'; ctx.fillRect(0,0,W,H);
+        ctx.drawImage(src, 0, 0, W, H);
+        // Small live indicator
+        ctx.fillStyle = 'rgba(249,115,22,0.85)';
+        ctx.beginPath(); ctx.arc(W-14, 14, 5, 0, 2*Math.PI); ctx.fill();
+        ctx.fillStyle = '#f97316';
+        ctx.font = 'bold ' + Math.max(10,Math.round(W*0.012)) + 'px Cinzel,serif';
+        ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+        ctx.fillText('LIVE · N-Body  N=' + getN(), W-22, 14);
+      }
+    }
+  };
+
   window.tbToggleOverlay=function(key){
     overlays[key]=!overlays[key];
     var btn=document.getElementById('tb-btn-'+key);if(!btn)return;
