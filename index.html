@@ -2792,7 +2792,7 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
                     <button onclick="shell3dPreset({N:30,z:'flat',alpha:0,opacity:1,color:'rainbow',ring:true,spokes:false,pt:8})" style="font-family:'Cinzel',serif;font-size:0.43rem;padding:2px 7px;border:1px solid #e879f9;background:var(--parchment-dark);color:#e879f9;cursor:pointer;border-radius:2px;">Flat Ring</button>
                   </div>
                   <!-- 3D Canvas -->
-                  <canvas id="sh-canvas" width="600" height="600" style="width:100%;height:auto;aspect-ratio:1;background:#020100;border:1px solid rgba(168,85,247,0.4);border-radius:4px;display:block;cursor:grab;touch-action:none;"></canvas>
+                  <canvas id="sh-canvas" width="600" height="600" style="width:100%;max-width:500px;height:auto;aspect-ratio:1;background:#020100;border:1px solid rgba(168,85,247,0.4);border-radius:4px;display:block;cursor:grab;touch-action:none;"></canvas>
                   <div style="font-family:'Cinzel',serif;font-size:0.43rem;color:#9a8060;margin-top:4px;text-align:center;">drag to rotate · scroll to zoom · shift+drag to pan</div>
                 </div>
               </div>
@@ -3240,137 +3240,6 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
 </div><!-- /farey-canvas-col -->
 </div><!-- /farey-shell -->
 
-<!-- ══ N-BODY PRIME / ELEMENT RESIDUE ORBITS ══ -->
-<div id="threebody-section" style="margin-top:8px;background:var(--parchment-dark);border:1px solid var(--panel-border);border-radius:4px;">
-  <!-- Header row: title + quick controls + toggle -->
-  <div style="display:flex;align-items:center;gap:6px;padding:6px 10px;flex-wrap:wrap;">
-    <!-- Title (clickable to toggle) -->
-    <div onclick="if(window.tbToggle)window.tbToggle();" style="display:flex;align-items:center;gap:6px;cursor:pointer;user-select:none;flex-shrink:0;">
-      <span style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);">&#9632; N-Body Orbits</span>
-      <span id="tb-toggle-icon" style="color:var(--gold);font-size:0.7rem;">&#9660;</span>
-    </div>
-    <!-- Divider -->
-    <span style="color:rgba(160,120,48,0.3);font-size:0.8rem;flex-shrink:0;">|</span>
-    <!-- Play / Reset -->
-    <button id="tb-play-btn-hdr" onclick="if(window.tbTogglePlay)window.tbTogglePlay()" style="font-family:'Cinzel',serif;font-size:0.48rem;letter-spacing:0.07em;text-transform:uppercase;padding:3px 10px;border:1px solid var(--gold);background:var(--gold);color:var(--parchment-dark);cursor:pointer;border-radius:2px;font-weight:700;flex-shrink:0;">&#9654; Play</button>
-    <button onclick="if(window.tbReset)window.tbReset()" style="font-family:'Cinzel',serif;font-size:0.48rem;letter-spacing:0.07em;text-transform:uppercase;padding:3px 8px;border:1px solid var(--gold);background:var(--parchment-dark);color:var(--gold);cursor:pointer;border-radius:2px;flex-shrink:0;">&#11119; Reset</button>
-    <button onclick="if(window.tbClearTrails)window.tbClearTrails()" style="font-family:'Cinzel',serif;font-size:0.48rem;letter-spacing:0.07em;text-transform:uppercase;padding:3px 8px;border:1px solid #4ecdc4;background:var(--parchment-dark);color:#4ecdc4;cursor:pointer;border-radius:2px;flex-shrink:0;">&#9003; Trace</button>
-    <!-- Divider -->
-    <span style="color:rgba(160,120,48,0.3);font-size:0.8rem;flex-shrink:0;">|</span>
-    <!-- K bodies quick input -->
-    <span style="font-family:'Cinzel',serif;font-size:0.47rem;color:#9a8060;flex-shrink:0;">K=</span>
-    <input id="tb-K-hdr" type="number" min="1" max="30" value="3" style="width:36px;background:#020100;color:var(--ink);border:1px solid var(--gold);padding:2px 4px;font-family:'Cinzel',serif;font-size:0.52rem;text-align:center;border-radius:2px;flex-shrink:0;" oninput="document.getElementById('tb-K').value=this.value;if(window.tbSyncBodies)window.tbSyncBodies();">
-    <!-- Speed quick slider -->
-    <span style="font-family:'Cinzel',serif;font-size:0.47rem;color:#9a8060;flex-shrink:0;">Spd</span>
-    <input type="range" min="1" max="40" step="1" value="10" style="width:55px;accent-color:var(--gold);flex-shrink:0;" oninput="document.getElementById('tb-speed').value=this.value;document.getElementById('tb-speedv').textContent=this.value;document.getElementById('tb-spd-hdr-val').textContent=this.value;" id="tb-spd-hdr">
-    <span id="tb-spd-hdr-val" style="font-family:'Cinzel',serif;font-size:0.47rem;color:var(--gold);min-width:14px;flex-shrink:0;">10</span>
-    <!-- Divider -->
-    <span style="color:rgba(160,120,48,0.3);font-size:0.8rem;flex-shrink:0;">|</span>
-    <!-- Quick presets -->
-    <span style="font-family:'Cinzel',serif;font-size:0.44rem;color:#9a8060;flex-shrink:0;">Preset:</span>
-    <button onclick="if(window.tbPreset)window.tbPreset({mode:'prime',N:12,K:3,G:1,gapK:0,R:1.5,soft:0.04,speed:10,trail:1500,overlays:{poly:true,cross:false,gap:false}})" style="font-family:'Cinzel',serif;font-size:0.44rem;padding:2px 6px;border:1px solid var(--gold);background:var(--parchment-dark);color:var(--gold);cursor:pointer;border-radius:2px;flex-shrink:0;">Trinity</button>
-    <button onclick="if(window.tbPreset)window.tbPreset({mode:'prime',N:30,K:5,G:1,gapK:0,R:1.5,soft:0.05,speed:8,trail:2000,overlays:{poly:true,cross:false,gap:false}})" style="font-family:'Cinzel',serif;font-size:0.44rem;padding:2px 6px;border:1px solid var(--gold);background:var(--parchment-dark);color:var(--gold);cursor:pointer;border-radius:2px;flex-shrink:0;">Pentagon</button>
-    <button onclick="if(window.tbPreset)window.tbPreset({mode:'prime',N:12,K:3,G:1,gapK:1.2,R:1.5,soft:0.04,speed:10,trail:2000,overlays:{poly:true,cross:false,gap:true}})" style="font-family:'Cinzel',serif;font-size:0.44rem;padding:2px 6px;border:1px solid #f97316;background:var(--parchment-dark);color:#f97316;cursor:pointer;border-radius:2px;flex-shrink:0;">Gap Dance</button>
-    <button onclick="if(window.tbPreset)window.tbPreset({mode:'prime',N:210,K:4,G:2,gapK:0,R:1.5,soft:0.03,speed:12,trail:3000,overlays:{poly:true,cross:false,gap:false}})" style="font-family:'Cinzel',serif;font-size:0.44rem;padding:2px 6px;border:1px solid var(--gold);background:var(--parchment-dark);color:var(--gold);cursor:pointer;border-radius:2px;flex-shrink:0;">Q210</button>
-    <!-- Live stream to main canvas -->
-    <span style="color:rgba(160,120,48,0.3);font-size:0.8rem;flex-shrink:0;">|</span>
-    <button id="tb-stream-btn-hdr" onclick="if(window.tbToggleStream)window.tbToggleStream()" style="font-family:'Cinzel',serif;font-size:0.44rem;letter-spacing:0.06em;text-transform:uppercase;padding:3px 8px;border:1px solid #f97316;background:var(--parchment-dark);color:#f97316;cursor:pointer;border-radius:2px;flex-shrink:0;">&#8862; Stream</button>
-  </div>
-  <!-- Live stats bar — always visible -->
-  <div id="tb-hdr-stats" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:3px 10px 5px;border-top:1px solid rgba(160,120,48,0.12);">
-    <span style="font-family:'Cinzel',serif;font-size:0.47rem;color:#9a8060;">t=<span id="tb-t-hdr" style="color:var(--gold);">0.000</span></span>
-    <span style="font-family:'Cinzel',serif;font-size:0.47rem;color:#9a8060;">E=<span id="tb-e-hdr" style="color:var(--gold);">—</span></span>
-    <span style="font-family:'Cinzel',serif;font-size:0.47rem;color:#9a8060;">sep=<span id="tb-sep-hdr" style="color:var(--gold);">—</span></span>
-    <span style="color:rgba(160,120,48,0.3);">|</span>
-    <span id="tb-body-list-hdr" style="font-family:'Cinzel',serif;font-size:0.44rem;color:#9a8060;line-height:1.6;"></span>
-  </div>
-  <div id="tb-body" style="display:none;padding:0 12px 12px;">
-    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-start;">
-      <div style="flex:1;min-width:200px;">
-        <canvas id="tb-canvas" width="500" height="500" style="width:100%;height:auto;aspect-ratio:1;background:#020100;border:1px solid var(--border);border-radius:3px;display:block;cursor:crosshair;"></canvas>
-        <!-- Play controls directly below orbit canvas -->
-        <div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:5px;">
-          <button id="tb-play-btn2" onclick="if(window.tbTogglePlay)window.tbTogglePlay()" style="font-family:'Cinzel',serif;font-size:0.52rem;letter-spacing:0.08em;text-transform:uppercase;padding:4px 12px;border:1px solid var(--gold);background:var(--gold);color:var(--parchment-dark);cursor:pointer;border-radius:2px;font-weight:700;">&#9654; Play</button>
-          <button onclick="if(window.tbReset)window.tbReset()" style="font-family:'Cinzel',serif;font-size:0.52rem;letter-spacing:0.08em;text-transform:uppercase;padding:4px 10px;border:1px solid var(--gold);background:var(--parchment-dark);color:var(--gold);cursor:pointer;border-radius:2px;">&#11119; Reset</button>
-          <button onclick="if(window.tbClearTrails)window.tbClearTrails()" style="font-family:'Cinzel',serif;font-size:0.52rem;letter-spacing:0.08em;text-transform:uppercase;padding:4px 10px;border:1px solid #4ecdc4;background:var(--parchment-dark);color:#4ecdc4;cursor:pointer;border-radius:2px;">&#9003; Trace</button>
-          <button id="tb-stream-btn" onclick="if(window.tbToggleStream)window.tbToggleStream()" title="Live-stream orbit to main canvas at full resolution" style="font-family:'Cinzel',serif;font-size:0.52rem;letter-spacing:0.08em;text-transform:uppercase;padding:4px 10px;border:1px solid #f97316;background:var(--parchment-dark);color:#f97316;cursor:pointer;border-radius:2px;">&#8862; Live Stream</button>
-        </div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;padding:3px 0;font-family:'Cinzel',serif;font-size:0.5rem;color:var(--ink-mid);margin-top:3px;">
-          <span>t=<span id="tb-t" style="color:var(--gold);">0.000</span></span>
-          <span>E=<span id="tb-e" style="color:var(--gold);">—</span></span>
-          <span>sep=<span id="tb-sep" style="color:var(--gold);">—</span></span>
-        </div>
-        <div id="tb-body-list" style="font-family:'Cinzel',serif;font-size:0.44rem;color:#9a8060;line-height:1.8;margin-top:2px;"></div>
-        <div style="margin-top:3px;">
-          <span style="font-family:'Cinzel',serif;font-size:0.43rem;color:#9a8060;letter-spacing:0.06em;text-transform:uppercase;">Camera — click body or:</span>
-          <div id="tb-cam-row" style="display:flex;gap:3px;flex-wrap:wrap;margin-top:3px;"></div>
-        </div>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:5px;min-width:175px;max-width:235px;">
-        <canvas id="tb-ring" width="180" height="180" style="width:100%;height:auto;aspect-ratio:1;background:#020100;border:1px solid var(--border);border-radius:3px;display:block;"></canvas>
-        <div style="display:flex;gap:3px;">
-          <button id="tb-mode-prime-btn" onclick="if(window.tbSetBodyMode)window.tbSetBodyMode('prime')" style="font-family:'Cinzel',serif;font-size:0.46rem;padding:2px 7px;border:1px solid var(--gold);background:var(--gold);color:var(--parchment-dark);cursor:pointer;border-radius:2px;flex:1;">Primes</button>
-          <button id="tb-mode-elem-btn" onclick="if(window.tbSetBodyMode)window.tbSetBodyMode('element')" style="font-family:'Cinzel',serif;font-size:0.46rem;padding:2px 7px;border:1px solid #34d399;background:var(--parchment-dark);color:#34d399;cursor:pointer;border-radius:2px;flex:1;">Elements</button>
-        </div>
-        <div id="tb-panel-prime" style="background:#0a0800;border:1px solid var(--panel-border);border-radius:3px;padding:5px 8px;">
-          <div style="font-family:'Cinzel',serif;font-size:0.46rem;color:#9a8060;letter-spacing:0.07em;text-transform:uppercase;margin-bottom:4px;">First K coprime primes mod N</div>
-          <div style="display:flex;align-items:center;gap:6px;">
-            <span style="font-family:'Cinzel',serif;font-size:0.55rem;color:var(--gold);">K =</span>
-            <input id="tb-K" type="number" min="1" max="20" value="3" style="width:44px;background:#020100;color:var(--ink);border:1px solid var(--gold);padding:3px 5px;font-family:'Cinzel',serif;font-size:0.6rem;text-align:center;border-radius:2px;" oninput="if(window.tbSyncBodies)window.tbSyncBodies()">
-            <span style="font-family:'Cinzel',serif;font-size:0.44rem;color:#9a8060;">bodies</span>
-          </div>
-          <div id="tb-prime-summary" style="font-family:'Cinzel',serif;font-size:0.44rem;color:#a855f7;margin-top:4px;line-height:1.7;"></div>
-        </div>
-        <div id="tb-panel-elem" style="display:none;background:#0a0800;border:1px solid #34d399;border-radius:3px;padding:5px 8px;">
-          <div style="font-family:'Cinzel',serif;font-size:0.46rem;color:#9a8060;letter-spacing:0.07em;text-transform:uppercase;margin-bottom:4px;">Elements (Z start / count)</div>
-          <div style="display:flex;align-items:center;gap:4px;margin-bottom:4px;">
-            <span style="font-family:'Cinzel',serif;font-size:0.46rem;color:#34d399;">Z</span>
-            <input id="tb-Z-start" type="number" min="1" max="36" value="1" style="width:36px;background:#020100;color:var(--ink);border:1px solid #34d399;padding:2px 3px;font-family:'Cinzel',serif;font-size:0.5rem;text-align:center;border-radius:2px;" oninput="if(window.tbSyncBodies)window.tbSyncBodies()">
-            <span style="font-family:'Cinzel',serif;font-size:0.46rem;color:#34d399;">count</span>
-            <input id="tb-Z-count" type="number" min="1" max="20" value="3" style="width:36px;background:#020100;color:var(--ink);border:1px solid #34d399;padding:2px 3px;font-family:'Cinzel',serif;font-size:0.5rem;text-align:center;border-radius:2px;" oninput="if(window.tbSyncBodies)window.tbSyncBodies()">
-          </div>
-          <div style="display:flex;align-items:center;gap:4px;margin-bottom:3px;">
-            <span style="font-family:'Cinzel',serif;font-size:0.44rem;color:#9a8060;">mass =</span>
-            <select id="tb-elem-mass" onchange="if(window.tbSyncBodies)window.tbSyncBodies()" style="font-family:'Cinzel',serif;font-size:0.44rem;background:#020100;color:var(--ink);border:1px solid #34d399;padding:1px 3px;border-radius:2px;">
-              <option value="atomic">Atomic mass</option>
-              <option value="period">Period</option>
-              <option value="group">Group</option>
-              <option value="Z">Atomic number</option>
-            </select>
-          </div>
-          <div id="tb-elem-summary" style="font-family:'Cinzel',serif;font-size:0.44rem;color:#34d399;line-height:1.7;"></div>
-        </div>
-        <div style="display:flex;gap:4px;flex-wrap:wrap;">
-          <button id="tb-btn-poly" onclick="if(window.tbToggleOverlay)window.tbToggleOverlay('poly')" style="font-family:'Cinzel',serif;font-size:0.46rem;padding:2px 6px;border:1px solid var(--gold);background:var(--gold);color:var(--parchment-dark);cursor:pointer;border-radius:2px;">Polygon</button>
-          <button id="tb-btn-cross" onclick="if(window.tbToggleOverlay)window.tbToggleOverlay('cross')" style="font-family:'Cinzel',serif;font-size:0.46rem;padding:2px 6px;border:1px solid #4a90d9;background:var(--parchment-dark);color:#4a90d9;cursor:pointer;border-radius:2px;">Cross-mod</button>
-          <button id="tb-btn-gap" onclick="if(window.tbToggleOverlay)window.tbToggleOverlay('gap')" style="font-family:'Cinzel',serif;font-size:0.46rem;padding:2px 6px;border:1px solid #f97316;background:var(--parchment-dark);color:#f97316;cursor:pointer;border-radius:2px;">Gap Force</button>
-        </div>
-        <div style="display:flex;align-items:center;gap:4px;"><span style="font-family:'Cinzel',serif;font-size:0.47rem;color:#9a8060;width:32px;">G</span><input type="range" id="tb-G" min="0.1" max="5" step="0.05" value="1" style="flex:1;accent-color:var(--gold);" oninput="document.getElementById('tb-Gv').textContent=parseFloat(this.value).toFixed(2);"><span id="tb-Gv" style="font-family:'Cinzel',serif;font-size:0.47rem;color:var(--gold);min-width:26px;">1.00</span></div>
-        <div style="display:flex;align-items:center;gap:4px;"><span style="font-family:'Cinzel',serif;font-size:0.47rem;color:#9a8060;width:32px;">Gap K</span><input type="range" id="tb-gapk" min="0" max="2" step="0.02" value="0.3" style="flex:1;accent-color:#f97316;" oninput="document.getElementById('tb-gapkv').textContent=parseFloat(this.value).toFixed(2);"><span id="tb-gapkv" style="font-family:'Cinzel',serif;font-size:0.47rem;color:#f97316;min-width:26px;">0.30</span></div>
-        <div style="display:flex;align-items:center;gap:4px;"><span style="font-family:'Cinzel',serif;font-size:0.47rem;color:#9a8060;width:32px;">Orbit R</span><input type="range" id="tb-R" min="0.3" max="3" step="0.05" value="1.5" style="flex:1;accent-color:var(--gold);" oninput="document.getElementById('tb-Rv').textContent=parseFloat(this.value).toFixed(2);"><span id="tb-Rv" style="font-family:'Cinzel',serif;font-size:0.47rem;color:var(--gold);min-width:26px;">1.50</span></div>
-        <div style="display:flex;align-items:center;gap:4px;"><span style="font-family:'Cinzel',serif;font-size:0.47rem;color:#9a8060;width:32px;">Trail</span><input type="range" id="tb-trail" min="100" max="5000" step="100" value="1500" style="flex:1;accent-color:var(--gold);" oninput="document.getElementById('tb-trailv').textContent=this.value;"><span id="tb-trailv" style="font-family:'Cinzel',serif;font-size:0.47rem;color:var(--gold);min-width:26px;">1500</span></div>
-        <div style="display:flex;align-items:center;gap:4px;"><span style="font-family:'Cinzel',serif;font-size:0.47rem;color:#9a8060;width:32px;">Speed</span><input type="range" id="tb-speed" min="1" max="40" step="1" value="10" style="flex:1;accent-color:var(--gold);" oninput="document.getElementById('tb-speedv').textContent=this.value;"><span id="tb-speedv" style="font-family:'Cinzel',serif;font-size:0.47rem;color:var(--gold);min-width:26px;">10</span></div>
-        <div style="display:flex;align-items:center;gap:4px;"><span style="font-family:'Cinzel',serif;font-size:0.47rem;color:#9a8060;width:32px;">ε soft</span><input type="range" id="tb-soft" min="0.005" max="0.3" step="0.005" value="0.04" style="flex:1;accent-color:var(--gold);" oninput="document.getElementById('tb-softv').textContent=parseFloat(this.value).toFixed(3);"><span id="tb-softv" style="font-family:'Cinzel',serif;font-size:0.47rem;color:var(--gold);min-width:30px;">0.040</span></div>
-        <div style="background:#0a0800;border:1px solid var(--panel-border);border-radius:3px;padding:5px 8px;">
-          <div style="font-family:'Cinzel',serif;font-size:0.44rem;color:#9a8060;letter-spacing:0.07em;text-transform:uppercase;margin-bottom:4px;">Presets</div>
-          <div style="display:flex;gap:3px;flex-wrap:wrap;">
-            <button onclick="if(window.tbPreset)window.tbPreset({mode:'prime',N:12,K:3,G:1,gapK:0,R:1.5,soft:0.04,speed:10,trail:1500,overlays:{poly:true,cross:false,gap:false}})" style="font-family:'Cinzel',serif;font-size:0.43rem;padding:2px 5px;border:1px solid var(--gold);background:var(--parchment-dark);color:var(--gold);cursor:pointer;border-radius:2px;">Trinity</button>
-            <button onclick="if(window.tbPreset)window.tbPreset({mode:'prime',N:30,K:5,G:1,gapK:0,R:1.5,soft:0.05,speed:8,trail:2000,overlays:{poly:true,cross:false,gap:false}})" style="font-family:'Cinzel',serif;font-size:0.43rem;padding:2px 5px;border:1px solid var(--gold);background:var(--parchment-dark);color:var(--gold);cursor:pointer;border-radius:2px;">Pentagon</button>
-            <button onclick="if(window.tbPreset)window.tbPreset({mode:'prime',N:210,K:4,G:2,gapK:0,R:1.5,soft:0.03,speed:12,trail:3000,overlays:{poly:true,cross:false,gap:false}})" style="font-family:'Cinzel',serif;font-size:0.43rem;padding:2px 5px;border:1px solid var(--gold);background:var(--parchment-dark);color:var(--gold);cursor:pointer;border-radius:2px;">Quadrant 210</button>
-            <button onclick="if(window.tbPreset)window.tbPreset({mode:'prime',N:12,K:3,G:1,gapK:1.2,R:1.5,soft:0.04,speed:10,trail:2000,overlays:{poly:true,cross:false,gap:true}})" style="font-family:'Cinzel',serif;font-size:0.43rem;padding:2px 5px;border:1px solid #f97316;background:var(--parchment-dark);color:#f97316;cursor:pointer;border-radius:2px;">Gap Dance</button>
-            <button onclick="if(window.tbPreset)window.tbPreset({mode:'prime',N:30,K:6,G:0.8,gapK:0.8,R:1.5,soft:0.04,speed:8,trail:2500,overlays:{poly:true,cross:true,gap:true}})" style="font-family:'Cinzel',serif;font-size:0.43rem;padding:2px 5px;border:1px solid #4a90d9;background:var(--parchment-dark);color:#4a90d9;cursor:pointer;border-radius:2px;">Lattice Web</button>
-            <button onclick="if(window.tbPreset)window.tbPreset({mode:'prime',N:12,K:2,G:1,gapK:0,R:1.5,soft:0.01,speed:15,trail:4000,overlays:{poly:true,cross:false,gap:false}})" style="font-family:'Cinzel',serif;font-size:0.43rem;padding:2px 5px;border:1px solid var(--gold);background:var(--parchment-dark);color:var(--gold);cursor:pointer;border-radius:2px;">Binary Star</button>
-            <button onclick="if(window.tbPreset)window.tbPreset({mode:'element',N:18,Zstart:1,Zcount:5,elemMass:'period',G:1,gapK:0,R:1.5,soft:0.04,speed:10,trail:2000,overlays:{poly:true,cross:false,gap:false}})" style="font-family:'Cinzel',serif;font-size:0.43rem;padding:2px 5px;border:1px solid #34d399;background:var(--parchment-dark);color:#34d399;cursor:pointer;border-radius:2px;">Period 1-5</button>
-            <button onclick="if(window.tbPreset)window.tbPreset({mode:'element',N:36,Zstart:2,Zcount:4,elemMass:'atomic',G:1.2,gapK:0.5,R:1.5,soft:0.04,speed:8,trail:2000,overlays:{poly:true,cross:false,gap:true}})" style="font-family:'Cinzel',serif;font-size:0.43rem;padding:2px 5px;border:1px solid #34d399;background:var(--parchment-dark);color:#34d399;cursor:pointer;border-radius:2px;">Noble Gases</button>
-            <button onclick="if(window.tbPreset)window.tbPreset({mode:'element',N:18,Zstart:3,Zcount:4,elemMass:'group',G:1,gapK:1,R:1.5,soft:0.04,speed:10,trail:2000,overlays:{poly:true,cross:false,gap:true}})" style="font-family:'Cinzel',serif;font-size:0.43rem;padding:2px 5px;border:1px solid #34d399;background:var(--parchment-dark);color:#34d399;cursor:pointer;border-radius:2px;">Alkali Dance</button>
-            <button onclick="if(window.tbPreset)window.tbPreset({mode:'element',N:36,Zstart:1,Zcount:8,elemMass:'atomic',G:0.7,gapK:0.4,R:1.5,soft:0.05,speed:7,trail:2000,overlays:{poly:true,cross:true,gap:false}})" style="font-family:'Cinzel',serif;font-size:0.43rem;padding:2px 5px;border:1px solid #34d399;background:var(--parchment-dark);color:#34d399;cursor:pointer;border-radius:2px;">Row 1-8</button>
-          </div>
-        </div>
-        <div style="font-family:'Cinzel',serif;font-size:0.44rem;color:#9a8060;line-height:1.6;margin-top:4px;">prime: gcd=1 filter · element: Z mod N · gap=Farey density · mass=selected property</div>
-      </div>
-    </div>
-  </div>
-</div>
 <!-- ══ STATS / DESCRIPTION DROPDOWN (always visible) ══ -->
               <!-- ══ STATS / DESCRIPTION DROPDOWN ══ -->
               <div id="farey-stats-section" style="margin-top:10px;">
@@ -3477,7 +3346,138 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
 
               </div>
 
-            </div><!-- /farey-root -->
+            <!-- ══ N-BODY PRIME / ELEMENT RESIDUE ORBITS ══ -->
+<div id="threebody-section" style="margin-top:8px;background:var(--parchment-dark);border:1px solid var(--panel-border);border-radius:4px;">
+  <!-- Header row: title + quick controls + toggle -->
+  <div style="display:flex;align-items:center;gap:6px;padding:6px 10px;flex-wrap:wrap;">
+    <!-- Title (clickable to toggle) -->
+    <div onclick="if(window.tbToggle)window.tbToggle();" style="display:flex;align-items:center;gap:6px;cursor:pointer;user-select:none;flex-shrink:0;">
+      <span style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);">&#9632; N-Body Orbits</span>
+      <span id="tb-toggle-icon" style="color:var(--gold);font-size:0.7rem;">&#9660;</span>
+    </div>
+    <!-- Divider -->
+    <span style="color:rgba(160,120,48,0.3);font-size:0.8rem;flex-shrink:0;">|</span>
+    <!-- Play / Reset -->
+    <button id="tb-play-btn-hdr" onclick="if(window.tbTogglePlay)window.tbTogglePlay()" style="font-family:'Cinzel',serif;font-size:0.48rem;letter-spacing:0.07em;text-transform:uppercase;padding:3px 10px;border:1px solid var(--gold);background:var(--gold);color:var(--parchment-dark);cursor:pointer;border-radius:2px;font-weight:700;flex-shrink:0;">&#9654; Play</button>
+    <button onclick="if(window.tbReset)window.tbReset()" style="font-family:'Cinzel',serif;font-size:0.48rem;letter-spacing:0.07em;text-transform:uppercase;padding:3px 8px;border:1px solid var(--gold);background:var(--parchment-dark);color:var(--gold);cursor:pointer;border-radius:2px;flex-shrink:0;">&#11119; Reset</button>
+    <button onclick="if(window.tbClearTrails)window.tbClearTrails()" style="font-family:'Cinzel',serif;font-size:0.48rem;letter-spacing:0.07em;text-transform:uppercase;padding:3px 8px;border:1px solid #4ecdc4;background:var(--parchment-dark);color:#4ecdc4;cursor:pointer;border-radius:2px;flex-shrink:0;">&#9003; Trace</button>
+    <!-- Divider -->
+    <span style="color:rgba(160,120,48,0.3);font-size:0.8rem;flex-shrink:0;">|</span>
+    <!-- K bodies quick input -->
+    <span style="font-family:'Cinzel',serif;font-size:0.47rem;color:#9a8060;flex-shrink:0;">K=</span>
+    <input id="tb-K-hdr" type="number" min="1" max="30" value="3" style="width:36px;background:#020100;color:var(--ink);border:1px solid var(--gold);padding:2px 4px;font-family:'Cinzel',serif;font-size:0.52rem;text-align:center;border-radius:2px;flex-shrink:0;" oninput="document.getElementById('tb-K').value=this.value;if(window.tbSyncBodies)window.tbSyncBodies();">
+    <!-- Speed quick slider -->
+    <span style="font-family:'Cinzel',serif;font-size:0.47rem;color:#9a8060;flex-shrink:0;">Spd</span>
+    <input type="range" min="1" max="40" step="1" value="10" style="width:55px;accent-color:var(--gold);flex-shrink:0;" oninput="document.getElementById('tb-speed').value=this.value;document.getElementById('tb-speedv').textContent=this.value;document.getElementById('tb-spd-hdr-val').textContent=this.value;" id="tb-spd-hdr">
+    <span id="tb-spd-hdr-val" style="font-family:'Cinzel',serif;font-size:0.47rem;color:var(--gold);min-width:14px;flex-shrink:0;">10</span>
+    <!-- Divider -->
+    <span style="color:rgba(160,120,48,0.3);font-size:0.8rem;flex-shrink:0;">|</span>
+    <!-- Quick presets -->
+    <span style="font-family:'Cinzel',serif;font-size:0.44rem;color:#9a8060;flex-shrink:0;">Preset:</span>
+    <button onclick="if(window.tbPreset)window.tbPreset({mode:'prime',N:12,K:3,G:1,gapK:0,R:1.5,soft:0.04,speed:10,trail:1500,overlays:{poly:true,cross:false,gap:false}})" style="font-family:'Cinzel',serif;font-size:0.44rem;padding:2px 6px;border:1px solid var(--gold);background:var(--parchment-dark);color:var(--gold);cursor:pointer;border-radius:2px;flex-shrink:0;">Trinity</button>
+    <button onclick="if(window.tbPreset)window.tbPreset({mode:'prime',N:30,K:5,G:1,gapK:0,R:1.5,soft:0.05,speed:8,trail:2000,overlays:{poly:true,cross:false,gap:false}})" style="font-family:'Cinzel',serif;font-size:0.44rem;padding:2px 6px;border:1px solid var(--gold);background:var(--parchment-dark);color:var(--gold);cursor:pointer;border-radius:2px;flex-shrink:0;">Pentagon</button>
+    <button onclick="if(window.tbPreset)window.tbPreset({mode:'prime',N:12,K:3,G:1,gapK:1.2,R:1.5,soft:0.04,speed:10,trail:2000,overlays:{poly:true,cross:false,gap:true}})" style="font-family:'Cinzel',serif;font-size:0.44rem;padding:2px 6px;border:1px solid #f97316;background:var(--parchment-dark);color:#f97316;cursor:pointer;border-radius:2px;flex-shrink:0;">Gap Dance</button>
+    <button onclick="if(window.tbPreset)window.tbPreset({mode:'prime',N:210,K:4,G:2,gapK:0,R:1.5,soft:0.03,speed:12,trail:3000,overlays:{poly:true,cross:false,gap:false}})" style="font-family:'Cinzel',serif;font-size:0.44rem;padding:2px 6px;border:1px solid var(--gold);background:var(--parchment-dark);color:var(--gold);cursor:pointer;border-radius:2px;flex-shrink:0;">Q210</button>
+    <!-- Live stream to main canvas -->
+    <span style="color:rgba(160,120,48,0.3);font-size:0.8rem;flex-shrink:0;">|</span>
+    <button id="tb-stream-btn-hdr" onclick="if(window.tbToggleStream)window.tbToggleStream()" style="font-family:'Cinzel',serif;font-size:0.44rem;letter-spacing:0.06em;text-transform:uppercase;padding:3px 8px;border:1px solid #f97316;background:var(--parchment-dark);color:#f97316;cursor:pointer;border-radius:2px;flex-shrink:0;">&#8862; Stream</button>
+  </div>
+  <!-- Live stats bar — always visible -->
+  <div id="tb-hdr-stats" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:3px 10px 5px;border-top:1px solid rgba(160,120,48,0.12);">
+    <span style="font-family:'Cinzel',serif;font-size:0.47rem;color:#9a8060;">t=<span id="tb-t-hdr" style="color:var(--gold);">0.000</span></span>
+    <span style="font-family:'Cinzel',serif;font-size:0.47rem;color:#9a8060;">E=<span id="tb-e-hdr" style="color:var(--gold);">—</span></span>
+    <span style="font-family:'Cinzel',serif;font-size:0.47rem;color:#9a8060;">sep=<span id="tb-sep-hdr" style="color:var(--gold);">—</span></span>
+    <span style="color:rgba(160,120,48,0.3);">|</span>
+    <span id="tb-body-list-hdr" style="font-family:'Cinzel',serif;font-size:0.44rem;color:#9a8060;line-height:1.6;"></span>
+  </div>
+  <div id="tb-body" style="display:none;padding:0 12px 12px;max-width:860px;">
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-start;">
+      <div style="flex:1;min-width:200px;max-width:500px;">
+        <canvas id="tb-canvas" width="500" height="500" style="width:100%;max-width:480px;height:auto;aspect-ratio:1;background:#020100;border:1px solid var(--border);border-radius:3px;display:block;cursor:crosshair;"></canvas>
+        <!-- Play controls directly below orbit canvas -->
+        <div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:5px;">
+          <button id="tb-play-btn2" onclick="if(window.tbTogglePlay)window.tbTogglePlay()" style="font-family:'Cinzel',serif;font-size:0.52rem;letter-spacing:0.08em;text-transform:uppercase;padding:4px 12px;border:1px solid var(--gold);background:var(--gold);color:var(--parchment-dark);cursor:pointer;border-radius:2px;font-weight:700;">&#9654; Play</button>
+          <button onclick="if(window.tbReset)window.tbReset()" style="font-family:'Cinzel',serif;font-size:0.52rem;letter-spacing:0.08em;text-transform:uppercase;padding:4px 10px;border:1px solid var(--gold);background:var(--parchment-dark);color:var(--gold);cursor:pointer;border-radius:2px;">&#11119; Reset</button>
+          <button onclick="if(window.tbClearTrails)window.tbClearTrails()" style="font-family:'Cinzel',serif;font-size:0.52rem;letter-spacing:0.08em;text-transform:uppercase;padding:4px 10px;border:1px solid #4ecdc4;background:var(--parchment-dark);color:#4ecdc4;cursor:pointer;border-radius:2px;">&#9003; Trace</button>
+          <button id="tb-stream-btn" onclick="if(window.tbToggleStream)window.tbToggleStream()" title="Live-stream orbit to main canvas at full resolution" style="font-family:'Cinzel',serif;font-size:0.52rem;letter-spacing:0.08em;text-transform:uppercase;padding:4px 10px;border:1px solid #f97316;background:var(--parchment-dark);color:#f97316;cursor:pointer;border-radius:2px;">&#8862; Live Stream</button>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;padding:3px 0;font-family:'Cinzel',serif;font-size:0.5rem;color:var(--ink-mid);margin-top:3px;">
+          <span>t=<span id="tb-t" style="color:var(--gold);">0.000</span></span>
+          <span>E=<span id="tb-e" style="color:var(--gold);">—</span></span>
+          <span>sep=<span id="tb-sep" style="color:var(--gold);">—</span></span>
+        </div>
+        <div id="tb-body-list" style="font-family:'Cinzel',serif;font-size:0.44rem;color:#9a8060;line-height:1.8;margin-top:2px;"></div>
+        <div style="margin-top:3px;">
+          <span style="font-family:'Cinzel',serif;font-size:0.43rem;color:#9a8060;letter-spacing:0.06em;text-transform:uppercase;">Camera — click body or:</span>
+          <div id="tb-cam-row" style="display:flex;gap:3px;flex-wrap:wrap;margin-top:3px;"></div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:5px;min-width:175px;max-width:235px;">
+        <canvas id="tb-ring" width="180" height="180" style="width:100%;height:auto;aspect-ratio:1;background:#020100;border:1px solid var(--border);border-radius:3px;display:block;"></canvas>
+        <div style="display:flex;gap:3px;">
+          <button id="tb-mode-prime-btn" onclick="if(window.tbSetBodyMode)window.tbSetBodyMode('prime')" style="font-family:'Cinzel',serif;font-size:0.46rem;padding:2px 7px;border:1px solid var(--gold);background:var(--gold);color:var(--parchment-dark);cursor:pointer;border-radius:2px;flex:1;">Primes</button>
+          <button id="tb-mode-elem-btn" onclick="if(window.tbSetBodyMode)window.tbSetBodyMode('element')" style="font-family:'Cinzel',serif;font-size:0.46rem;padding:2px 7px;border:1px solid #34d399;background:var(--parchment-dark);color:#34d399;cursor:pointer;border-radius:2px;flex:1;">Elements</button>
+        </div>
+        <div id="tb-panel-prime" style="background:#0a0800;border:1px solid var(--panel-border);border-radius:3px;padding:5px 8px;">
+          <div style="font-family:'Cinzel',serif;font-size:0.46rem;color:#9a8060;letter-spacing:0.07em;text-transform:uppercase;margin-bottom:4px;">First K coprime primes mod N</div>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <span style="font-family:'Cinzel',serif;font-size:0.55rem;color:var(--gold);">K =</span>
+            <input id="tb-K" type="number" min="1" max="20" value="3" style="width:44px;background:#020100;color:var(--ink);border:1px solid var(--gold);padding:3px 5px;font-family:'Cinzel',serif;font-size:0.6rem;text-align:center;border-radius:2px;" oninput="if(window.tbSyncBodies)window.tbSyncBodies()">
+            <span style="font-family:'Cinzel',serif;font-size:0.44rem;color:#9a8060;">bodies</span>
+          </div>
+          <div id="tb-prime-summary" style="font-family:'Cinzel',serif;font-size:0.44rem;color:#a855f7;margin-top:4px;line-height:1.7;"></div>
+        </div>
+        <div id="tb-panel-elem" style="display:none;background:#0a0800;border:1px solid #34d399;border-radius:3px;padding:5px 8px;">
+          <div style="font-family:'Cinzel',serif;font-size:0.46rem;color:#9a8060;letter-spacing:0.07em;text-transform:uppercase;margin-bottom:4px;">Elements (Z start / count)</div>
+          <div style="display:flex;align-items:center;gap:4px;margin-bottom:4px;">
+            <span style="font-family:'Cinzel',serif;font-size:0.46rem;color:#34d399;">Z</span>
+            <input id="tb-Z-start" type="number" min="1" max="36" value="1" style="width:36px;background:#020100;color:var(--ink);border:1px solid #34d399;padding:2px 3px;font-family:'Cinzel',serif;font-size:0.5rem;text-align:center;border-radius:2px;" oninput="if(window.tbSyncBodies)window.tbSyncBodies()">
+            <span style="font-family:'Cinzel',serif;font-size:0.46rem;color:#34d399;">count</span>
+            <input id="tb-Z-count" type="number" min="1" max="20" value="3" style="width:36px;background:#020100;color:var(--ink);border:1px solid #34d399;padding:2px 3px;font-family:'Cinzel',serif;font-size:0.5rem;text-align:center;border-radius:2px;" oninput="if(window.tbSyncBodies)window.tbSyncBodies()">
+          </div>
+          <div style="display:flex;align-items:center;gap:4px;margin-bottom:3px;">
+            <span style="font-family:'Cinzel',serif;font-size:0.44rem;color:#9a8060;">mass =</span>
+            <select id="tb-elem-mass" onchange="if(window.tbSyncBodies)window.tbSyncBodies()" style="font-family:'Cinzel',serif;font-size:0.44rem;background:#020100;color:var(--ink);border:1px solid #34d399;padding:1px 3px;border-radius:2px;">
+              <option value="atomic">Atomic mass</option>
+              <option value="period">Period</option>
+              <option value="group">Group</option>
+              <option value="Z">Atomic number</option>
+            </select>
+          </div>
+          <div id="tb-elem-summary" style="font-family:'Cinzel',serif;font-size:0.44rem;color:#34d399;line-height:1.7;"></div>
+        </div>
+        <div style="display:flex;gap:4px;flex-wrap:wrap;">
+          <button id="tb-btn-poly" onclick="if(window.tbToggleOverlay)window.tbToggleOverlay('poly')" style="font-family:'Cinzel',serif;font-size:0.46rem;padding:2px 6px;border:1px solid var(--gold);background:var(--gold);color:var(--parchment-dark);cursor:pointer;border-radius:2px;">Polygon</button>
+          <button id="tb-btn-cross" onclick="if(window.tbToggleOverlay)window.tbToggleOverlay('cross')" style="font-family:'Cinzel',serif;font-size:0.46rem;padding:2px 6px;border:1px solid #4a90d9;background:var(--parchment-dark);color:#4a90d9;cursor:pointer;border-radius:2px;">Cross-mod</button>
+          <button id="tb-btn-gap" onclick="if(window.tbToggleOverlay)window.tbToggleOverlay('gap')" style="font-family:'Cinzel',serif;font-size:0.46rem;padding:2px 6px;border:1px solid #f97316;background:var(--parchment-dark);color:#f97316;cursor:pointer;border-radius:2px;">Gap Force</button>
+        </div>
+        <div style="display:flex;align-items:center;gap:4px;"><span style="font-family:'Cinzel',serif;font-size:0.47rem;color:#9a8060;width:32px;">G</span><input type="range" id="tb-G" min="0.1" max="5" step="0.05" value="1" style="flex:1;accent-color:var(--gold);" oninput="document.getElementById('tb-Gv').textContent=parseFloat(this.value).toFixed(2);"><span id="tb-Gv" style="font-family:'Cinzel',serif;font-size:0.47rem;color:var(--gold);min-width:26px;">1.00</span></div>
+        <div style="display:flex;align-items:center;gap:4px;"><span style="font-family:'Cinzel',serif;font-size:0.47rem;color:#9a8060;width:32px;">Gap K</span><input type="range" id="tb-gapk" min="0" max="2" step="0.02" value="0.3" style="flex:1;accent-color:#f97316;" oninput="document.getElementById('tb-gapkv').textContent=parseFloat(this.value).toFixed(2);"><span id="tb-gapkv" style="font-family:'Cinzel',serif;font-size:0.47rem;color:#f97316;min-width:26px;">0.30</span></div>
+        <div style="display:flex;align-items:center;gap:4px;"><span style="font-family:'Cinzel',serif;font-size:0.47rem;color:#9a8060;width:32px;">Orbit R</span><input type="range" id="tb-R" min="0.3" max="3" step="0.05" value="1.5" style="flex:1;accent-color:var(--gold);" oninput="document.getElementById('tb-Rv').textContent=parseFloat(this.value).toFixed(2);"><span id="tb-Rv" style="font-family:'Cinzel',serif;font-size:0.47rem;color:var(--gold);min-width:26px;">1.50</span></div>
+        <div style="display:flex;align-items:center;gap:4px;"><span style="font-family:'Cinzel',serif;font-size:0.47rem;color:#9a8060;width:32px;">Trail</span><input type="range" id="tb-trail" min="100" max="5000" step="100" value="1500" style="flex:1;accent-color:var(--gold);" oninput="document.getElementById('tb-trailv').textContent=this.value;"><span id="tb-trailv" style="font-family:'Cinzel',serif;font-size:0.47rem;color:var(--gold);min-width:26px;">1500</span></div>
+        <div style="display:flex;align-items:center;gap:4px;"><span style="font-family:'Cinzel',serif;font-size:0.47rem;color:#9a8060;width:32px;">Speed</span><input type="range" id="tb-speed" min="1" max="40" step="1" value="10" style="flex:1;accent-color:var(--gold);" oninput="document.getElementById('tb-speedv').textContent=this.value;"><span id="tb-speedv" style="font-family:'Cinzel',serif;font-size:0.47rem;color:var(--gold);min-width:26px;">10</span></div>
+        <div style="display:flex;align-items:center;gap:4px;"><span style="font-family:'Cinzel',serif;font-size:0.47rem;color:#9a8060;width:32px;">ε soft</span><input type="range" id="tb-soft" min="0.005" max="0.3" step="0.005" value="0.04" style="flex:1;accent-color:var(--gold);" oninput="document.getElementById('tb-softv').textContent=parseFloat(this.value).toFixed(3);"><span id="tb-softv" style="font-family:'Cinzel',serif;font-size:0.47rem;color:var(--gold);min-width:30px;">0.040</span></div>
+        <div style="background:#0a0800;border:1px solid var(--panel-border);border-radius:3px;padding:5px 8px;">
+          <div style="font-family:'Cinzel',serif;font-size:0.44rem;color:#9a8060;letter-spacing:0.07em;text-transform:uppercase;margin-bottom:4px;">Presets</div>
+          <div style="display:flex;gap:3px;flex-wrap:wrap;">
+            <button onclick="if(window.tbPreset)window.tbPreset({mode:'prime',N:12,K:3,G:1,gapK:0,R:1.5,soft:0.04,speed:10,trail:1500,overlays:{poly:true,cross:false,gap:false}})" style="font-family:'Cinzel',serif;font-size:0.43rem;padding:2px 5px;border:1px solid var(--gold);background:var(--parchment-dark);color:var(--gold);cursor:pointer;border-radius:2px;">Trinity</button>
+            <button onclick="if(window.tbPreset)window.tbPreset({mode:'prime',N:30,K:5,G:1,gapK:0,R:1.5,soft:0.05,speed:8,trail:2000,overlays:{poly:true,cross:false,gap:false}})" style="font-family:'Cinzel',serif;font-size:0.43rem;padding:2px 5px;border:1px solid var(--gold);background:var(--parchment-dark);color:var(--gold);cursor:pointer;border-radius:2px;">Pentagon</button>
+            <button onclick="if(window.tbPreset)window.tbPreset({mode:'prime',N:210,K:4,G:2,gapK:0,R:1.5,soft:0.03,speed:12,trail:3000,overlays:{poly:true,cross:false,gap:false}})" style="font-family:'Cinzel',serif;font-size:0.43rem;padding:2px 5px;border:1px solid var(--gold);background:var(--parchment-dark);color:var(--gold);cursor:pointer;border-radius:2px;">Quadrant 210</button>
+            <button onclick="if(window.tbPreset)window.tbPreset({mode:'prime',N:12,K:3,G:1,gapK:1.2,R:1.5,soft:0.04,speed:10,trail:2000,overlays:{poly:true,cross:false,gap:true}})" style="font-family:'Cinzel',serif;font-size:0.43rem;padding:2px 5px;border:1px solid #f97316;background:var(--parchment-dark);color:#f97316;cursor:pointer;border-radius:2px;">Gap Dance</button>
+            <button onclick="if(window.tbPreset)window.tbPreset({mode:'prime',N:30,K:6,G:0.8,gapK:0.8,R:1.5,soft:0.04,speed:8,trail:2500,overlays:{poly:true,cross:true,gap:true}})" style="font-family:'Cinzel',serif;font-size:0.43rem;padding:2px 5px;border:1px solid #4a90d9;background:var(--parchment-dark);color:#4a90d9;cursor:pointer;border-radius:2px;">Lattice Web</button>
+            <button onclick="if(window.tbPreset)window.tbPreset({mode:'prime',N:12,K:2,G:1,gapK:0,R:1.5,soft:0.01,speed:15,trail:4000,overlays:{poly:true,cross:false,gap:false}})" style="font-family:'Cinzel',serif;font-size:0.43rem;padding:2px 5px;border:1px solid var(--gold);background:var(--parchment-dark);color:var(--gold);cursor:pointer;border-radius:2px;">Binary Star</button>
+            <button onclick="if(window.tbPreset)window.tbPreset({mode:'element',N:18,Zstart:1,Zcount:5,elemMass:'period',G:1,gapK:0,R:1.5,soft:0.04,speed:10,trail:2000,overlays:{poly:true,cross:false,gap:false}})" style="font-family:'Cinzel',serif;font-size:0.43rem;padding:2px 5px;border:1px solid #34d399;background:var(--parchment-dark);color:#34d399;cursor:pointer;border-radius:2px;">Period 1-5</button>
+            <button onclick="if(window.tbPreset)window.tbPreset({mode:'element',N:36,Zstart:2,Zcount:4,elemMass:'atomic',G:1.2,gapK:0.5,R:1.5,soft:0.04,speed:8,trail:2000,overlays:{poly:true,cross:false,gap:true}})" style="font-family:'Cinzel',serif;font-size:0.43rem;padding:2px 5px;border:1px solid #34d399;background:var(--parchment-dark);color:#34d399;cursor:pointer;border-radius:2px;">Noble Gases</button>
+            <button onclick="if(window.tbPreset)window.tbPreset({mode:'element',N:18,Zstart:3,Zcount:4,elemMass:'group',G:1,gapK:1,R:1.5,soft:0.04,speed:10,trail:2000,overlays:{poly:true,cross:false,gap:true}})" style="font-family:'Cinzel',serif;font-size:0.43rem;padding:2px 5px;border:1px solid #34d399;background:var(--parchment-dark);color:#34d399;cursor:pointer;border-radius:2px;">Alkali Dance</button>
+            <button onclick="if(window.tbPreset)window.tbPreset({mode:'element',N:36,Zstart:1,Zcount:8,elemMass:'atomic',G:0.7,gapK:0.4,R:1.5,soft:0.05,speed:7,trail:2000,overlays:{poly:true,cross:true,gap:false}})" style="font-family:'Cinzel',serif;font-size:0.43rem;padding:2px 5px;border:1px solid #34d399;background:var(--parchment-dark);color:#34d399;cursor:pointer;border-radius:2px;">Row 1-8</button>
+          </div>
+        </div>
+        <div style="font-family:'Cinzel',serif;font-size:0.44rem;color:#9a8060;line-height:1.6;margin-top:4px;">prime: gcd=1 filter · element: Z mod N · gap=Farey density · mass=selected property</div>
+      </div>
+    </div>
+  </div>
+</div>
+</div><!-- /farey-root -->
 
     <!-- ══ THEORY PANEL ══ -->
     <div id="theory-toggle-bar" onclick="toggleTheoryPanel()" role="button" aria-expanded="false">
@@ -10948,26 +10948,40 @@ function _getMainCanvas(callback) {
     var wrap = document.getElementById('farey-canvas-wrap');
     var isOpen = wrap && wrap.style.display !== 'none';
 
+    function _switchToCombined() {
+        // If split is active, switch to single combined view so fc-combined is visible
+        var splitWrap = document.getElementById('fc-split-wrap');
+        var singleWrap = document.getElementById('fc-single-wrap');
+        var combinedView = document.getElementById('farey-combined-view');
+        var isSplit = splitWrap && splitWrap.style.display !== 'none';
+        if (isSplit || (combinedView && combinedView.style.display === 'none')) {
+            if (window.fareyCombinedMode) window.fareyCombinedMode('both');
+        }
+    }
+
     if (!isOpen) {
         // Open the Advanced panel
         if (window.toggleFareyPanel) window.toggleFareyPanel();
-        // toggleFareyPanel triggers fareyRedraw async — wait one frame then proceed
         requestAnimationFrame(function() {
             requestAnimationFrame(function() {
+                _switchToCombined();
                 var c2 = document.getElementById('fc-combined');
                 if (c2) {
                     c2.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    // Give the canvas a moment to render before stamping
-                    setTimeout(function() { if (callback) callback(c2); }, 120);
+                    setTimeout(function() { if (callback) callback(c2); }, 150);
                 }
             });
         });
-        return null; // caller must use callback pattern
+        return null;
     }
 
-    // Already open — scroll to it
+    // Already open — ensure combined view, then scroll
+    _switchToCombined();
     c.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    if (callback) { callback(c); return null; }
+    if (callback) {
+        setTimeout(function() { callback(c); }, 80);
+        return null;
+    }
     return c;
 }
 
@@ -12111,6 +12125,15 @@ window.tbSendToMain = function() {
       if (!wrap || wrap.style.display === 'none') {
         if (window.toggleFareyPanel) window.toggleFareyPanel();
       }
+      // Switch to single combined view (not split)
+      requestAnimationFrame(function(){
+        var splitWrap = document.getElementById('fc-split-wrap');
+        if (splitWrap && splitWrap.style.display !== 'none') {
+          if (window.fareyCombinedMode) window.fareyCombinedMode('both');
+        }
+        var c = document.getElementById('fc-combined');
+        if (c) c.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
       // Freeze main canvas from fareyRedraw
       window._canvasFrozen = true;
       var bar = document.getElementById('fc-pin-bar');
