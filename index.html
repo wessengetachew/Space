@@ -334,6 +334,16 @@
             min-height: 100vh;
             transition: background 0.3s, color 0.3s;
         }
+
+        /* ── Research paper layout: constrained column, centred ── */
+        #page-root {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 28px 60px;
+        }
+        @media (max-width: 960px) {
+            #page-root { padding: 0 14px 40px; }
+        }
         
         .tool-nav {
             margin-top: 18px;
@@ -362,10 +372,12 @@
         .header {
             background: var(--ink);
             background-image: linear-gradient(135deg, #1e1008 0%, #3b220f 100%);
-            padding: 4vw 6vw 3vw;
+            padding: 36px 24px 28px;
             border-bottom: 4px double var(--border);
+            border-radius: 0 0 4px 4px;
             text-align: center;
             position: relative;
+            margin-bottom: 24px;
         }
         .header::after {
             content: '';
@@ -406,19 +418,19 @@
         
         .introduction {
             max-width: 100%;
-            margin: 24px auto;
-            padding: 0 2vw;
+            margin: 0 auto;
+            padding: 0;
             overflow: visible;
         }
         /* When advanced open, let the intro-section expand to full width */
         .intro-section:has(#farey-root.advanced-open) {
             max-width: 100%;
-            padding-left: 16px;
-            padding-right: 16px;
+            padding-left: 0;
+            padding-right: 0;
         }
         .introduction:has(#farey-root.advanced-open) {
             max-width: 100%;
-            padding: 0 16px;
+            padding: 0;
         }
         .introduction, .intro-section {
             overflow: visible !important;
@@ -795,9 +807,9 @@
         }
         
         .charts-container {
-            max-width: 3840px;
+            max-width: 900px;
             margin: 0 auto;
-            padding: 0 40px 40px 40px;
+            padding: 0 0 40px 0;
         }
         
         .chart-wrapper {
@@ -1675,8 +1687,8 @@
             gap: 0;
             border-bottom: 2px solid var(--border);
             margin: 0 auto;
-            max-width: 1400px;
-            padding: 0 24px;
+            max-width: 900px;
+            padding: 0 0;
             position: sticky;
             top: 0;
             z-index: 100;
@@ -1856,9 +1868,9 @@
 
         /* ══ GAP DECOMP TAB ══ */
         .gap-shell {
-            max-width: 1400px;
+            max-width: 900px;
             margin: 0 auto;
-            padding: 0 16px 32px;
+            padding: 0 0 32px;
         }
 
         /* ══ UNIT CIRCLE THEORY PANEL ══ */
@@ -2193,6 +2205,7 @@
     </style>
 </head>
 <body class="dark-mode">
+<div id="page-root">
     <header class="header">
         <h1>Farey Modular Residue Rings</h1>
         <div class="subtitle">An Interactive Visualization of Modular Arithmetic, Prime Structure, and the Farey Sequence</div>
@@ -2493,13 +2506,24 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
                 <button id="f-mod-play" onclick="fareyModPlay()" title="Animate mod from 2 to current max" style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.06em;text-transform:uppercase;padding:2px 7px;border:1px solid var(--gold);background:var(--parchment-dark);color:var(--gold);cursor:pointer;">&#9654;</button>
                 <span style="color:var(--border);margin:0 1px;">|</span>
                 <span style="font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.06em;color:var(--gold);">GAP</span>
-                <input id="f-gap-input" type="text" placeholder="1,2,4,6…" style="width:72px;min-width:60px;background:var(--parchment-deep);color:var(--ink);border:1px solid var(--border);padding:2px 4px;font-family:'Cinzel',serif;font-size:0.6rem;position:relative;z-index:3;" onkeydown="if(event.key==='Enter')fareyGapInputApply()">
+                <input id="f-gap-input" type="text" placeholder="1, 2, 4, 6…" style="width:72px;min-width:60px;background:var(--parchment-deep);color:var(--ink);border:1px solid var(--border);padding:2px 4px;font-family:'Cinzel',serif;font-size:0.6rem;position:relative;z-index:3;" onkeydown="if(event.key==='Enter')fareyGapInputApply()" oninput="if(window.fareyGapZetaPreview)fareyGapZetaPreview()">
                 <button onclick="fareyGapInputApply()" style="font-family:'Cinzel',serif;font-size:0.58rem;text-transform:uppercase;padding:2px 6px;border:1px solid var(--gold);background:var(--parchment-dark);color:var(--gold);cursor:pointer;">Show</button>
                 <button onclick="fareyGapOverlayClear()" style="font-family:'Cinzel',serif;font-size:0.58rem;text-transform:uppercase;padding:2px 6px;border:1px solid #c94040;background:var(--parchment-dark);color:#c94040;cursor:pointer;">Clear</button>
                 <div id="f-gap-input-status" style="font-family:'Cinzel',serif;font-size:0.55rem;color:#9a8060;min-width:0;"></div>
                 <span style="color:var(--border);margin:0 2px;">|</span>
                 <button id="f-adv-btn" onclick="toggleFareyPanel()" title="Open combined canvas with full controls" style="font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.08em;text-transform:uppercase;background:var(--parchment-dark);color:var(--gold);border:1px solid var(--gold);padding:3px 10px;cursor:pointer;">&#9660; Advanced</button>
               </div><!-- /control row -->
+
+              <!-- ══ GAP ZETA DETAIL PANEL ══ -->
+              <div id="gap-zeta-panel" style="display:none;margin:4px 0 6px;padding:8px 12px;background:rgba(74,144,217,0.06);border:1px solid rgba(74,144,217,0.22);border-radius:4px;font-family:'Cinzel',serif;font-size:0.52rem;color:#e8d9b0;">
+                <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:5px;">
+                  <span id="gzp-title" style="color:#4a90d9;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;"></span>
+                  <span id="gzp-formula" style="color:#9a8060;font-size:0.46rem;"></span>
+                </div>
+                <div id="gzp-table" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:2px 12px;line-height:2;"></div>
+                <div id="gzp-cumulative" style="margin-top:5px;padding-top:5px;border-top:1px solid rgba(74,144,217,0.15);color:#4ecdc4;font-size:0.54rem;"></div>
+              </div>
+              <!-- /GAP ZETA DETAIL PANEL -->
 
               <!-- ══ CANVAS (top of advanced panel) ══ -->
               <div id="farey-canvas-wrap" style="display:none;">
@@ -2555,8 +2579,8 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
                     <input id="f-dipole-thick" type="range" min="1" max="30" value="8" style="width:55px;accent-color:#e879f9;" oninput="fareyRedraw()">
                     <span style="color:rgba(160,120,48,0.5);">|</span>
                     <span style="color:#9a8060;">PT</span>
-                    <input type="range" min="1" max="400" value="100" style="width:60px;accent-color:#e879f9;" oninput="var v=this.value;document.getElementById('f-ptsize').value=v;document.getElementById('f-ptsize-num').value=v;document.getElementById('f-dipole-pt-val').textContent=v+'%';fareyRedraw()">
-                    <span id="f-dipole-pt-val" style="color:#e879f9;min-width:32px;">100%</span>
+                    <input id="f-dipole-hl-size" type="range" min="1" max="400" value="150" style="width:60px;accent-color:#e879f9;" oninput="document.getElementById('f-dipole-hl-val').textContent=this.value+'%';fareyRedraw()">
+                    <span id="f-dipole-hl-val" style="color:#e879f9;min-width:32px;">150%</span>
                   </div>
                   <button id="fcm-lifting" onclick="fareyToggleLiftMode()" title="Show residue lifting: connects gcd=1 residues across rings b, b×a, b×a²…" style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.08em;text-transform:uppercase;padding:4px 10px;border:1px solid #4ecdc4;background:var(--parchment-dark);color:#4ecdc4;cursor:pointer;">&#8593; Lifting</button>
                   <!-- Lifting tower panel -->
@@ -2581,11 +2605,11 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
                     </div>
                     <!-- Row 3: live tower sequence display -->
                     <div id="f-lift-sequence" style="color:#4ecdc4;font-size:0.55rem;letter-spacing:0.04em;line-height:1.8;"></div>
-                    <!-- Row 4: point size -->
+                    <!-- Row 4: highlight point size (independent of global) -->
                     <div style="display:flex;align-items:center;gap:8px;">
-                      <span style="color:#9a8060;letter-spacing:0.08em;">PT SIZE</span>
-                      <input type="range" min="1" max="400" value="100" style="flex:1;accent-color:#4ecdc4;" oninput="var v=this.value;document.getElementById('f-ptsize').value=v;document.getElementById('f-ptsize-num').value=v;document.getElementById('f-lift-pt-val').textContent=v+'%';fareyRedraw()">
-                      <span id="f-lift-pt-val" style="color:#4ecdc4;min-width:36px;text-align:right;">100%</span>
+                      <span style="color:#9a8060;letter-spacing:0.08em;">HL SIZE</span>
+                      <input id="f-lift-hl-size" type="range" min="50" max="600" value="200" style="flex:1;accent-color:#4ecdc4;" oninput="document.getElementById('f-lift-hl-val').textContent=this.value+'%';fareyRedraw()">
+                      <span id="f-lift-hl-val" style="color:#4ecdc4;min-width:36px;text-align:right;">200%</span>
                     </div>
                   </div>
                 </div>
@@ -2856,10 +2880,26 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
                       <option value="decimal">Decimal</option>
                     </select>
                     <div style="margin-bottom:5px;color:#9a8060;font-size:0.58rem;">LABEL SCOPE</div>
-                    <select id="f-label-scope" onchange="fareyRedraw()" style="background:var(--parchment-deep);color:var(--ink);border:1px solid var(--border);padding:3px 6px;font-family:'Cinzel',serif;font-size:0.62rem;width:100%;">
+                    <select id="f-label-scope" onchange="fareyLabelScopeChange()" style="background:var(--parchment-deep);color:var(--ink);border:1px solid var(--border);padding:3px 6px;font-family:'Cinzel',serif;font-size:0.62rem;width:100%;margin-bottom:6px;">
                       <option value="all">All rings</option>
                       <option value="outer">Outer ring only</option>
+                      <option value="range">Mod range</option>
+                      <option value="nth">Every nth mod</option>
                     </select>
+                    <!-- Mod range controls (shown when scope=range) -->
+                    <div id="f-label-range-row" style="display:none;gap:4px;align-items:center;flex-wrap:wrap;margin-bottom:4px;">
+                      <span style="color:#9a8060;font-size:0.56rem;">m=</span>
+                      <input id="f-label-mod-min" type="number" min="1" max="9999" value="1" style="width:40px;background:var(--parchment-deep);color:var(--ink);border:1px solid var(--border);padding:1px 3px;font-family:'Cinzel',serif;font-size:0.58rem;text-align:center;" oninput="fareyRedraw()">
+                      <span style="color:#9a8060;font-size:0.56rem;">to</span>
+                      <input id="f-label-mod-max" type="number" min="1" max="9999" value="19" style="width:40px;background:var(--parchment-deep);color:var(--ink);border:1px solid var(--border);padding:1px 3px;font-family:'Cinzel',serif;font-size:0.58rem;text-align:center;" oninput="fareyRedraw()">
+                      <span style="color:rgba(154,128,96,0.5);font-size:0.52rem;">others → dots</span>
+                    </div>
+                    <!-- Every nth mod control (shown when scope=nth) -->
+                    <div id="f-label-nth-row" style="display:none;gap:4px;align-items:center;margin-bottom:4px;">
+                      <span style="color:#9a8060;font-size:0.56rem;">every</span>
+                      <input id="f-label-mod-nth" type="number" min="1" max="999" value="5" style="width:40px;background:var(--parchment-deep);color:var(--ink);border:1px solid var(--border);padding:1px 3px;font-family:'Cinzel',serif;font-size:0.58rem;text-align:center;" oninput="fareyRedraw()">
+                      <span style="color:#9a8060;font-size:0.56rem;">th mod</span>
+                    </div>
                   </div>
 
                   <!-- Label replaces dot -->
@@ -2877,6 +2917,38 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
                     <div style="display:flex;align-items:center;gap:8px;">
                       <input id="f-lsize" type="range" min="4" max="18" value="7" style="flex:1;accent-color:var(--gold);" oninput="document.getElementById('f-lsize-val').textContent=this.value;fareyRedraw()">
                       <span id="f-lsize-val" style="color:var(--ink);min-width:20px;text-align:right;">7</span>
+                    </div>
+                  </div>
+
+                  <!-- Residue tracking -->
+                  <div style="grid-column: span 2;">
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+                      <span style="color:var(--gold);">RESIDUE TRACK</span>
+                      <label style="display:flex;align-items:center;gap:4px;cursor:pointer;font-size:0.56rem;color:#f97316;">
+                        <input type="checkbox" id="f-res-track-on" style="accent-color:#f97316;" onchange="fareyRedraw()">
+                        <span>on</span>
+                      </label>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+                      <span style="color:#9a8060;font-size:0.56rem;">r =</span>
+                      <input id="f-res-track-r" type="number" min="1" max="9999" value="1" style="width:44px;background:var(--parchment-deep);color:var(--ink);border:1px solid #f97316;padding:2px 4px;font-family:'Cinzel',serif;font-size:0.58rem;text-align:center;" oninput="fareyRedraw()">
+                      <span style="color:rgba(154,128,96,0.4);">|</span>
+                      <span style="color:#9a8060;font-size:0.56rem;">THICK</span>
+                      <input id="f-res-track-thick" type="range" min="1" max="40" value="10" style="width:60px;accent-color:#f97316;" oninput="document.getElementById('f-res-track-thick-val').textContent=(this.value/10).toFixed(1);fareyRedraw()">
+                      <span id="f-res-track-thick-val" style="color:#f97316;min-width:24px;font-size:0.56rem;">1.0</span>
+                      <span style="color:rgba(154,128,96,0.4);">|</span>
+                      <span style="color:#9a8060;font-size:0.56rem;">COLOR</span>
+                      <input id="f-res-track-color" type="color" value="#f97316" oninput="fareyRedraw()" style="width:30px;height:20px;border:1px solid var(--border);cursor:pointer;background:none;padding:0;">
+                    </div>
+                    <div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:4px;">
+                      <span style="color:#9a8060;font-size:0.52rem;align-self:center;">quick r:</span>
+                      <button onclick="document.getElementById('f-res-track-r').value=1;document.getElementById('f-res-track-on').checked=true;fareyRedraw()" style="font-family:'Cinzel',serif;font-size:0.5rem;padding:1px 5px;border:1px solid #f97316;background:var(--parchment-dark);color:#f97316;cursor:pointer;">1</button>
+                      <button onclick="document.getElementById('f-res-track-r').value=2;document.getElementById('f-res-track-on').checked=true;fareyRedraw()" style="font-family:'Cinzel',serif;font-size:0.5rem;padding:1px 5px;border:1px solid #f97316;background:var(--parchment-dark);color:#f97316;cursor:pointer;">2</button>
+                      <button onclick="document.getElementById('f-res-track-r').value=3;document.getElementById('f-res-track-on').checked=true;fareyRedraw()" style="font-family:'Cinzel',serif;font-size:0.5rem;padding:1px 5px;border:1px solid #f97316;background:var(--parchment-dark);color:#f97316;cursor:pointer;">3</button>
+                      <button onclick="document.getElementById('f-res-track-r').value=5;document.getElementById('f-res-track-on').checked=true;fareyRedraw()" style="font-family:'Cinzel',serif;font-size:0.5rem;padding:1px 5px;border:1px solid #f97316;background:var(--parchment-dark);color:#f97316;cursor:pointer;">5</button>
+                      <button onclick="document.getElementById('f-res-track-r').value=7;document.getElementById('f-res-track-on').checked=true;fareyRedraw()" style="font-family:'Cinzel',serif;font-size:0.5rem;padding:1px 5px;border:1px solid #f97316;background:var(--parchment-dark);color:#f97316;cursor:pointer;">7</button>
+                      <button onclick="document.getElementById('f-res-track-r').value=11;document.getElementById('f-res-track-on').checked=true;fareyRedraw()" style="font-family:'Cinzel',serif;font-size:0.5rem;padding:1px 5px;border:1px solid #f97316;background:var(--parchment-dark);color:#f97316;cursor:pointer;">11</button>
+                      <button onclick="document.getElementById('f-res-track-r').value=13;document.getElementById('f-res-track-on').checked=true;fareyRedraw()" style="font-family:'Cinzel',serif;font-size:0.5rem;padding:1px 5px;border:1px solid #f97316;background:var(--parchment-dark);color:#f97316;cursor:pointer;">13</button>
                     </div>
                   </div>
 
@@ -3198,9 +3270,20 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
                       Snap to points
                     </label>
                     <span style="color:rgba(154,128,96,0.3);">|</span>
-                    <span style="color:#9a8060;">Radius</span>
+                    <span style="color:#9a8060;" title="Angular capture zone: the slider will snap to the nearest residue point only if it lies within this many degrees of your cursor position. At 1° only exact hits snap; at 20° the nearest point always wins.">Snap radius <span style="color:rgba(78,205,196,0.5);font-size:0.42rem;">(°&thinsp;capture zone)</span></span>
                     <input type="range" id="fcc-snap-r" min="1" max="20" value="5" style="width:55px;accent-color:#4ecdc4;" oninput="document.getElementById('fcc-snap-r-val').textContent=this.value+'&#176;';if(window.fareyCollapsedAngleDraw)window.fareyCollapsedAngleDraw(parseFloat(document.getElementById('fcc-angle-sl').value),false)">
                     <span id="fcc-snap-r-val" style="color:#4ecdc4;min-width:24px;">5&#176;</span>
+                  </div>
+                  <!-- Ring radius + CCW toggle -->
+                  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;">
+                    <span style="color:#9a8060;" title="Slide to 0 to collapse all rings to one circle — equivalent to the main GCD canvas view">Ring radius</span>
+                    <input type="range" id="fcc-ring-r" min="0" max="100" value="100" style="width:80px;accent-color:#4ecdc4;" oninput="document.getElementById('fcc-ring-r-val').textContent=(this.value/100).toFixed(2);if(window.fareyCollapsedAngleDraw)window.fareyCollapsedAngleDraw(parseFloat(document.getElementById('fcc-angle-sl').value),false)">
+                    <span id="fcc-ring-r-val" style="color:#4ecdc4;min-width:28px;">1.00</span>
+                    <span style="color:rgba(154,128,96,0.3);">|</span>
+                    <label style="display:flex;align-items:center;gap:5px;cursor:pointer;color:#9a8060;" title="Counter-clockwise: standard math convention (90° at top, angles increase CCW)">
+                      <input type="checkbox" id="fcc-ccw" checked style="accent-color:#4ecdc4;" onchange="if(window.fareyCollapsedAngleDraw)window.fareyCollapsedAngleDraw(parseFloat(document.getElementById('fcc-angle-sl').value),false)">
+                      <span>CCW <span style="color:rgba(78,205,196,0.5);font-size:0.42rem;">(90°=top)</span></span>
+                    </label>
                   </div>
                   <!-- Trig row -->
                   <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px 12px;text-align:left;margin-bottom:8px;border-bottom:1px solid rgba(196,155,56,0.1);padding-bottom:8px;">
@@ -3215,6 +3298,11 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
                     <div id="fcc-cohabit" style="margin-top:6px;font-size:0.55rem;color:#9a8060;"></div>
                   </div>
                   <div id="fcc-no-snap" style="color:#9a8060;font-size:0.55rem;padding-top:4px;display:none;">Between points &#183; use &#9664; &#9654; to jump</div>
+                  <!-- Export button -->
+                  <div style="margin-top:8px;display:flex;gap:5px;align-items:center;">
+                    <button onclick="if(window.fccExportDOM)window.fccExportDOM()" style="font-family:'Cinzel',serif;font-size:0.46rem;letter-spacing:0.07em;text-transform:uppercase;padding:3px 10px;border:1px solid #4ecdc4;background:var(--parchment-dark);color:#4ecdc4;cursor:pointer;border-radius:2px;">&#9633; DOM PNG</button>
+                    <span id="fcc-export-label" style="font-family:'Cinzel',serif;font-size:0.44rem;color:#9a8060;"></span>
+                  </div>
                 </div>
                 <div id="fc-collapsed-label" style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);margin-top:6px;">Unit Circle · All Points</div>
               </div>
@@ -3347,6 +3435,103 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
               </div>
 
             <!-- ══ N-BODY PRIME / ELEMENT RESIDUE ORBITS ══ -->
+<!-- ══ GUE / NUCLEAR LEVEL SPACING EXPLORER ══ -->
+<div id="gue-section" style="margin-top:8px;background:var(--parchment-dark);border:1px solid var(--panel-border);border-radius:4px;">
+  <div onclick="if(window.gueToggle)gueToggle();" style="display:flex;align-items:center;justify-content:space-between;padding:7px 14px;cursor:pointer;user-select:none;">
+    <span style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;color:#34d399;">&#9632; Spectral Correlation <span style="color:#9a8060;font-size:0.48rem;">— Farey gaps vs GUE · nuclear levels · Riemann zeros</span></span>
+    <span id="gue-icon" style="color:#34d399;font-size:0.7rem;">&#9660;</span>
+  </div>
+  <div id="gue-body" style="display:none;padding:0 12px 14px;">
+
+    <!-- Controls row 1 -->
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;margin-bottom:6px;">
+      <div style="display:flex;flex-direction:column;gap:2px;">
+        <span style="font-family:'Cinzel',serif;font-size:0.44rem;color:#9a8060;text-transform:uppercase;letter-spacing:0.07em;">Modulus N</span>
+        <select id="gue-N" onchange="if(window.gueDraw)gueDraw()" style="font-family:'Cinzel',serif;font-size:0.48rem;background:#020100;color:var(--ink);border:1px solid #34d399;padding:2px 6px;border-radius:2px;">
+          <option value="6">N=6 (2·3)</option>
+          <option value="30" selected>N=30 (2·3·5)</option>
+          <option value="210">N=210 (2·3·5·7)</option>
+          <option value="2310">N=2310 (2·3·5·7·11)</option>
+          <option value="30030">N=30030 (2·3·5·7·11·13)</option>
+          <option value="custom">Custom…</option>
+        </select>
+      </div>
+      <div id="gue-custom-wrap" style="display:none;flex-direction:column;gap:2px;">
+        <span style="font-family:'Cinzel',serif;font-size:0.44rem;color:#9a8060;text-transform:uppercase;letter-spacing:0.07em;">Custom N</span>
+        <input id="gue-custom-N" type="number" min="2" max="50000" value="30" style="width:70px;background:#020100;color:var(--ink);border:1px solid #34d399;padding:2px 5px;font-family:'Cinzel',serif;font-size:0.52rem;text-align:center;border-radius:2px;" oninput="if(window.gueDraw)gueDraw()">
+      </div>
+      <div style="display:flex;flex-direction:column;gap:2px;">
+        <span style="font-family:'Cinzel',serif;font-size:0.44rem;color:#9a8060;text-transform:uppercase;letter-spacing:0.07em;">Gap type</span>
+        <select id="gue-gaptype" onchange="if(window.gueDraw)gueDraw()" style="font-family:'Cinzel',serif;font-size:0.48rem;background:#020100;color:var(--ink);border:1px solid #34d399;padding:2px 6px;border-radius:2px;">
+          <option value="coprime">Coprime residues (gcd=1)</option>
+          <option value="all">All residues</option>
+          <option value="prime">Prime residues mod N</option>
+        </select>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:2px;">
+        <span style="font-family:'Cinzel',serif;font-size:0.44rem;color:#9a8060;text-transform:uppercase;letter-spacing:0.07em;">Bins <span id="gue-bins-val" style="color:#34d399;">15</span></span>
+        <input id="gue-bins" type="range" min="5" max="100" value="15" style="width:90px;accent-color:#34d399;" oninput="document.getElementById('gue-bins-val').textContent=this.value;if(window.gueDraw)gueDraw()">
+      </div>
+      <div style="display:flex;flex-direction:column;gap:2px;">
+        <span style="font-family:'Cinzel',serif;font-size:0.44rem;color:#9a8060;text-transform:uppercase;letter-spacing:0.07em;">Max s</span>
+        <input id="gue-maxs" type="range" min="2" max="6" step="0.5" value="4" style="width:70px;accent-color:#34d399;" oninput="document.getElementById('gue-maxs-val').textContent=parseFloat(this.value).toFixed(1);if(window.gueDraw)gueDraw()">
+        <span id="gue-maxs-val" style="font-family:'Cinzel',serif;font-size:0.44rem;color:#34d399;text-align:center;">4.0</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:3px;">
+        <span style="font-family:'Cinzel',serif;font-size:0.44rem;color:#9a8060;text-transform:uppercase;letter-spacing:0.07em;">Overlays</span>
+        <div style="display:flex;gap:5px;flex-wrap:wrap;">
+          <label style="display:flex;align-items:center;gap:2px;font-family:'Cinzel',serif;font-size:0.44rem;color:#a855f7;cursor:pointer;"><input id="gue-show-gue" type="checkbox" checked onchange="if(window.gueDraw)gueDraw()" style="accent-color:#a855f7;"> GUE</label>
+          <label style="display:flex;align-items:center;gap:2px;font-family:'Cinzel',serif;font-size:0.44rem;color:#f97316;cursor:pointer;"><input id="gue-show-goe" type="checkbox" checked onchange="if(window.gueDraw)gueDraw()" style="accent-color:#f97316;"> GOE</label>
+          <label style="display:flex;align-items:center;gap:2px;font-family:'Cinzel',serif;font-size:0.44rem;color:#4a90d9;cursor:pointer;"><input id="gue-show-poisson" type="checkbox" checked onchange="if(window.gueDraw)gueDraw()" style="accent-color:#4a90d9;"> Poisson</label>
+          <label style="display:flex;align-items:center;gap:2px;font-family:'Cinzel',serif;font-size:0.44rem;color:#facc15;cursor:pointer;"><input id="gue-show-riemann" type="checkbox" checked onchange="if(window.gueDraw)gueDraw()" style="accent-color:#facc15;"> ζ zeros</label>
+          <label style="display:flex;align-items:center;gap:2px;font-family:'Cinzel',serif;font-size:0.44rem;color:#f87171;cursor:pointer;"><input id="gue-show-magic" type="checkbox" checked onchange="if(window.gueDraw)gueDraw()" style="accent-color:#f87171;"> Magic N</label>
+        </div>
+      </div>
+      <!-- Export button -->
+      <div style="display:flex;flex-direction:column;gap:2px;margin-left:auto;">
+        <span style="font-family:'Cinzel',serif;font-size:0.44rem;color:#9a8060;text-transform:uppercase;letter-spacing:0.07em;">Export</span>
+        <div style="display:flex;gap:3px;">
+          <button onclick="if(window.gueExportDOM)gueExportDOM('main')" style="font-family:'Cinzel',serif;font-size:0.46rem;letter-spacing:0.06em;text-transform:uppercase;padding:3px 8px;border:1px solid #34d399;background:var(--parchment-dark);color:#34d399;cursor:pointer;border-radius:2px;">&#9633; DOM PNG</button>
+          <button onclick="if(window.gueExport)gueExport('svg')" style="font-family:'Cinzel',serif;font-size:0.46rem;letter-spacing:0.06em;text-transform:uppercase;padding:3px 8px;border:1px solid #34d399;background:var(--parchment-dark);color:#34d399;cursor:pointer;border-radius:2px;">&#8659; SVG</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats summary -->
+    <div id="gue-stats" style="font-family:'Cinzel',serif;font-size:0.5rem;color:var(--ink-mid);line-height:2;margin-bottom:6px;background:#0a0800;border:1px solid var(--panel-border);border-radius:3px;padding:6px 10px;"></div>
+
+    <!-- Main canvas -->
+    <canvas id="gue-canvas" width="2480" height="1300" style="width:100%;max-width:900px;height:auto;background:#020100;border:1px solid rgba(52,211,153,0.3);border-radius:4px;display:block;"></canvas>
+
+    <!-- Interpretation -->
+    <div id="gue-interp" style="font-family:'Cinzel',serif;font-size:0.5rem;color:#9a8060;line-height:1.9;margin-top:8px;padding:8px 12px;background:#0a0800;border-left:3px solid #34d399;border-radius:2px;"></div>
+
+    <!-- Detailed analysis dropdown -->
+    <div style="margin-top:8px;background:#0a0800;border:1px solid rgba(52,211,153,0.25);border-radius:4px;">
+      <div onclick="var b=this.nextElementSibling;var a=this.querySelector('.gue-arr');var open=b.style.display==='none';b.style.display=open?'block':'none';a.textContent=open?'▼':'▶';if(open&&window.gueDrawDetail)gueDrawDetail();" style="display:flex;align-items:center;justify-content:space-between;padding:7px 12px;cursor:pointer;user-select:none;">
+        <span style="font-family:'Cinzel',serif;font-size:0.54rem;letter-spacing:0.1em;text-transform:uppercase;color:#34d399;">&#9654; Extended Analysis &amp; Raw Data</span>
+        <span class="gue-arr" style="color:#34d399;font-size:0.65rem;">&#9654;</span>
+      </div>
+      <div style="display:none;padding:0 12px 12px;">
+
+        <!-- Detail tab selector -->
+        <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px;margin-top:4px;">
+          <button onclick="gueSetTab('cumulative')" id="gue-tab-cumulative" style="font-family:'Cinzel',serif;font-size:0.44rem;padding:2px 8px;border:1px solid #34d399;background:#34d399;color:#020100;cursor:pointer;border-radius:2px;">Cumulative CDF</button>
+          <button onclick="gueSetTab('number')" id="gue-tab-number" style="font-family:'Cinzel',serif;font-size:0.44rem;padding:2px 8px;border:1px solid #34d399;background:var(--parchment-dark);color:#34d399;cursor:pointer;border-radius:2px;">Number Variance Σ²</button>
+          <button onclick="gueSetTab('ratio')" id="gue-tab-ratio" style="font-family:'Cinzel',serif;font-size:0.44rem;padding:2px 8px;border:1px solid #34d399;background:var(--parchment-dark);color:#34d399;cursor:pointer;border-radius:2px;">Gap Ratio r_n</button>
+          <button onclick="gueSetTab('rawgaps')" id="gue-tab-rawgaps" style="font-family:'Cinzel',serif;font-size:0.44rem;padding:2px 8px;border:1px solid #34d399;background:var(--parchment-dark);color:#34d399;cursor:pointer;border-radius:2px;">Raw Gap Sequence</button>
+          <button onclick="gueSetTab('compare')" id="gue-tab-compare" style="font-family:'Cinzel',serif;font-size:0.44rem;padding:2px 8px;border:1px solid #34d399;background:var(--parchment-dark);color:#34d399;cursor:pointer;border-radius:2px;">Multi-N Compare</button>
+        </div>
+        <canvas id="gue-detail-canvas" width="2480" height="900" style="width:100%;max-width:900px;height:auto;background:#020100;border:1px solid rgba(52,211,153,0.2);border-radius:3px;display:block;"></canvas>
+        <div id="gue-detail-text" style="font-family:'Cinzel',serif;font-size:0.48rem;color:#9a8060;line-height:1.9;margin-top:6px;white-space:pre-wrap;max-height:280px;overflow-y:auto;background:#020100;border:1px solid var(--panel-border);border-radius:3px;padding:8px 10px;"></div>
+        <button onclick="if(window.gueExportDOM)gueExportDOM('detail')" style="margin-top:6px;font-family:'Cinzel',serif;font-size:0.46rem;letter-spacing:0.06em;text-transform:uppercase;padding:3px 10px;border:1px solid #34d399;background:var(--parchment-dark);color:#34d399;cursor:pointer;border-radius:2px;">&#9633; Export Detail DOM PNG</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+<!-- /GUE section -->
+
 <div id="threebody-section" style="margin-top:8px;background:var(--parchment-dark);border:1px solid var(--panel-border);border-radius:4px;">
   <!-- Header row: title + quick controls + toggle -->
   <div style="display:flex;align-items:center;gap:6px;padding:6px 10px;flex-wrap:wrap;">
@@ -4298,6 +4483,9 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
 
     // dots and labels
     var _labelScope = document.getElementById('f-label-scope') ? document.getElementById('f-label-scope').value : 'all';
+    var _labelModMin = parseInt((document.getElementById('f-label-mod-min')||{value:'1'}).value)||1;
+    var _labelModMax = parseInt((document.getElementById('f-label-mod-max')||{value:'19'}).value)||19;
+    var _labelModNth = parseInt((document.getElementById('f-label-mod-nth')||{value:'5'}).value)||5;
     var _ptScale=(parseInt(document.getElementById('f-ptsize')&&document.getElementById('f-ptsize').value)||100)/100;
     var _noLabels = labelMode==='none' || !!window._showDipole;
 
@@ -4320,13 +4508,19 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
     } else {
       // ── Label mode: individual draw per point ─────────────────────────────
       var _labelScopeV = _labelScope;
+      var _lblCount=0, _lblLimit=window._wcLabelLimit||99999;
       pts.forEach(function(p){
         var xy=ptXY(p.r,p.m);
         var dotR=Math.max(0.5, (1-p.m/modN*0.1) * (W/400) * _ptScale);
         ctx.globalAlpha=1;
         var dotColor = getPointColor(p, which, modN, color);
         var lbl='';
-        var showLabel = (_labelScopeV==='all' || p.m===modN);
+        var showLabel = _lblCount<_lblLimit && (
+          _labelScopeV==='all' ||
+          (_labelScopeV==='outer' && p.m===modN) ||
+          (_labelScopeV==='range' && p.m>=_labelModMin && p.m<=_labelModMax) ||
+          (_labelScopeV==='nth'   && p.m % _labelModNth === 0)
+        );
         if(showLabel){
           if(labelMode==='gcd')     { var _g=gcd(p.r,p.m); lbl=_g===1?'1':''+_g; }
           else if(labelMode==='fraction') lbl=p.r+'/'+p.m;
@@ -4335,6 +4529,7 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
           else if(labelMode==='angle') lbl=Math.round(360*p.r/p.m)+'°';
           else if(labelMode==='radian') lbl=(2*p.r/p.m).toFixed(2)+'π';
           else if(labelMode==='decimal') lbl=(p.r/p.m).toFixed(2);
+          if(lbl) _lblCount++;
         }
         if(labelStyle==='dot+label'){
           ctx.beginPath(); ctx.arc(xy.x,xy.y,dotR,0,2*Math.PI);
@@ -4738,6 +4933,16 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
       fareyRedraw();
     }
     if(_overlayGap !== null && _overlayPairs.length > 0) drawGapOverlay();
+  };
+
+  // ── Label scope change: show/hide range and nth sub-controls ────────────
+  window.fareyLabelScopeChange = function() {
+    var v = (document.getElementById('f-label-scope')||{value:'all'}).value;
+    var rangeRow = document.getElementById('f-label-range-row');
+    var nthRow   = document.getElementById('f-label-nth-row');
+    if (rangeRow) rangeRow.style.display = v==='range' ? 'flex' : 'none';
+    if (nthRow)   nthRow.style.display   = v==='nth'   ? 'flex' : 'none';
+    if (window.fareyRedraw) fareyRedraw();
   };
 
   window.fareyToggleInspect = function(){
@@ -5198,6 +5403,40 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
           var d = Math.sqrt((pt.px-mx)*(pt.px-mx)+(pt.py-my)*(pt.py-my));
           if(d < hitR && d < bestD){ bestD=d; best=pt; }
         });
+
+        // If dipole is on and no normal point hit, also check dipole-highlighted points
+        if (!best && window._showDipole) {
+          var _modN2 = parseInt((document.getElementById('f-mod-num')||{value:'12'}).value)||12;
+          var _dBase2 = parseInt((document.getElementById('f-dipole-base')||{value:'30'}).value)||30;
+          var _dNmax2 = parseInt((document.getElementById('f-dipole-nmax')||{value:'3'}).value)||3;
+          function _gcdCk(a,b){while(b){var t=b;b=a%b;a=t;}return a;}
+          for (var _dn2=0; _dn2<=_dNmax2; _dn2++) {
+            var _dm2 = Math.round(_dBase2 * Math.pow(2,_dn2));
+            if (_dm2 > _modN2) break;
+            for (var _rr2=1; _rr2<_dm2; _rr2++) {
+              if (_gcdCk(_rr2,_dm2)!==1) continue;
+              var _pxy = ptXY ? ptXY(_rr2,_dm2) : null;
+              if (!_pxy) continue;
+              var _dd = Math.sqrt((_pxy.x-mx)*(_pxy.x-mx)+(_pxy.y-my)*(_pxy.y-my));
+              if (_dd < hitR && _dd < bestD) { bestD=_dd; best={r:_rr2,m:_dm2,px:_pxy.x,py:_pxy.y,gcd1:true}; }
+            }
+          }
+        }
+
+        // If lift is on and no point hit yet, also check lift tower points
+        if (!best && window._liftModeActive && window._liftModeActive()) {
+          var _lp3 = window._getLiftParams ? window._getLiftParams() : {};
+          var _ltRings = window._liftTower || (_lp3.seq) || [];
+          _ltRings.forEach(function(_ltm) {
+            for (var _ltr=1; _ltr<_ltm; _ltr++) {
+              var _pxy2 = ptXY ? ptXY(_ltr,_ltm) : null;
+              if (!_pxy2) return;
+              var _dd2 = Math.sqrt((_pxy2.x-mx)*(_pxy2.x-mx)+(_pxy2.y-my)*(_pxy2.y-my));
+              if (_dd2 < hitR && _dd2 < bestD) { bestD=_dd2; best={r:_ltr,m:_ltm,px:_pxy2.x,py:_pxy2.y,gcd1:true}; }
+            }
+          });
+        }
+
         if(best){
           // If lift mode active — select as lift seed instead of chain
           if (window._liftModeActive && window._liftModeActive()) {
@@ -5211,7 +5450,7 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
             drawCombined();
             return;
           }
-          // Check if already in chain — if so remove it
+          // Chain multi-select (works when dipole or lift also on)
           var existing = _chain.findIndex(function(p){ return p.r===best.r && p.m===best.m; });
           if(existing >= 0){
             _chain.splice(existing, 1);
@@ -5917,6 +6156,9 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
 
       // dots / labels
       var _labelScope = document.getElementById('f-label-scope') ? document.getElementById('f-label-scope').value : 'all';
+      var _labelModMin2 = parseInt((document.getElementById('f-label-mod-min')||{value:'1'}).value)||1;
+      var _labelModMax2 = parseInt((document.getElementById('f-label-mod-max')||{value:'19'}).value)||19;
+      var _labelModNth2 = parseInt((document.getElementById('f-label-mod-nth')||{value:'5'}).value)||5;
       var _which = s.color === col1 ? 'coprime' : 'noncoprime';
       var _ptScale=(parseInt(document.getElementById('f-ptsize')&&document.getElementById('f-ptsize').value)||100)/100;
       var _noLabels = labelMode==='none' || !!window._showDipole;
@@ -5944,6 +6186,7 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
         });
       } else {
         // ── Per-point draw (labels or active tooltip) ─────────────────────
+        var _wcLblCount2=0;
         pts.forEach(function(p){
           var xy=ptXY(p.r,p.m); if(!xy) return;
           var dotR=Math.max(0.5,(1-p.m/modN*0.1)*(W/400)*_ptScale);
@@ -5955,7 +6198,13 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
           }
           ctx.globalAlpha=1;
           var dotColor=isActive?'#f0d060':getPointColor(p,_which,modN,color);
-          var showLabel=(_labelScope==='all'||p.m===modN);
+          var _lblLimit2=window._wcLabelLimit||99999;
+          var showLabel=_wcLblCount2<_lblLimit2 && (
+            _labelScope==='all' ||
+            (_labelScope==='outer' && p.m===modN) ||
+            (_labelScope==='range' && p.m>=_labelModMin2 && p.m<=_labelModMax2) ||
+            (_labelScope==='nth'   && p.m % _labelModNth2 === 0)
+          );
           var lbl='';
           if(showLabel){
             if(labelMode==='gcd'){var _g=gcd(p.r,p.m);lbl=_g===1?'1':''+_g;}
@@ -5965,6 +6214,7 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
             else if(labelMode==='angle')lbl=Math.round(360*p.r/p.m)+'°';
             else if(labelMode==='radian')lbl=(2*p.r/p.m).toFixed(2)+'π';
             else if(labelMode==='decimal')lbl=(p.r/p.m).toFixed(2);
+            if(lbl) _wcLblCount2++;
           }
           if(_noLabels||labelStyle==='dot+label'){
             ctx.beginPath();ctx.arc(xy.x,xy.y,isActive?dotR*2.5:dotR,0,2*Math.PI);
@@ -6166,7 +6416,8 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
       (function() {
         function _gcdP(a,b){ while(b){var t=b;b=a%b;a=t;} return a; }
         var _outerM = modN;
-        var _dotR   = Math.max(4, W * 0.009);
+        var _hlScale = parseInt((document.getElementById('f-dipole-hl-size')||{value:'150'}).value)/100;
+        var _dotR   = Math.max(3, W * 0.009 * _hlScale);
         var _glowR  = _dotR * 2.4;
 
         // Find up to 2 nearest gcd=1 residues to a target angle on the outer ring
@@ -6260,6 +6511,37 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
       ctx.globalAlpha = 1;
     }
 
+    // ── RESIDUE TRACK: connect all points where r/m has numerator = tracked r ─
+    if (document.getElementById('f-res-track-on') && document.getElementById('f-res-track-on').checked) {
+      var _rtR     = parseInt((document.getElementById('f-res-track-r')||{value:'1'}).value)||1;
+      var _rtThick = parseInt((document.getElementById('f-res-track-thick')||{value:'10'}).value)/10;
+      var _rtColor = (document.getElementById('f-res-track-color')||{value:'#f97316'}).value||'#f97316';
+      // Collect all fractions (across all rings) where r === _rtR
+      var _rtPts = [];
+      for (var _rm = _rtR+1; _rm <= modN; _rm++) {
+        var _rtxy = ptXY(_rtR, _rm);
+        if (_rtxy) _rtPts.push({x:_rtxy.x, y:_rtxy.y, m:_rm});
+      }
+      if (_rtPts.length >= 2) {
+        // Draw polyline connecting them ring by ring
+        ctx.beginPath();
+        ctx.moveTo(_rtPts[0].x, _rtPts[0].y);
+        for (var _ri=1; _ri<_rtPts.length; _ri++) ctx.lineTo(_rtPts[_ri].x, _rtPts[_ri].y);
+        ctx.strokeStyle = _rtColor;
+        ctx.lineWidth   = _rtThick;
+        ctx.globalAlpha = 0.75;
+        ctx.setLineDash([]);
+        ctx.stroke();
+        ctx.globalAlpha = 1;
+      }
+      // Draw highlighted dots at each tracked point
+      _rtPts.forEach(function(p){
+        ctx.beginPath(); ctx.arc(p.x, p.y, Math.max(2, _rtThick*1.4), 0, 2*Math.PI);
+        ctx.fillStyle = _rtColor; ctx.globalAlpha = 0.9; ctx.fill();
+      });
+      ctx.globalAlpha = 1;
+    }
+
     // ── LIFTING TOWER: b × a^n residue connections ───────────────────────
     if (window._liftModeActive && window._liftModeActive()) {
       function _gcd2(a,b){ while(b){var t=b;b=a%b;a=t;} return a; }
@@ -6316,9 +6598,10 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
         }
 
         // Draw YELLOW selected dot (the seed)
+        var _liftHlScale = parseInt((document.getElementById('f-lift-hl-size')||{value:'200'}).value)/100;
         var ptSeed = ptXY(_seedR, seedBase);
         if (ptSeed) {
-          ctx.beginPath(); ctx.arc(ptSeed.x, ptSeed.y, Math.max(4, W*0.009), 0, 2*Math.PI);
+          ctx.beginPath(); ctx.arc(ptSeed.x, ptSeed.y, Math.max(3, W*0.009*_liftHlScale), 0, 2*Math.PI);
           ctx.fillStyle = '#ffd700'; ctx.globalAlpha = 1; ctx.fill();
           ctx.strokeStyle = '#fff'; ctx.lineWidth = Math.max(1, _liftThick*0.4);
           ctx.globalAlpha = 0.8; ctx.stroke();
@@ -8364,6 +8647,135 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
     return true;
   }
 
+  // ── Gap Zeta Decomposition ─────────────────────────────────────────────────
+  // Each prime p contributes weight p²/(p²-1) to Z*(g)(2) where g = gap class of p.
+  // Gap class = smallest gap g such that primes p and p+g both exist in the sieve.
+  // Cumulative product over all gap classes ≤ G converges to ζ(2) = π²/6.
+
+  var _gapZetaCache = null;
+
+  function _buildGapZetaData(limit) {
+    limit = limit || 100000;
+    // Sieve
+    var sieve = new Uint8Array(limit + 1);
+    sieve[0] = sieve[1] = 1;
+    for (var i = 2; i * i <= limit; i++) if (!sieve[i]) for (var j = i*i; j <= limit; j += i) sieve[j] = 1;
+    var primes = [];
+    for (var k = 2; k <= limit; k++) if (!sieve[k]) primes.push(k);
+
+    // For each prime, find its gap class = actual gap to next prime
+    // prime 2: gap to 3 = 1 → gap class 1
+    // For others: gap = next_prime - p
+    var gapClasses = {}; // gap → { primes: [], weight: product of p²/(p²-1) }
+    for (var i = 0; i < primes.length - 1; i++) {
+      var p = primes[i];
+      var g = primes[i+1] - p;
+      if (!gapClasses[g]) gapClasses[g] = { primes: [], weight: 1, zStar: 1 };
+      gapClasses[g].primes.push(p);
+      var w = (p*p) / (p*p - 1);
+      gapClasses[g].weight *= w;
+      gapClasses[g].zStar  *= w;
+    }
+
+    // Sort gap keys
+    var gapKeys = Object.keys(gapClasses).map(Number).sort(function(a,b){return a-b;});
+
+    // Compute cumulative product (ordered by gap class)
+    var cumProd = 1;
+    var cumData = [];
+    gapKeys.forEach(function(g) {
+      cumProd *= gapClasses[g].zStar;
+      cumData.push({ g: g, z: gapClasses[g].zStar, cum: cumProd, count: gapClasses[g].primes.length });
+    });
+
+    return { gapClasses: gapClasses, gapKeys: gapKeys, cumData: cumData, zeta2: Math.PI*Math.PI/6 };
+  }
+
+  function _getGapZetaData() {
+    if (!_gapZetaCache) _gapZetaCache = _buildGapZetaData(50000);
+    return _gapZetaCache;
+  }
+
+  // Convert decimal to simple fraction string (best rational approx, denom ≤ 1000)
+  function _toFrac(x) {
+    var best_n=1, best_d=1, best_err=Math.abs(x-1);
+    for (var d=1; d<=1000; d++) {
+      var n = Math.round(x*d);
+      var err = Math.abs(x - n/d);
+      if (err < best_err) { best_err=err; best_n=n; best_d=d; }
+      if (best_err < 1e-6) break;
+    }
+    if (best_err < 0.0005 && best_d > 1) return best_n + '/' + best_d;
+    return x.toFixed(6);
+  }
+
+  window.fareyGapZetaPreview = function() {
+    var el = document.getElementById('f-gap-input');
+    var panel = document.getElementById('gap-zeta-panel');
+    if (!el || !panel) return;
+    var raw = el.value.trim();
+    if (!raw) { panel.style.display = 'none'; return; }
+
+    var gaps = raw.split(/[,\s]+/).map(function(s){ return parseInt(s); })
+                  .filter(function(n){ return !isNaN(n) && n >= 1; });
+    if (!gaps.length) { panel.style.display = 'none'; return; }
+
+    // Only show for valid gaps
+    var valid = gaps.every(function(g){ return _isValidPrimeGap(g); });
+    if (!valid) { panel.style.display = 'none'; return; }
+
+    var data = _getGapZetaData();
+    var titleEl  = document.getElementById('gzp-title');
+    var formulaEl= document.getElementById('gzp-formula');
+    var tableEl  = document.getElementById('gzp-table');
+    var cumEl    = document.getElementById('gzp-cumulative');
+
+    // Build rows for each requested gap
+    var rows = '';
+    var combinedZ = 1;
+    gaps.forEach(function(g) {
+      var cd = data.cumData.find(function(d){ return d.g === g; });
+      if (!cd) { rows += '<div style="color:#9a8060;">gap '+g+': no data</div>'; return; }
+      var zFrac = _toFrac(cd.z);
+      var pct = ((cd.z - 1) * 100).toFixed(3);
+      rows += '<div style="display:flex;justify-content:space-between;gap:8px;border-bottom:1px solid rgba(74,144,217,0.08);padding:1px 0;">'
+        + '<span style="color:#9a8060;">gap ' + g + '</span>'
+        + '<span style="color:#4a90d9;font-weight:600;">Z*('+g+')(2) = ' + zFrac + '</span>'
+        + '<span style="color:#9a8060;font-size:0.46rem;">' + cd.count + ' primes &nbsp;+' + pct + '%</span>'
+        + '</div>';
+      combinedZ *= cd.z;
+    });
+
+    // Cumulative line up through the max requested gap
+    var maxGap = Math.max.apply(null, gaps);
+    var cumUpTo = data.cumData.filter(function(d){ return d.g <= maxGap; });
+    var cumThroughMax = cumUpTo.length ? cumUpTo[cumUpTo.length-1].cum : 1;
+    var piEst = Math.sqrt(6 * cumThroughMax);
+    var zetaFull = data.zeta2;
+    var pctOfZeta = (cumThroughMax / zetaFull * 100).toFixed(2);
+
+    var cumStr = 'Cumulative ζ(2) through gap ' + maxGap + ': '
+      + '<span style="color:#ffd700;font-weight:600;">' + _toFrac(cumThroughMax) + ' ≈ ' + cumThroughMax.toFixed(6) + '</span>'
+      + ' &nbsp;·&nbsp; ' + pctOfZeta + '% of π²/6'
+      + ' &nbsp;·&nbsp; √(6·cum) ≈ <span style="color:#4ecdc4;">' + piEst.toFixed(6) + '</span>';
+
+    if (gaps.length === 1) {
+      var g = gaps[0];
+      var cd = data.cumData.find(function(d){ return d.g === g; });
+      if (cd) {
+        titleEl.textContent  = 'Z*('+g+')(2) gap decomposition';
+        formulaEl.textContent = '∏ p²/(p²−1) over primes with gap class ' + g;
+      }
+    } else {
+      titleEl.textContent  = 'Gap decomposition: ' + gaps.join(', ');
+      formulaEl.textContent = '∏ p²/(p²−1) per gap class';
+    }
+
+    tableEl.innerHTML  = rows;
+    cumEl.innerHTML    = cumStr;
+    panel.style.display = 'block';
+  };
+
   window.fareyGapInputApply = function() {
     var el     = document.getElementById('f-gap-input');
     var status = document.getElementById('f-gap-input-status');
@@ -9424,11 +9836,15 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
     var col1   = (document.getElementById('f-col1')||{value:'#4a90d9'}).value;
     var col2   = (document.getElementById('f-col2')||{value:'#c94040'}).value;
     var mode   = window._collapsedMode || 'both';
+    var ringRatio = parseInt((document.getElementById('fcc-ring-r')||{value:'100'}).value)/100;
+    var ccw    = (document.getElementById('fcc-ccw')||{checked:true}).checked;
 
     function gcd(a,b){ while(b){var t=b;b=a%b;a=t;} return a; }
     function phi(n){ var r=n,k=n; for(var p=2;p*p<=k;p++){if(k%p===0){r-=r/p;while(k%p===0)k/=p;}} if(k>1)r-=r/k; return Math.round(r); }
 
     // Build all points sorted by angle (degrees 0–360)
+    // Angle convention: 0°=right, CCW positive (standard math) when ccw=true
+    // or 0°=right, CW (canvas-native) when ccw=false
     var pts = [];
     for (var m=1; m<=modN; m++) {
       for (var r=0; r<m; r++) {
@@ -9464,52 +9880,86 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
     var cc = document.getElementById('fc-collapsed'); if (!cc) return;
     var W = cc.width, H = cc.height, ctx = cc.getContext('2d');
     ctx.clearRect(0,0,W,H);
-    var cx = W/2, cy = H/2, radius = Math.min(W,H)*0.42;
+    var cx = W/2, cy = H/2;
+    var outerR = Math.min(W,H)*0.42;
+
+    // Ring radius: at ringRatio=1 → outerR; at ringRatio=0 → all points collapse to center dot
+    // We keep the outer circle fixed and scale only where ring points are placed
+    var ringR = outerR * ringRatio;
+
+    // Coordinate helper: angDeg (0=right, CCW=up when ccw checked) → canvas x,y
+    function ptXY_fcc(angDeg, r_frac) {
+      // r_frac: 0=center, 1=outerR
+      var rad = angDeg * Math.PI / 180;
+      var x = cx + r_frac * Math.cos(rad);
+      var y = ccw ? (cy - r_frac * Math.sin(rad))   // CCW: +y is up
+                  : (cy + r_frac * Math.sin(rad));   // CW: +y is down
+      return {x:x, y:y};
+    }
 
     // Axes
     ctx.strokeStyle='rgba(196,155,56,0.12)'; ctx.lineWidth=0.5;
-    ctx.beginPath(); ctx.moveTo(cx-radius-12,cy); ctx.lineTo(cx+radius+12,cy); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(cx,cy-radius-12); ctx.lineTo(cx,cy+radius+12); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cx-outerR-12,cy); ctx.lineTo(cx+outerR+12,cy); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cx,cy-outerR-12); ctx.lineTo(cx,cy+outerR+12); ctx.stroke();
 
-    // Unit circle ring
-    ctx.beginPath(); ctx.arc(cx,cy,radius,0,2*Math.PI);
+    // Axis labels (CCW: 0=right, 90=top, 180=left, 270=bottom)
+    if (ccw) {
+      ctx.font='7px Cinzel,serif'; ctx.fillStyle='rgba(196,155,56,0.35)'; ctx.textAlign='center';
+      ctx.fillText('90°',  cx,         cy-outerR-16);
+      ctx.fillText('270°', cx,         cy+outerR+14);
+      ctx.fillText('0°',   cx+outerR+14, cy+4);
+      ctx.fillText('180°', cx-outerR-18, cy+4);
+    }
+
+    // Unit circle ring (always at outerR)
+    ctx.beginPath(); ctx.arc(cx,cy,outerR,0,2*Math.PI);
     ctx.strokeStyle='rgba(160,120,48,0.4)'; ctx.lineWidth=1; ctx.stroke();
 
-    // Draw all points
-    var ptR = Math.max(2.5, W*0.005);
+    // Inner circle at ringR (if < outerR, draw a guide ring)
+    if (ringRatio < 0.99 && ringRatio > 0.01) {
+      ctx.beginPath(); ctx.arc(cx,cy,ringR,0,2*Math.PI);
+      ctx.strokeStyle='rgba(78,205,196,0.18)'; ctx.lineWidth=0.5;
+      ctx.setLineDash([3,4]); ctx.stroke(); ctx.setLineDash([]);
+    }
+
+    // Draw all points at ringR
+    var ptR = Math.max(1.5, W*0.004);
     pts.forEach(function(p) {
-      var a = p.deg * Math.PI/180;
-      var x = cx + radius*Math.cos(a), y = cy + radius*Math.sin(a);
-      // Highlight snapped point
+      var pos = ptXY_fcc(p.deg, ringR);
       var isSnap = snapPt && p.r===snapPt.r && p.m===snapPt.m;
-      ctx.beginPath(); ctx.arc(x,y, isSnap ? ptR*2.2 : ptR, 0,2*Math.PI);
+      ctx.beginPath(); ctx.arc(pos.x, pos.y, isSnap ? ptR*2.2 : ptR, 0,2*Math.PI);
       ctx.fillStyle = p.g===1 ? col1 : col2;
       ctx.globalAlpha = isSnap ? 1 : 0.7;
       ctx.fill();
-      if (isSnap) {
-        ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.stroke();
-      }
+      if (isSnap) { ctx.strokeStyle='#fff'; ctx.lineWidth=1.5; ctx.stroke(); }
     });
     ctx.globalAlpha = 1;
 
-    // Trig lines
-    var rad = deg * Math.PI/180;
-    var sinV = Math.sin(rad), cosV = Math.cos(rad), tanV = Math.tan(rad);
-    var px = cx + radius*cosV, py = cy + radius*sinV;
+    // Trig lines (always drawn on the outer unit circle)
+    var rad = deg * Math.PI / 180;
+    var sinV = ccw ?  Math.sin(rad) : -Math.sin(rad);  // display value (CCW convention)
+    var cosV = Math.cos(rad);
+    var tanV = sinV / cosV;
+    var px = cx + outerR*Math.cos(rad);
+    var py = ccw ? (cy - outerR*Math.sin(rad)) : (cy + outerR*Math.sin(rad));
 
     // Angle arc
-    ctx.beginPath(); ctx.arc(cx,cy,radius*0.15,0,rad,deg<0);
+    if (ccw) {
+      ctx.beginPath(); ctx.arc(cx,cy,outerR*0.15, 0, -rad, rad>0);
+    } else {
+      ctx.beginPath(); ctx.arc(cx,cy,outerR*0.15, 0, rad, rad<0);
+    }
     ctx.strokeStyle='rgba(78,205,196,0.55)'; ctx.lineWidth=1.5; ctx.stroke();
 
-    // cos dashed line
+    // cos dashed line (horizontal from center to foot)
     ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(px,cy);
     ctx.strokeStyle='#e879f9'; ctx.lineWidth=1.5; ctx.setLineDash([4,3]); ctx.stroke(); ctx.setLineDash([]);
 
-    // sin dashed line
+    // sin dashed line (vertical from foot to point)
     ctx.beginPath(); ctx.moveTo(px,cy); ctx.lineTo(px,py);
     ctx.strokeStyle='#4ecdc4'; ctx.lineWidth=1.5; ctx.setLineDash([4,3]); ctx.stroke(); ctx.setLineDash([]);
 
-    // Radius line
+    // Radius line (to unit circle)
     ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(px,py);
     ctx.strokeStyle = snapPt ? 'rgba(255,215,0,0.95)' : 'rgba(255,215,0,0.6)';
     ctx.lineWidth=2; ctx.stroke();
@@ -9523,8 +9973,9 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
     ctx.font='bold 10px Cinzel,serif';
     ctx.fillStyle = snapPt ? '#ffd700' : '#4ecdc4';
     ctx.textAlign = cosV>=0 ? 'left' : 'right';
-    ctx.textBaseline = sinV>=0 ? 'top' : 'bottom';
-    ctx.fillText(deg.toFixed(2)+'\u00b0', px+(cosV>=0?8:-8), py+(sinV>=0?4:-4));
+    // For CCW: label above when sin>0 (upper half), below when sin<0
+    ctx.textBaseline = (ccw ? sinV>0 : sinV<0) ? 'bottom' : 'top';
+    ctx.fillText(deg.toFixed(2)+'\u00b0', px+(cosV>=0?8:-8), py+((ccw ? sinV>0 : sinV<0)?-4:4));
 
     // UPDATE READOUTS
     var dp3 = function(v){ return v.toFixed(3); };
@@ -9554,14 +10005,16 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
           +'<span style="color:'+(c||'#e8d9b0')+';font-weight:600;">'+val+'</span></div>';
       }
       var radV = snapPt.deg*Math.PI/180;
+      var sinDisplay = ccw ? Math.sin(radV) : -Math.sin(radV);
+      var cosDisplay = Math.cos(radV);
       var html='';
       html+=row('r / m', snapPt.r+' / '+snapPt.m, col);
       html+=row('gcd(r,m)', ''+snapPt.g, snapPt.g===1?'#4ecdc4':'#f97316');
       html+=row('angle', snapPt.deg.toFixed(4)+'\u00b0', '#4ecdc4');
       html+=row('radian', (radV).toFixed(5)+' rad', '#9a8060');
       html+=row('decimal r/m', (snapPt.r/snapPt.m).toFixed(6), '#e8d9b0');
-      html+=row('sin', Math.sin(radV).toFixed(5), '#4ecdc4');
-      html+=row('cos', Math.cos(radV).toFixed(5), '#e879f9');
+      html+=row('sin', sinDisplay.toFixed(5), '#4ecdc4');
+      html+=row('cos', cosDisplay.toFixed(5), '#e879f9');
       html+=row('\u03c6(m)', ''+phi(snapPt.m), '#c49b38');
       html+=row('\u03c6(m)/m', (phi(snapPt.m)/snapPt.m).toFixed(4), '#c49b38');
       if(body) body.innerHTML=html;
@@ -9612,6 +10065,39 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
     var next=(idx+dir+pts.length)%pts.length;
     var sl=document.getElementById('fcc-angle-sl'); if(sl) sl.value=pts[next];
     window.fareyCollapsedAngleDraw(pts[next],true);
+  };
+
+  // ── DOM Export for Unit Circle Angle Panel ───────────────────────────────
+  window.fccExportDOM = function() {
+    if(typeof html2canvas==='undefined'){alert('html2canvas not loaded.');return;}
+    // Capture the collapsed unit circle canvas + the angle panel together
+    var anglePanel=document.getElementById('fcc-angle-panel');
+    var canvasWrap=document.querySelector('.fc-collapsed-wrap')||
+                   (document.getElementById('fc-collapsed')?document.getElementById('fc-collapsed').parentElement:null);
+    // Best target: the whole collapsed-view container
+    var target=document.getElementById('fc-collapsed-outer')||
+               document.getElementById('fcc-angle-panel')||
+               anglePanel;
+    // Try to grab the full collapsed section including canvas + panel
+    var collapsed=document.getElementById('fc-collapsed');
+    if(collapsed){
+      // Walk up to find a container that holds both canvas and angle panel
+      var el=collapsed.parentElement;
+      while(el&&el!==document.body){
+        if(el.querySelector('#fcc-angle-panel')&&el.querySelector('#fc-collapsed')){target=el;break;}
+        el=el.parentElement;
+      }
+    }
+    if(!target){alert('Angle section not found.');return;}
+    var modN=(document.getElementById('f-mod-num')||{value:'?'}).value;
+    var deg=(window._collapsedAngleDeg||0).toFixed(2).replace('.','p');
+    html2canvas(target,{backgroundColor:'#020100',scale:3,useCORS:true,logging:false}).then(function(canvas){
+      var a=document.createElement('a');
+      a.download='unit_circle_angle_N'+modN+'_'+deg+'deg.png';
+      a.href=canvas.toDataURL('image/png');a.click();
+      var lbl=document.getElementById('fcc-export-label');
+      if(lbl){lbl.textContent='Saved';setTimeout(function(){lbl.textContent='';},3000);}
+    });
   };
 
 
@@ -12521,6 +13007,909 @@ window.tbSendToMain = function() {
     }
   });
 })();
+</script>
+
+<script>
+// ══ GUE / NUCLEAR LEVEL SPACING EXPLORER ═════════════════════════════════
+(function(){
+
+  // ── helpers ───────────────────────────────────────────────────────────
+  function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){var t=b;b=a%b;a=t;}return a||1;}
+  function isPrime(n){if(n<2)return false;if(n<4)return true;if(n%2===0||n%3===0)return false;for(var i=5;i*i<=n;i+=6)if(n%i===0||n%(i+2)===0)return false;return true;}
+  function sv(id){var e=document.getElementById(id);return e?e.value:'';}
+  function iv(id){return parseInt(sv(id))||0;}
+  function fv(id){return parseFloat(sv(id))||0;}
+  function cb(id){var e=document.getElementById(id);return e?e.checked:false;}
+
+  // ── Riemann zeros (imaginary parts, first 100) ────────────────────────
+  var RZEROS=[14.134725,21.022040,25.010858,30.424876,32.935062,37.586178,
+    40.918719,43.327073,48.005151,49.773832,52.970321,56.446247,59.347044,
+    60.831779,65.112544,67.079811,69.546401,72.067157,75.704691,77.144840,
+    79.337375,82.910381,84.735493,87.425274,88.809111,92.491899,94.651344,
+    95.870634,98.831194,101.317851,103.725538,105.446623,107.168611,111.029536,
+    111.874659,114.320220,116.226680,118.790782,121.370125,122.946829,
+    124.256819,127.516683,129.578704,131.087688,133.497737,134.756510,
+    138.116042,139.736209,141.123707,143.111846,146.000982,147.422765,
+    150.053521,150.925258,153.024693,156.112909,157.597591,158.849988,
+    161.188964,163.030709,165.537069,167.184439,169.094515,169.911976,
+    173.411536,174.754191,176.441434,178.377407,179.916484,182.207078,
+    184.874467,185.598783,187.228922,189.416158,192.026656,193.079726,
+    195.265397,196.876481,198.015309,201.264751,202.493594,204.189671,
+    205.394697,207.906258,209.576509,211.690862,213.347919,214.547044,
+    216.169538,219.067596,220.714918,221.430705,224.007000,224.983324,
+    227.421444,229.337413,231.250188,231.987235,233.693404];
+  var MAGIC=[2,8,20,28,50,82,126];
+
+  // ── gap computation ───────────────────────────────────────────────────
+  function computeGaps(N, gaptype){
+    var pts=[];
+    for(var r=0;r<N;r++){
+      if(gaptype==='coprime'&&gcd(r,N)!==1) continue;
+      if(gaptype==='prime'&&!isPrime(r)) continue;
+      pts.push(r);
+    }
+    if(pts.length<3) return {gaps:[],mean:0,pts:pts,raw:[]};
+    var raw=[];
+    for(var i=1;i<pts.length;i++) raw.push(pts[i]-pts[i-1]);
+    raw.push((N-pts[pts.length-1])+pts[0]);
+    var mean=raw.reduce(function(a,b){return a+b;},0)/raw.length;
+    return {gaps:raw.map(function(g){return g/mean;}),mean:mean,raw:raw,pts:pts};
+  }
+  function computeRiemannGaps(){
+    var gaps=[]; for(var i=1;i<RZEROS.length;i++) gaps.push(RZEROS[i]-RZEROS[i-1]);
+    var m=gaps.reduce(function(a,b){return a+b;},0)/gaps.length;
+    return gaps.map(function(g){return g/m;});
+  }
+  function computeMagicGaps(){
+    var gaps=[]; for(var i=1;i<MAGIC.length;i++) gaps.push(MAGIC[i]-MAGIC[i-1]);
+    var m=gaps.reduce(function(a,b){return a+b;},0)/gaps.length;
+    return gaps.map(function(g){return g/m;});
+  }
+
+  // ── theoretical distributions ─────────────────────────────────────────
+  function wigner_gue(s){return (32/(Math.PI*Math.PI))*s*s*Math.exp(-4*s*s/Math.PI);}
+  function wigner_goe(s){return (Math.PI/2)*s*Math.exp(-Math.PI*s*s/4);}
+  function poisson(s){return Math.exp(-s);}
+
+  // ── histogram ─────────────────────────────────────────────────────────
+  function histogram(data,bins,maxS){
+    var h=new Array(bins).fill(0), bw=maxS/bins;
+    data.forEach(function(s){var b=Math.floor(s/bw);if(b>=0&&b<bins)h[b]++;});
+    var n=data.length;
+    return h.map(function(c){return c/(n*bw);});
+  }
+
+  // ── statistics ────────────────────────────────────────────────────────
+  function variance(arr){
+    var m=arr.reduce(function(a,b){return a+b;},0)/arr.length;
+    return arr.reduce(function(a,b){return a+(b-m)*(b-m);},0)/arr.length;
+  }
+  function skewness(arr){
+    var m=arr.reduce(function(a,b){return a+b;},0)/arr.length;
+    var v=variance(arr), s=Math.sqrt(v);
+    if(s===0)return 0;
+    return arr.reduce(function(a,b){return a+Math.pow((b-m)/s,3);},0)/arr.length;
+  }
+  function kurtosis(arr){
+    var m=arr.reduce(function(a,b){return a+b;},0)/arr.length;
+    var v=variance(arr);
+    if(v===0)return 0;
+    return arr.reduce(function(a,b){return a+Math.pow(b-m,4);},0)/(arr.length*v*v)-3;
+  }
+  function kolmogorovSmirnov(data,cdf){
+    var sorted=data.slice().sort(function(a,b){return a-b;}), n=sorted.length, maxD=0;
+    sorted.forEach(function(x,i){
+      var Fn=(i+1)/n, F=cdf(x);
+      maxD=Math.max(maxD,Math.abs(Fn-F),Math.abs(i/n-F));
+    });
+    return maxD;
+  }
+  function numIntegrate(fn,a,b,steps){
+    var h=(b-a)/steps, s=0;
+    for(var i=0;i<steps;i++) s+=fn(a+i*h+h/2)*h;
+    return s;
+  }
+  function gue_cdf(s){return Math.min(1,numIntegrate(wigner_gue,0,s,300));}
+  function goe_cdf(s){return Math.min(1,numIntegrate(wigner_goe,0,s,300));}
+  function poisson_cdf(s){return 1-Math.exp(-s);}
+
+  // gap ratio r_n = min(s_n,s_{n+1})/max(s_n,s_{n+1})
+  function gapRatios(gaps){
+    var ratios=[];
+    for(var i=0;i<gaps.length-1;i++){
+      var a=gaps[i],b=gaps[i+1];
+      ratios.push(Math.min(a,b)/Math.max(a,b));
+    }
+    return ratios;
+  }
+  // number variance Sigma2(L) = <(n-<n>)^2> in window L
+  function numberVariance(gaps,Lmax){
+    var cum=[0]; gaps.forEach(function(g){cum.push(cum[cum.length-1]+g);});
+    var totalLen=cum[cum.length-1];
+    var result=[];
+    for(var L=0.2;L<=Lmax;L+=Lmax/30){
+      var vals=[],starts=Math.min(50,gaps.length);
+      for(var k=0;k<starts;k++){
+        var x0=k*totalLen/starts;
+        var x1=x0+L;
+        var cnt=0;
+        for(var j=1;j<cum.length;j++) if(cum[j]>=x0&&cum[j-1]<x1) cnt++;
+        vals.push(cnt);
+      }
+      var m=vals.reduce(function(a,b){return a+b;},0)/vals.length;
+      var v=vals.reduce(function(a,b){return a+(b-m)*(b-m);},0)/vals.length;
+      result.push({L:L,sig2:v});
+    }
+    return result;
+  }
+
+  // ── axis / chart helpers ──────────────────────────────────────────────
+  function drawAxes(ctx,pad,W,H,xLabel,yLabel,title,xTicks,yTicks,maxX,maxY){
+    var pw=W-pad.l-pad.r, ph=H-pad.t-pad.b;
+    ctx.strokeStyle='rgba(196,155,56,0.4)';ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(pad.l,pad.t);ctx.lineTo(pad.l,pad.t+ph);ctx.lineTo(pad.l+pw,pad.t+ph);ctx.stroke();
+    ctx.setLineDash([4,6]);ctx.strokeStyle='rgba(196,155,56,0.1)';ctx.lineWidth=1;
+    xTicks.forEach(function(xv){
+      if(xv>maxX)return;
+      var px=pad.l+xv/maxX*pw;
+      ctx.beginPath();ctx.moveTo(px,pad.t);ctx.lineTo(px,pad.t+ph);ctx.stroke();
+      ctx.fillStyle='rgba(196,155,56,0.6)';ctx.font='22px Cinzel,serif';ctx.textAlign='center';
+      ctx.fillText(xv,px,pad.t+ph+32);
+    });
+    yTicks.forEach(function(yv){
+      if(yv>maxY)return;
+      var py=pad.t+ph*(1-yv/maxY);
+      ctx.beginPath();ctx.moveTo(pad.l,py);ctx.lineTo(pad.l+pw,py);ctx.stroke();
+      ctx.fillStyle='rgba(196,155,56,0.6)';ctx.font='22px Cinzel,serif';ctx.textAlign='right';
+      ctx.fillText(yv.toFixed(2),pad.l-8,py+6);
+    });
+    ctx.setLineDash([]);
+    ctx.fillStyle='rgba(196,155,56,0.8)';ctx.font='bold 28px Cinzel,serif';ctx.textAlign='center';
+    ctx.fillText(xLabel,pad.l+pw/2,H-14);
+    ctx.save();ctx.translate(28,pad.t+ph/2);ctx.rotate(-Math.PI/2);ctx.fillText(yLabel,0,0);ctx.restore();
+    ctx.font='bold 34px Cinzel,serif';ctx.fillStyle='rgba(52,211,153,0.9)';ctx.textAlign='left';
+    ctx.fillText(title,pad.l,pad.t-18);
+  }
+  function drawCurveOnCanvas(ctx,fn,col,lw,dash,pad,W,H,maxX,maxY){
+    var pw=W-pad.l-pad.r,ph=H-pad.t-pad.b;
+    ctx.beginPath();ctx.strokeStyle=col;ctx.lineWidth=lw;
+    if(dash)ctx.setLineDash(dash);else ctx.setLineDash([]);
+    for(var i=0;i<=400;i++){
+      var s=i/400*maxX,y=fn(s);
+      var px=pad.l+s/maxX*pw, py=pad.t+ph*(1-y/maxY);
+      i===0?ctx.moveTo(px,py):ctx.lineTo(px,py);
+    }
+    ctx.stroke();ctx.setLineDash([]);
+  }
+
+  // ── MAIN DRAW ─────────────────────────────────────────────────────────
+  function _getParams(){
+    var selN=sv('gue-N');
+    var N=selN==='custom'?(parseInt(sv('gue-custom-N'))||30):parseInt(selN);
+    document.getElementById('gue-custom-wrap').style.display=selN==='custom'?'flex':'none';
+    var gaptype=sv('gue-gaptype')||'coprime';
+    var bins=Math.max(5,Math.min(100,iv('gue-bins')||15));
+    var maxS=Math.max(2,Math.min(6,fv('gue-maxs')||4));
+    return {N:N,gaptype:gaptype,bins:bins,maxS:maxS};
+  }
+
+  function draw(){
+    var C=document.getElementById('gue-canvas');if(!C)return;
+    var W=C.width,H=C.height;
+    var ctx=C.getContext('2d');
+    ctx.fillStyle='#020100';ctx.fillRect(0,0,W,H);
+
+    var p=_getParams(), N=p.N, gaptype=p.gaptype, bins=p.bins, maxS=p.maxS;
+    var showGUE=cb('gue-show-gue'),showGOE=cb('gue-show-goe');
+    var showPoisson=cb('gue-show-poisson'),showRiemann=cb('gue-show-riemann');
+    var showMagic=cb('gue-show-magic');
+
+    var result=computeGaps(N,gaptype), gaps=result.gaps;
+    if(gaps.length<3){
+      ctx.fillStyle='#9a8060';ctx.font='32px Cinzel,serif';ctx.textAlign='center';
+      ctx.fillText('Not enough points for N='+N+' / '+gaptype,W/2,H/2);return;
+    }
+
+    var hist=histogram(gaps,bins,maxS);
+    var rGaps=computeRiemannGaps(), rHist=histogram(rGaps,bins,maxS);
+
+    var pad={l:130,r:60,t:90,b:90};
+    var pw=W-pad.l-pad.r, ph=H-pad.t-pad.b;
+    var maxY=Math.max.apply(null,hist.concat(showRiemann?rHist:[]).concat([1.5]))*1.18;
+    function sx(s){return pad.l+s/maxS*pw;}
+    function sy(y){return pad.t+ph*(1-y/maxY);}
+
+    // X ticks
+    var xTicks=[];for(var xi=0;xi<=maxS;xi+=0.5)xTicks.push(xi);
+    var yTicks=[];for(var yi=0;yi<=5;yi++)yTicks.push(parseFloat((yi*maxY/5).toFixed(2)));
+    drawAxes(ctx,pad,W,H,
+      'Normalised spacing  s = gap / \u27e8gap\u27e9',
+      'Probability density  P(s)',
+      'N='+N+'  \u00b7  '+gaptype+'  \u00b7  n='+gaps.length+' gaps  \u00b7  bins='+bins,
+      xTicks,yTicks,maxS,maxY);
+
+    // Farey histogram
+    var bw=maxS/bins;
+    hist.forEach(function(hv,i){
+      var x0=sx(i*bw),x1=sx((i+1)*bw),y0=sy(0),y1=sy(hv);
+      ctx.fillStyle='rgba(52,211,153,0.22)';ctx.fillRect(x0+1,y1,x1-x0-2,y0-y1);
+      ctx.strokeStyle='rgba(52,211,153,0.75)';ctx.lineWidth=2;ctx.strokeRect(x0+1,y1,x1-x0-2,y0-y1);
+    });
+
+    // Riemann histogram
+    if(showRiemann){
+      rHist.forEach(function(hv,i){
+        var x0=sx(i*bw),x1=sx((i+1)*bw),y0=sy(0),y1=sy(hv);
+        ctx.fillStyle='rgba(250,204,21,0.13)';ctx.fillRect(x0+2,y1,x1-x0-4,y0-y1);
+        ctx.strokeStyle='rgba(250,204,21,0.55)';ctx.lineWidth=1.5;ctx.setLineDash([6,4]);
+        ctx.strokeRect(x0+2,y1,x1-x0-4,y0-y1);ctx.setLineDash([]);
+      });
+    }
+
+    // Curves
+    if(showGUE)     drawCurveOnCanvas(ctx,wigner_gue,'#a855f7',4,null,pad,W,H,maxS,maxY);
+    if(showGOE)     drawCurveOnCanvas(ctx,wigner_goe,'#f97316',3,[12,6],pad,W,H,maxS,maxY);
+    if(showPoisson) drawCurveOnCanvas(ctx,poisson,   '#4a90d9',3,[6,6],pad,W,H,maxS,maxY);
+
+    // Magic number verticals
+    if(showMagic){
+      var mGaps=computeMagicGaps();
+      mGaps.forEach(function(s){
+        if(s>maxS)return;
+        ctx.strokeStyle='rgba(248,113,113,0.7)';ctx.lineWidth=2;ctx.setLineDash([8,5]);
+        ctx.beginPath();ctx.moveTo(sx(s),pad.t);ctx.lineTo(sx(s),pad.t+ph);ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.fillStyle='rgba(248,113,113,0.8)';ctx.font='20px Cinzel,serif';ctx.textAlign='center';
+        ctx.fillText(s.toFixed(2),sx(s),pad.t-6);
+      });
+    }
+
+    // Legend
+    var lx=pad.l+pw*0.60, ly=pad.t+12, ls=38;
+    var items=[
+      {col:'rgba(52,211,153,0.75)',lbl:'Farey gaps (N='+N+')',fill:true},
+      showRiemann&&{col:'rgba(250,204,21,0.75)',lbl:'\u03b6(\u00bd+it) zeros (n='+rGaps.length+')',fill:true,dash:true},
+      showGUE&&{col:'#a855f7',lbl:'GUE  P(s)=32s\u00b2/\u03c0\u00b2\u00b7e^(\u22124s\u00b2/\u03c0)',fill:false},
+      showGOE&&{col:'#f97316',lbl:'GOE  P(s)=\u03c0s/2\u00b7e^(\u2212\u03c0s\u00b2/4)',fill:false,dash:true},
+      showPoisson&&{col:'#4a90d9',lbl:'Poisson  P(s)=e^(\u2212s)',fill:false,dash:true},
+      showMagic&&{col:'rgba(248,113,113,0.8)',lbl:'Nuclear magic number spacings',fill:false,dash:[8,5]},
+    ].filter(Boolean);
+    items.forEach(function(it,i){
+      var y=ly+i*ls;
+      ctx.fillStyle=it.col;
+      if(it.fill){ctx.fillRect(lx,y,28,22);}
+      else{
+        ctx.strokeStyle=it.col;ctx.lineWidth=3;
+        if(it.dash)ctx.setLineDash(it.dash);
+        ctx.beginPath();ctx.moveTo(lx,y+11);ctx.lineTo(lx+28,y+11);ctx.stroke();ctx.setLineDash([]);
+      }
+      ctx.fillStyle='rgba(232,217,176,0.85)';ctx.font='22px Cinzel,serif';ctx.textAlign='left';
+      ctx.fillText(it.lbl,lx+36,y+16);
+    });
+
+    // Watermark
+    ctx.fillStyle='rgba(196,155,56,0.18)';ctx.font='bold 28px Cinzel Decorative,serif';
+    ctx.textAlign='right';ctx.fillText('wessengetachew.github.io  \u00b7  Spectral Correlation',W-pad.r,H-18);
+
+    // KS stats
+    var ks_gue=kolmogorovSmirnov(gaps,gue_cdf);
+    var ks_goe=kolmogorovSmirnov(gaps,goe_cdf);
+    var ks_poi=kolmogorovSmirnov(gaps,poisson_cdf);
+    var vr=variance(gaps), sk=skewness(gaps), ku=kurtosis(gaps);
+    var mean_s=gaps.reduce(function(a,b){return a+b;},0)/gaps.length;
+    var best='GUE',bestKS=ks_gue;
+    if(ks_goe<bestKS){best='GOE';bestKS=ks_goe;}
+    if(ks_poi<bestKS){best='Poisson';bestKS=ks_poi;}
+
+    // KS overlay on canvas
+    ctx.font='26px Cinzel,serif';ctx.textAlign='left';
+    ctx.fillStyle='rgba(52,211,153,0.7)';
+    ctx.fillText('KS: GUE='+ks_gue.toFixed(4)+'  GOE='+ks_goe.toFixed(4)+'  Poisson='+ks_poi.toFixed(4),pad.l,pad.t+ph+72);
+    ctx.fillStyle='rgba(250,204,21,0.9)';ctx.font='bold 28px Cinzel,serif';
+    ctx.fillText('Best fit: '+best+'  (KS='+bestKS.toFixed(4)+')',pad.l,pad.t+ph+72+36);
+
+    var statsEl=document.getElementById('gue-stats');
+    if(statsEl){
+      statsEl.innerHTML=
+        '<span style="color:#34d399;">n='+gaps.length+' gaps</span>  ·  '+
+        '<span style="color:var(--gold);">\u27e8s\u27e9='+mean_s.toFixed(6)+'</span>  ·  '+
+        '<span style="color:var(--gold);">Var='+vr.toFixed(6)+'</span>  ·  '+
+        '<span style="color:var(--gold);">Skew='+sk.toFixed(4)+'</span>  ·  '+
+        '<span style="color:var(--gold);">Excess Kurt='+ku.toFixed(4)+'</span>'+
+        '<br>KS:  <span style="color:#a855f7;">GUE='+ks_gue.toFixed(5)+'</span>  '+
+        '<span style="color:#f97316;">GOE='+ks_goe.toFixed(5)+'</span>  '+
+        '<span style="color:#4a90d9;">Poisson='+ks_poi.toFixed(5)+'</span>'+
+        '<br><span style="color:#facc15;">&#9654; Best fit: <b>'+best+'</b>  KS='+bestKS.toFixed(5)+'</span>'+
+        (showRiemann?'  ·  <span style="color:#facc15;">\u03b6 zeros: Var='+variance(rGaps).toFixed(4)+'  Skew='+skewness(rGaps).toFixed(4)+'</span>':'');
+    }
+    var interpEl=document.getElementById('gue-interp');
+    if(interpEl){
+      var gueLevel=ks_gue<0.08?'very strong':ks_gue<0.15?'moderate':ks_gue<0.25?'weak':'absent';
+      interpEl.innerHTML=
+        '<b style="color:#34d399;">Reading the result:</b>  '+
+        'KS=0 means perfect match; KS&lt;0.08 is statistically significant. '+
+        'GUE agreement is <b style="color:#facc15;">'+gueLevel+'</b> (KS='+ks_gue.toFixed(4)+').  '+
+        'Best fit overall: <b style="color:#facc15;">'+best+'</b>.<br>'+
+        (best==='GUE'?
+          '<b style="color:#a855f7;">GUE</b> — time-reversal symmetry broken. Found in: chaotic nuclei, Riemann zeros, '+
+          'quantum chaos. Coprime residues at primorial N matching GUE would triangulate '+
+          'arithmetic structure with quantum spectral universality.':
+        best==='GOE'?
+          '<b style="color:#f97316;">GOE</b> — time-reversal symmetric real Hamiltonian. Found in: neutron resonances, '+
+          'GOE Wigner surmise P(s)=\u03c0s/2\u00b7e^(\u2212\u03c0s\u00b2/4). '+
+          'Suggests the residue operator is self-adjoint with real spectrum.':
+          '<b style="color:#4a90d9;">Poisson</b> — uncorrelated levels; no level repulsion. '+
+          'Integrable systems, independent random events. Residues at this N '+
+          'behave as independent samples, not an interacting spectrum.')+
+        '<br><span style="color:rgba(248,113,113,0.8);">Red verticals: nuclear magic number gap spacings (normalised). '+
+        'Alignment with histogram peaks indicates arithmetic-nuclear spectral resonance.</span>';
+    }
+    window._gueLastGaps=gaps; window._gueLastRGaps=rGaps; window._gueLastN=N;
+  }
+
+  // ── DETAIL TAB system ─────────────────────────────────────────────────
+  var _currentTab='cumulative';
+  window.gueSetTab=function(tab){
+    _currentTab=tab;
+    ['cumulative','number','ratio','rawgaps','compare'].forEach(function(t){
+      var b=document.getElementById('gue-tab-'+t);
+      if(b){b.style.background=t===tab?'#34d399':'var(--parchment-dark)';b.style.color=t===tab?'#020100':'#34d399';}
+    });
+    gueDrawDetail();
+  };
+
+  window.gueDrawDetail=function(){
+    var C=document.getElementById('gue-detail-canvas');if(!C)return;
+    var W=C.width,H=C.height;
+    var ctx=C.getContext('2d');
+    ctx.fillStyle='#020100';ctx.fillRect(0,0,W,H);
+    var p=_getParams(), N=p.N, gaptype=p.gaptype;
+    var result=computeGaps(N,gaptype), gaps=result.gaps;
+    var txtEl=document.getElementById('gue-detail-text');
+    if(gaps.length<3){if(txtEl)txtEl.textContent='Not enough data.';return;}
+
+    var pad={l:130,r:60,t:80,b:80};
+    var pw=W-pad.l-pad.r, ph=H-pad.t-pad.b;
+
+    if(_currentTab==='cumulative'){
+      // Empirical CDF vs theoretical CDFs
+      var sorted=gaps.slice().sort(function(a,b){return a-b;}), n=sorted.length;
+      var maxS=Math.max(sorted[sorted.length-1]*1.05,3);
+      drawAxes(ctx,pad,W,H,'s','F(s)','Cumulative Distribution  F(s)',
+        [0,0.5,1,1.5,2,2.5,3,3.5,4].filter(function(x){return x<=maxS;}),
+        [0,0.2,0.4,0.6,0.8,1.0],maxS,1);
+      // Empirical
+      ctx.beginPath();ctx.strokeStyle='rgba(52,211,153,0.9)';ctx.lineWidth=3;
+      sorted.forEach(function(x,i){
+        var px=pad.l+x/maxS*pw, py=pad.t+ph*(1-(i+1)/n);
+        i===0?ctx.moveTo(px,py):ctx.lineTo(px,py);
+      });ctx.stroke();
+      // Riemann CDF
+      var rS=computeRiemannGaps().slice().sort(function(a,b){return a-b;}), rn=rS.length;
+      ctx.beginPath();ctx.strokeStyle='rgba(250,204,21,0.7)';ctx.lineWidth=2;ctx.setLineDash([8,5]);
+      rS.forEach(function(x,i){var px=pad.l+x/maxS*pw,py=pad.t+ph*(1-(i+1)/rn);i===0?ctx.moveTo(px,py):ctx.lineTo(px,py);});
+      ctx.stroke();ctx.setLineDash([]);
+      // Theoretical CDFs
+      drawCurveOnCanvas(ctx,gue_cdf,'#a855f7',3,null,pad,W,H,maxS,1);
+      drawCurveOnCanvas(ctx,goe_cdf,'#f97316',2,[10,6],pad,W,H,maxS,1);
+      drawCurveOnCanvas(ctx,poisson_cdf,'#4a90d9',2,[5,5],pad,W,H,maxS,1);
+      var ks_gue=kolmogorovSmirnov(gaps,gue_cdf);
+      var ks_goe=kolmogorovSmirnov(gaps,goe_cdf);
+      var ks_poi=kolmogorovSmirnov(gaps,poisson_cdf);
+      if(txtEl)txtEl.textContent=
+        'Cumulative Distribution Function (CDF)\n'+
+        'Empirical CDF (green) vs GUE (purple), GOE (orange), Poisson (blue), \u03b6 zeros (yellow)\n'+
+        'KS distances: GUE='+ks_gue.toFixed(6)+'  GOE='+ks_goe.toFixed(6)+'  Poisson='+ks_poi.toFixed(6)+'\n'+
+        'n='+gaps.length+' gaps  N='+N+'  type='+gaptype;
+
+    } else if(_currentTab==='number'){
+      var Lmax=Math.min(10,gaps.length/3);
+      var nv=numberVariance(gaps,Lmax);
+      var maxSig=Math.max.apply(null,nv.map(function(x){return x.sig2;}))*1.2;
+      drawAxes(ctx,pad,W,H,'L (window length)','\u03a3\u00b2(L)','Number Variance  \u03a3\u00b2(L)',
+        [1,2,3,4,5,6,7,8,9,10].filter(function(x){return x<=Lmax;}),
+        [0,0.5,1,1.5,2,2.5,3].filter(function(y){return y<=maxSig;}),Lmax,maxSig);
+      // Empirical
+      ctx.beginPath();ctx.strokeStyle='rgba(52,211,153,0.9)';ctx.lineWidth=4;
+      nv.forEach(function(pt,i){
+        var px=pad.l+pt.L/Lmax*pw, py=pad.t+ph*(1-pt.sig2/maxSig);
+        i===0?ctx.moveTo(px,py):ctx.lineTo(px,py);
+      });ctx.stroke();
+      // GUE: Sigma2 ~ (2/pi^2)(ln(2*pi*L)+gamma+1-pi^2/8)
+      var gamma=0.5772;
+      drawCurveOnCanvas(ctx,function(L){return L>0.01?(2/(Math.PI*Math.PI))*(Math.log(2*Math.PI*L)+gamma+1):-0;},
+        '#a855f7',3,null,pad,W,H,Lmax,maxSig);
+      // Poisson: Sigma2=L
+      drawCurveOnCanvas(ctx,function(L){return L;},'#4a90d9',2,[8,6],pad,W,H,Lmax,maxSig);
+      if(txtEl)txtEl.textContent=
+        'Number Variance \u03a3\u00b2(L): mean squared fluctuation in number of levels in window L\n'+
+        'GUE prediction (purple): \u03a3\u00b2 \u223c (2/\u03c0\u00b2)(ln(2\u03c0L)+\u03b3+1) — logarithmic growth (rigid spectrum)\n'+
+        'Poisson (blue): \u03a3\u00b2=L — linear growth (uncorrelated)\n'+
+        'Green=empirical Farey gaps. If green follows purple: GUE rigidity confirmed.\n'+
+        'n='+gaps.length+'  N='+N+'  Lmax='+Lmax.toFixed(1);
+
+    } else if(_currentTab==='ratio'){
+      var ratios=gapRatios(gaps), rRatios=gapRatios(computeRiemannGaps());
+      var rBins=30, rHist2=histogram(ratios,rBins,1);
+      var rrHist=histogram(rRatios,rBins,1);
+      var maxY2=Math.max.apply(null,rHist2.concat(rrHist))*1.2;
+      drawAxes(ctx,pad,W,H,'r_n = min(s_n,s_{n+1})/max(s_n,s_{n+1})','P(r)','Gap Ratio Distribution  r_n',
+        [0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0],[0,0.5,1,1.5,2,2.5].filter(function(y){return y<=maxY2;}),1,maxY2);
+      var bw2=1/rBins;
+      rHist2.forEach(function(hv,i){
+        var x0=pad.l+i*bw2*pw,x1=pad.l+(i+1)*bw2*pw,y0=pad.t+ph,y1=pad.t+ph*(1-hv/maxY2);
+        ctx.fillStyle='rgba(52,211,153,0.2)';ctx.fillRect(x0+1,y1,x1-x0-2,y0-y1);
+        ctx.strokeStyle='rgba(52,211,153,0.7)';ctx.lineWidth=2;ctx.strokeRect(x0+1,y1,x1-x0-2,y0-y1);
+      });
+      rrHist.forEach(function(hv,i){
+        var x0=pad.l+i*bw2*pw,x1=pad.l+(i+1)*bw2*pw,y0=pad.t+ph,y1=pad.t+ph*(1-hv/maxY2);
+        ctx.fillStyle='rgba(250,204,21,0.1)';ctx.fillRect(x0+2,y1,x1-x0-4,y0-y1);
+        ctx.strokeStyle='rgba(250,204,21,0.5)';ctx.lineWidth=1.5;ctx.setLineDash([5,4]);
+        ctx.strokeRect(x0+2,y1,x1-x0-4,y0-y1);ctx.setLineDash([]);
+      });
+      // GUE ratio distribution: P(r)=27/4*(r+r^2)/(1+r+r^2)^{5/2}
+      drawCurveOnCanvas(ctx,function(r){return r>0?(27/4)*(r+r*r)/Math.pow(1+r+r*r,2.5):0;},'#a855f7',3,null,pad,W,H,1,maxY2);
+      // Poisson: P(r)=2/(1+r)^2
+      drawCurveOnCanvas(ctx,function(r){return 2/Math.pow(1+r,2);},'#4a90d9',2,[8,5],pad,W,H,1,maxY2);
+      var meanR=ratios.reduce(function(a,b){return a+b;},0)/ratios.length;
+      if(txtEl)txtEl.textContent=
+        'Gap Ratio r_n = min(s_n,s_{n+1})/max(s_n,s_{n+1}) \u2208 [0,1]\n'+
+        'Avoids unfolding bias. GUE predicts \u27e8r\u27e9\u22480.5996, Poisson \u27e8r\u27e9\u22480.3863\n'+
+        'Empirical \u27e8r\u27e9='+meanR.toFixed(6)+'  (n='+ratios.length+' ratios)\n'+
+        'Green=Farey  Yellow=\u03b6 zeros  Purple=GUE  Blue=Poisson\n'+
+        'GUE ratio curve: P(r)=27/4\u00b7(r+r\u00b2)/(1+r+r\u00b2)^{5/2}';
+
+    } else if(_currentTab==='rawgaps'){
+      var raw=result.raw, pts=result.pts;
+      var maxRaw=Math.max.apply(null,raw)*1.05;
+      var n2=Math.min(raw.length,200);
+      drawAxes(ctx,pad,W,H,'Gap index k','Gap size \u0394_k','Raw Gap Sequence  \u0394_k (not normalised)',
+        [0,25,50,75,100,125,150,175,200].filter(function(x){return x<=n2;}),
+        [0,Math.round(maxRaw*0.25),Math.round(maxRaw*0.5),Math.round(maxRaw*0.75),Math.round(maxRaw)],n2,maxRaw);
+      ctx.beginPath();ctx.strokeStyle='rgba(52,211,153,0.7)';ctx.lineWidth=2;
+      raw.slice(0,n2).forEach(function(g,i){
+        var px=pad.l+i/n2*pw, py=pad.t+ph*(1-g/maxRaw);
+        i===0?ctx.moveTo(px,py):ctx.lineTo(px,py);
+      });ctx.stroke();
+      raw.slice(0,n2).forEach(function(g,i){
+        var px=pad.l+i/n2*pw, py=pad.t+ph*(1-g/maxRaw);
+        ctx.beginPath();ctx.arc(px,py,6,0,2*Math.PI);ctx.fillStyle='rgba(52,211,153,0.8)';ctx.fill();
+      });
+      // Mean line
+      ctx.strokeStyle='rgba(196,155,56,0.5)';ctx.lineWidth=2;ctx.setLineDash([10,8]);
+      var meanRaw=raw.reduce(function(a,b){return a+b;},0)/raw.length;
+      var mpy=pad.t+ph*(1-meanRaw/maxRaw);
+      ctx.beginPath();ctx.moveTo(pad.l,mpy);ctx.lineTo(pad.l+pw,mpy);ctx.stroke();ctx.setLineDash([]);
+      ctx.fillStyle='rgba(196,155,56,0.6)';ctx.font='22px Cinzel,serif';ctx.textAlign='left';
+      ctx.fillText('\u27e8\u0394\u27e9='+meanRaw.toFixed(4),pad.l+8,mpy-10);
+      if(txtEl)txtEl.textContent=
+        'Raw gap sequence (first '+n2+' of '+raw.length+')\n'+
+        'N='+N+'  type='+gaptype+'  n_pts='+pts.length+'\n'+
+        'Residue positions: '+pts.slice(0,40).join(', ')+(pts.length>40?'\u2026':'')+'\n'+
+        'Gaps: '+raw.slice(0,40).join(', ')+(raw.length>40?'\u2026':'')+'\n'+
+        'Mean gap = '+meanRaw.toFixed(6)+'  Max = '+Math.max.apply(null,raw)+'  Min = '+Math.min.apply(null,raw)+'\n'+
+        'Unique gap values: '+[...new Set(raw)].sort(function(a,b){return a-b;}).join(', ');
+
+    } else if(_currentTab==='compare'){
+      // Multi-N comparison: KS vs GUE for several N
+      var Ns=[6,30,210,2310,12,24,60,120,360];
+      var results=Ns.map(function(n){
+        var r=computeGaps(n,'coprime');
+        if(r.gaps.length<4)return null;
+        return{N:n,ks_gue:kolmogorovSmirnov(r.gaps,gue_cdf),n:r.gaps.length,var:variance(r.gaps)};
+      }).filter(Boolean);
+      var maxKS=Math.max.apply(null,results.map(function(r){return r.ks_gue;}))*1.2;
+      drawAxes(ctx,pad,W,H,'Modulus N (index)','KS distance to GUE','Multi-N GUE Comparison (coprime gaps)',
+        results.map(function(r,i){return i;}),
+        [0,0.1,0.2,0.3,0.4,0.5].filter(function(y){return y<=maxKS;}),results.length-1,maxKS);
+      results.forEach(function(r,i){
+        var px=pad.l+i/(results.length-1)*pw, py=pad.t+ph*(1-r.ks_gue/maxKS);
+        ctx.beginPath();ctx.arc(px,py,14,0,2*Math.PI);
+        ctx.fillStyle=r.ks_gue<0.1?'#34d399':r.ks_gue<0.2?'#facc15':'#f97316';ctx.fill();
+        ctx.fillStyle='rgba(232,217,176,0.9)';ctx.font='bold 22px Cinzel,serif';ctx.textAlign='center';
+        ctx.fillText('N='+r.N,px,py-22);
+        ctx.fillText(r.ks_gue.toFixed(3),px,py+38);
+      });
+      ctx.beginPath();ctx.strokeStyle='rgba(52,211,153,0.5)';ctx.lineWidth=2;
+      results.forEach(function(r,i){var px=pad.l+i/(results.length-1)*pw,py=pad.t+ph*(1-r.ks_gue/maxKS);i===0?ctx.moveTo(px,py):ctx.lineTo(px,py);});
+      ctx.stroke();
+      // KS=0.08 significance line
+      ctx.strokeStyle='rgba(248,113,113,0.6)';ctx.lineWidth=2;ctx.setLineDash([10,6]);
+      var sigY=pad.t+ph*(1-0.08/maxKS);
+      ctx.beginPath();ctx.moveTo(pad.l,sigY);ctx.lineTo(pad.l+pw,sigY);ctx.stroke();ctx.setLineDash([]);
+      ctx.fillStyle='rgba(248,113,113,0.7)';ctx.font='22px Cinzel,serif';ctx.textAlign='left';
+      ctx.fillText('KS=0.08 significance threshold',pad.l+8,sigY-8);
+      if(txtEl)txtEl.textContent=
+        'KS distance to GUE for coprime gaps at multiple N\n'+
+        'Green = strong GUE agreement (KS<0.10)\n'+
+        results.map(function(r){return 'N='+r.N+'  n='+r.n+'  KS_GUE='+r.ks_gue.toFixed(5)+'  Var='+r.var.toFixed(5);}).join('\n');
+    }
+  };
+
+  // ── EXPORT ────────────────────────────────────────────────────────────
+  // A4 at 300 DPI = 2480 × 3508 px; landscape = 3508 × 2480
+  // We render at canvas native size (2480×1300) which is ~A4 landscape width
+  window.gueExport=function(fmt){if(fmt==='svg')_gueExportSVG();};
+  window.gueExportDOM=function(which){
+    if(typeof html2canvas==='undefined'){alert('html2canvas not loaded.');return;}
+    var p=_getParams(), el, fname;
+    if(which==='detail'){
+      // The innermost expanded dropdown body (last child of gue-section > div)
+      var sec=document.getElementById('gue-section');
+      var innerDropdown=sec?sec.querySelector('[style*="border-radius:4px"]:last-child div:nth-child(2)'):null;
+      el=innerDropdown||document.getElementById('gue-detail-canvas');
+      fname='spectral_detail_'+_currentTab+'_N'+p.N+'_'+p.gaptype+'.png';
+    } else {
+      el=document.getElementById('gue-section');
+      fname='spectral_correlation_N'+p.N+'_'+p.gaptype+'.png';
+    }
+    if(!el){alert('Element not found.');return;}
+    html2canvas(el,{backgroundColor:'#020100',scale:3,useCORS:true,logging:false}).then(function(canvas){
+      var a=document.createElement('a');a.download=fname;a.href=canvas.toDataURL('image/png');a.click();
+    });
+  };
+  window.gueExportDetail=function(){window.gueExportDOM('detail');};
+
+
+  function _gueExportSVG(){
+    // Build minimal SVG with key info as text (no canvas-to-SVG, just data summary)
+    var p=_getParams(), gaps=computeGaps(p.N,p.gaptype).gaps;
+    if(gaps.length<3)return;
+    var ks_gue=kolmogorovSmirnov(gaps,gue_cdf);
+    var ks_goe=kolmogorovSmirnov(gaps,goe_cdf);
+    var ks_poi=kolmogorovSmirnov(gaps,poisson_cdf);
+    var best='GUE',bestKS=ks_gue;
+    if(ks_goe<bestKS){best='GOE';bestKS=ks_goe;}
+    if(ks_poi<bestKS){best='Poisson';bestKS=ks_poi;}
+    var svg='<?xml version="1.0"?>\n<svg xmlns="http://www.w3.org/2000/svg" width="2480" height="1300">\n'+
+      '<rect width="2480" height="1300" fill="#020100"/>\n'+
+      '<text x="1240" y="60" font-family="serif" font-size="40" fill="#34d399" text-anchor="middle">'+
+      'Spectral Correlation: Farey Gaps vs GUE/GOE/Poisson</text>\n'+
+      '<text x="1240" y="110" font-family="serif" font-size="28" fill="#c49b38" text-anchor="middle">'+
+      'N='+p.N+'  type='+p.gaptype+'  n='+gaps.length+' gaps</text>\n'+
+      '<text x="1240" y="160" font-family="serif" font-size="28" fill="#facc15" text-anchor="middle">'+
+      'Best fit: '+best+'  KS='+bestKS.toFixed(5)+'</text>\n'+
+      '<text x="1240" y="210" font-family="serif" font-size="24" fill="#a855f7" text-anchor="middle">'+
+      'KS_GUE='+ks_gue.toFixed(5)+'  KS_GOE='+ks_goe.toFixed(5)+'  KS_Poisson='+ks_poi.toFixed(5)+'</text>\n'+
+      '<text x="1240" y="1260" font-family="serif" font-size="22" fill="#c49b38" text-anchor="middle">wessengetachew.github.io</text>\n'+
+      '</svg>';
+    var blob=new Blob([svg],{type:'image/svg+xml'});
+    var a=document.createElement('a');
+    a.download='spectral_N'+p.N+'_'+p.gaptype+'.svg';
+    a.href=URL.createObjectURL(blob);a.click();
+  }
+
+  // ── toggle & init ─────────────────────────────────────────────────────
+  window.gueDraw=draw;
+  window.gueToggle=function(){
+    var body=document.getElementById('gue-body'),icon=document.getElementById('gue-icon');
+    if(!body)return;
+    var open=body.style.display==='none';
+    body.style.display=open?'block':'none';
+    if(icon)icon.textContent=open?'\u25b2':'\u25bc';
+    if(open){draw();}
+  };
+
+  document.addEventListener('DOMContentLoaded',function(){
+    var mainMod=document.getElementById('f-mod-num');
+    if(mainMod){mainMod.addEventListener('input',function(){
+      var body=document.getElementById('gue-body');
+      if(body&&body.style.display!=='none'&&sv('gue-N')==='custom'){
+        document.getElementById('gue-custom-N').value=this.value;draw();
+      }
+    });}
+  });
+
+})();
+</script>
+
+</div><!-- /page-root -->
+
+<!-- ══ WELCOME POPUP ══ -->
+<div id="welcome-overlay" style="position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:9999;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);">
+  <div id="welcome-box" style="background:#0a0800;border:1px solid rgba(196,155,56,0.5);border-radius:8px;padding:36px 40px;max-width:540px;width:90%;font-family:'Cinzel',serif;position:relative;box-shadow:0 0 60px rgba(196,155,56,0.15);">
+
+    <!-- Gold top bar -->
+    <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,#c49b38,transparent);border-radius:8px 8px 0 0;"></div>
+
+    <!-- Header -->
+    <div style="text-align:center;margin-bottom:24px;">
+      <div style="font-size:0.52rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(196,155,56,0.6);margin-bottom:8px;">Rational Unit Circle Structure</div>
+      <div style="font-size:1.1rem;letter-spacing:0.1em;color:#e8d9b0;line-height:1.4;">Choose your number</div>
+      <div style="font-size:0.46rem;color:#9a8060;margin-top:6px;letter-spacing:0.08em;">The geometry of modular fractions r/m will open at your chosen modulus</div>
+    </div>
+
+    <!-- Input -->
+    <div style="display:flex;flex-direction:column;align-items:center;gap:10px;margin-bottom:16px;">
+      <input id="wc-input" type="number" min="1" max="1024" placeholder="1 – 1024"
+        style="width:160px;font-family:'Cinzel Decorative',serif;font-size:1.6rem;text-align:center;background:#020100;color:#c49b38;border:2px solid rgba(196,155,56,0.4);border-radius:4px;padding:10px;outline:none;letter-spacing:0.06em;"
+        oninput="if(window.wcPreview)wcPreview();if(window.wcUpdateGapHint)wcUpdateGapHint();" onkeydown="if(event.key==='Enter'&&window.wcLaunch)wcLaunch()">
+      <div id="wc-preview" style="min-height:80px;width:100%;text-align:center;font-size:0.48rem;line-height:2;color:#9a8060;background:rgba(196,155,56,0.04);border:1px solid rgba(196,155,56,0.12);border-radius:4px;padding:8px 14px;"></div>
+    </div>
+
+    <!-- Gap question -->
+    <div style="margin-bottom:16px;background:rgba(74,144,217,0.05);border:1px solid rgba(74,144,217,0.2);border-radius:4px;padding:10px 14px;">
+      <div style="font-size:0.46rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(74,144,217,0.7);margin-bottom:8px;">Prime gap overlay <span style="color:rgba(154,128,96,0.5);font-weight:400;text-transform:none;letter-spacing:0;">(optional — 1 to 2N)</span></div>
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <label style="display:flex;align-items:center;gap:5px;cursor:pointer;font-size:0.5rem;color:#9a8060;">
+          <input type="radio" name="wc-gap-choice" id="wc-gap-none" checked style="accent-color:#c49b38;" onchange="document.getElementById('wc-gap-row').style.display='none';">
+          <span>No gap</span>
+        </label>
+        <label style="display:flex;align-items:center;gap:5px;cursor:pointer;font-size:0.5rem;color:#4a90d9;">
+          <input type="radio" name="wc-gap-choice" id="wc-gap-yes" style="accent-color:#4a90d9;" onchange="document.getElementById('wc-gap-row').style.display='flex';if(window.wcUpdateGapHint)wcUpdateGapHint();">
+          <span>Show gap</span>
+        </label>
+        <div id="wc-gap-row" style="display:none;align-items:center;gap:6px;flex-wrap:wrap;">
+          <input id="wc-gap-val" type="number" min="1" value="2"
+            style="width:52px;background:#020100;color:#4a90d9;border:1px solid rgba(74,144,217,0.4);border-radius:3px;padding:3px 6px;font-family:'Cinzel',serif;font-size:0.62rem;text-align:center;"
+            oninput="if(window.wcUpdateGapHint)wcUpdateGapHint()">
+          <span id="wc-gap-hint" style="font-size:0.44rem;color:rgba(154,128,96,0.7);"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Timer + button -->
+    <div style="display:flex;align-items:center;gap:12px;justify-content:center;">
+      <button id="wc-btn" onclick="if(window.wcLaunch)wcLaunch()"
+        style="font-family:'Cinzel',serif;font-size:0.56rem;letter-spacing:0.12em;text-transform:uppercase;padding:9px 24px;background:linear-gradient(135deg,#3a2a00,#5a3e00);color:#c49b38;border:1px solid #c49b38;border-radius:3px;cursor:pointer;">
+        Enter the Structure
+      </button>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
+        <div id="wc-timer-ring" style="width:36px;height:36px;position:relative;cursor:pointer;" onclick="if(window.wcTogglePause)wcTogglePause()" title="Click to pause/resume">
+          <canvas id="wc-timer-canvas" width="36" height="36"></canvas>
+          <div id="wc-timer-num" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:0.65rem;color:#c49b38;font-family:'Cinzel',serif;">10</div>
+        </div>
+        <div id="wc-auto-lbl" style="font-size:0.38rem;color:rgba(154,128,96,0.6);letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;" onclick="if(window.wcTogglePause)wcTogglePause()">auto</div>
+      </div>
+    </div>
+
+    <!-- Skip -->
+    <div style="text-align:center;margin-top:16px;">
+      <span onclick="if(window.wcDismiss)wcDismiss()" style="font-size:0.42rem;color:rgba(154,128,96,0.5);cursor:pointer;letter-spacing:0.08em;text-decoration:underline;text-underline-offset:3px;">skip — use default (N=128)</span>
+    </div>
+  </div>
+</div>
+<!-- /WELCOME POPUP -->
+
+<script>
+// ══ WELCOME POPUP ════════════════════════════════════════════════════════════
+(function(){
+  var _timer=null, _remaining=10, _launched=false, _paused=false;
+
+  // ── number theory ─────────────────────────────────────────────────────────
+  function gcd(a,b){while(b){var t=b;b=a%b;a=t;}return a;}
+  function phi(n){var r=n,k=n;for(var p=2;p*p<=k;p++){if(k%p===0){r-=r/p;while(k%p===0)k/=p;}}if(k>1)r-=r/k;return Math.round(r);}
+  function isPrime(n){if(n<2)return false;if(n<4)return true;if(n%2===0||n%3===0)return false;for(var i=5;i*i<=n;i+=6)if(n%i===0||n%(i+2)===0)return false;return true;}
+  function primeFactors(n){var f={};for(var p=2;p*p<=n;p++){while(n%p===0){f[p]=(f[p]||0)+1;n/=p;}}if(n>1)f[n]=(f[n]||0)+1;return f;}
+  function isSquare(n){var s=Math.round(Math.sqrt(n));return s*s===n;}
+  function numDivisors(n){var d=1,k=n;for(var p=2;p*p<=k;p++){var e=0;while(k%p===0){e++;k/=p;}d*=(e+1);}if(k>1)d*=2;return d;}
+  function isPrimePower(n){var f=primeFactors(n);return Object.keys(f).length===1;}
+  function isPrimorial(n){var primes=[2,3,5,7,11,13,17,19,23],prod=1;for(var i=0;i<primes.length;i++){prod*=primes[i];if(prod===n)return primes.slice(0,i+1);}return null;}
+  function isHighlyComposite(n){return[1,2,4,6,12,24,36,48,60,120,180,240,360,720,840,1024].indexOf(n)>=0;}
+  function mobiusMu(n){var f=primeFactors(n);var keys=Object.keys(f);for(var i=0;i<keys.length;i++)if(f[keys[i]]>1)return 0;return keys.length%2===0?1:-1;}
+  function zetaFit(n){
+    if(n<4)return null;
+    var approx=2*Math.PI*n/Math.log(n);
+    var zeros=[14.13,21.02,25.01,30.42,32.94,37.59,40.92,43.33,48.01,49.77];
+    var best=null,bestD=Infinity;
+    zeros.forEach(function(z,i){var d=Math.abs(z-approx);if(d<bestD){bestD=d;best={z:z,idx:i+1,d:d};}});
+    return best&&bestD<8?best:null;
+  }
+  function phiRatio(n){return(phi(n)/n).toFixed(4);}
+  function mertensApprox(n){return(Math.log(Math.log(n))+0.5772).toFixed(4);}
+
+  // ── visual + label settings based on N ────────────────────────────────────
+  function settingsForN(n){
+    var ptsize,sameThick,crossThick,chordThick,lsize,labelLimit;
+    if(n<=10)       {ptsize=220;sameThick=200;crossThick=20;chordThick=12;lsize=14;labelLimit=n;}
+    else if(n<=20)  {ptsize=200;sameThick=180;crossThick=18;chordThick=11;lsize=12;labelLimit=n;}
+    else if(n<=30)  {ptsize=160;sameThick=160;crossThick=18;chordThick=10;lsize=11;labelLimit=n;}
+    else if(n<=60)  {ptsize=130;sameThick=130;crossThick=15;chordThick=8; lsize=9; labelLimit=n;}
+    else if(n<=100) {ptsize=100;sameThick=100;crossThick=12;chordThick=6; lsize=7; labelLimit=n;}
+    else if(n<=210) {ptsize=75; sameThick=75; crossThick=10;chordThick=4; lsize=6; labelLimit=50;}
+    else if(n<=360) {ptsize=50; sameThick=50; crossThick=7; chordThick=3; lsize=5; labelLimit=50;}
+    else if(n<=512) {ptsize=35; sameThick=35; crossThick=5; chordThick=2; lsize=5; labelLimit=50;}
+    else            {ptsize=20; sameThick=20; crossThick=3; chordThick=15;lsize=4; labelLimit=50;}
+    // Always open to rainbow-residue (color by residue value)
+    return{ptsize:ptsize,sameThick:sameThick,crossThick:crossThick,
+           chordThick:chordThick,colmode:'rainbow-residue',lsize:lsize,labelLimit:labelLimit};
+  }
+
+  // ── build preview text ────────────────────────────────────────────────────
+  window.wcPreview=function(){
+    var el=document.getElementById('wc-input');if(!el)return;
+    var n=parseInt(el.value);
+    var prev=document.getElementById('wc-preview');if(!prev)return;
+    if(!n||n<1||n>1024){
+      prev.innerHTML='<span style="color:rgba(154,128,96,0.5);">Enter a number between 1 and 1024</span>';return;
+    }
+    var f=primeFactors(n),fkeys=Object.keys(f);
+    var fstr=fkeys.map(function(p){return f[p]>1?p+'\u00b2':p;}).join('\u00b7')||'1';
+    var phiN=phi(n),mu=mobiusMu(n),nd=numDivisors(n);
+    var primorialArr=isPrimorial(n),zf=zetaFit(n),s=settingsForN(n);
+    var lines=[];
+    lines.push('<span style="color:#c49b38;font-size:0.56rem;letter-spacing:0.1em;">N = '+n+'</span>');
+    if(n===1)          lines.push('<span style="color:#34d399;">The unit \u2014 \u03c6(1)=1, the empty product.</span>');
+    else if(isPrime(n))lines.push('<span style="color:#34d399;">Prime \u2014 (Z/NZ)* cyclic, \u03c6(N)=N\u22121='+phiN+'. All non-zero residues coprime.</span>');
+    else if(isPrimePower(n))lines.push('<span style="color:#a855f7;">Prime power \u2014 (Z/'+n+'Z)* cyclic, \u03c6(N)='+phiN+'.</span>');
+    if(primorialArr)   lines.push('<span style="color:#facc15;">Primorial \u2014 '+primorialArr.join('\u00b7')+'='+n+'. Sieve closes here.</span>');
+    if(isHighlyComposite(n)&&!primorialArr) lines.push('<span style="color:#f97316;">Highly composite \u2014 d(N)='+nd+'.</span>');
+    if(isSquare(n))    lines.push('<span style="color:#4ecdc4;">Perfect square \u2014 '+Math.round(Math.sqrt(n))+'\u00b2.</span>');
+    lines.push('\u03c6(N)='+phiN+' &nbsp;\u00b7&nbsp; \u03c6/N='+phiRatio(n)+' &nbsp;\u00b7&nbsp; \u03bc='+( mu===1?'+1':mu===0?'0':'\u22121')+' &nbsp;\u00b7&nbsp; d='+nd+'&nbsp; &nbsp;'+fstr);
+    if(zf) lines.push('<span style="color:#a855f7;">\u03b6: 2\u03c0N/ln N\u2248'+(2*Math.PI*n/Math.log(n)).toFixed(2)+' \u2192 Im(\u03c1<sub>'+zf.idx+'</sub>)='+zf.z.toFixed(2)+' \u0394='+zf.d.toFixed(2)+'</span>');
+    var lblNote=n<=100?'labels: all r/m':'labels: first '+s.labelLimit+' fractions';
+    lines.push('<span style="color:rgba(154,128,96,0.7);">pts '+s.ptsize+'% \u00b7 ring thick '+(s.sameThick/100).toFixed(2)+' \u00b7 label size '+s.lsize+'px \u00b7 '+lblNote+' \u00b7 '+s.colmode+'</span>');
+    prev.innerHTML=lines.join('<br>');
+  };
+
+  // ── pause / resume ────────────────────────────────────────────────────────
+  window.wcTogglePause=function(){
+    if(_launched)return;
+    _paused=!_paused;
+    var lbl=document.getElementById('wc-auto-lbl');
+    var ring=document.getElementById('wc-timer-ring');
+    if(lbl)  lbl.textContent=_paused?'paused':'auto';
+    if(ring) ring.style.opacity=_paused?'0.45':'1';
+    _drawTimer(_remaining,_paused);
+  };
+
+  // ── gap hint updater ─────────────────────────────────────────────────────
+  window.wcUpdateGapHint=function(){
+    var nEl=document.getElementById('wc-input');
+    var gEl=document.getElementById('wc-gap-val');
+    var hint=document.getElementById('wc-gap-hint');
+    if(!gEl||!hint)return;
+    var n=parseInt(nEl&&nEl.value)||128;
+    var g=parseInt(gEl.value)||2;
+    var maxG=2*n;
+    // Clamp to valid range
+    if(g<1){g=1;gEl.value=1;}
+    if(g>maxG){g=maxG;gEl.value=maxG;}
+    gEl.max=maxG;
+    var valid=(g===1||g%2===0);
+    hint.style.color=valid?'rgba(78,205,196,0.8)':'rgba(249,115,22,0.8)';
+    hint.textContent=valid
+      ? 'lift: '+n+'×'+g+'ⁿ · stop at boundary on'
+      : 'gap must be 1 or even';
+  };
+
+  // ── launch ────────────────────────────────────────────────────────────────
+  window.wcLaunch=function(){
+    if(_launched)return;_launched=true;
+    clearInterval(_timer);
+    var el=document.getElementById('wc-input');
+    var n=el?Math.min(1024,Math.max(1,parseInt(el.value)||128)):128;
+    // Read gap choice
+    var gapYes=document.getElementById('wc-gap-yes');
+    var gapVal=parseInt((document.getElementById('wc-gap-val')||{}).value)||2;
+    var useGap=gapYes&&gapYes.checked;
+    _applyAndClose(n, useGap?gapVal:null);
+  };
+  window.wcDismiss=function(){
+    if(_launched)return;_launched=true;
+    clearInterval(_timer);
+    _applyAndClose(128, null);
+  };
+
+  function _applyAndClose(n, gap){
+    var overlay=document.getElementById('welcome-overlay');
+    if(overlay){
+      overlay.style.transition='opacity 0.4s';
+      overlay.style.opacity='0';
+      setTimeout(function(){overlay.style.display='none';},420);
+    }
+    setTimeout(function(){
+      var s=settingsForN(n);
+      function setV(id,v){var e=document.getElementById(id);if(e)e.value=v;}
+      function setTxt(id,v){var e=document.getElementById(id);if(e)e.textContent=v;}
+      function setChk(id,v){var e=document.getElementById(id);if(e)e.checked=v;}
+      // Point size
+      setV('f-ptsize',s.ptsize); setV('f-ptsize-num',s.ptsize);
+      // Ring thickness
+      setV('f-samemod-thick',s.sameThick); setTxt('f-samemod-thick-val',(s.sameThick/100).toFixed(2));
+      // Cross-mod thickness
+      setV('f-crossmod-thick',s.crossThick); setTxt('f-crossmod-thick-val',(s.crossThick/10).toFixed(1));
+      // Chord thickness
+      setV('f-chord-thick',s.chordThick); setV('f-chord-thick-num',(s.chordThick/10).toFixed(1));
+      // Colmode — always rainbow-residue
+      setV('f-pt-colmode','rainbow-residue');
+      if(window.fareyPtColModeChange)fareyPtColModeChange();
+      // Labels: fraction, all, size, limit
+      setV('f-label','fraction');
+      setV('f-label-scope','all');
+      setV('f-lsize',s.lsize); setTxt('f-lsize-val',s.lsize);
+      window._wcLabelLimit=s.labelLimit;
+      // Mod N
+      setV('f-mod',Math.min(512,n)); setV('f-mod-num',n);
+      var modSl=document.getElementById('f-mod');
+      if(modSl)modSl.max=Math.max(parseInt(modSl.max)||512,n);
+
+      // ── Gap overlay + lift ──────────────────────────────────────────────
+      if(gap!==null&&gap!==undefined&&gap>=1){
+        var validGap=(gap===1||gap%2===0);
+        if(validGap){
+          // Fill gap input and trigger overlay
+          var gapInputEl=document.getElementById('f-gap-input');
+          if(gapInputEl){gapInputEl.value=gap;}
+          // Activate gap: defer so fareyRedraw has run first
+          setTimeout(function(){
+            if(window.fareyGapInputApply)window.fareyGapInputApply();
+          },300);
+          // Stop-at-boundary ON (both copies)
+          setChk('f-path-stop-boundary',true);
+          setChk('f-path-stop-boundary-bar',true);
+          // Open lift panel and set base=n, mult=gap, nmax=auto
+          // Lift nmax: how many steps of n×gap^k fit within modN slider range
+          var liftNmax=0,liftVal=n;
+          while(liftVal<=Math.min(512,n*20)&&liftNmax<8){liftNmax++;liftVal*=gap;}
+          liftNmax=Math.max(1,liftNmax);
+          setV('f-lift-base',n);
+          setV('f-lift-mult',gap);
+          setV('f-lift-nmax',liftNmax);
+          // Open lift panel if toggle exists
+          setTimeout(function(){
+            // Open lift panel if not already on
+            if(window._liftModeActive&&!window._liftModeActive()){
+              if(window.fareyToggleLiftMode)window.fareyToggleLiftMode();
+            }
+            if(window.fareyLiftApply)window.fareyLiftApply();
+          },500);
+        }
+      }
+
+      if(window.fareyRedraw)fareyRedraw();
+    },450);
+  }
+
+  // ── countdown timer ───────────────────────────────────────────────────────
+  function _drawTimer(t,paused){
+    var c=document.getElementById('wc-timer-canvas');if(!c)return;
+    var ctx=c.getContext('2d'),W=36,H=36,cx=18,cy=18,r=15;
+    ctx.clearRect(0,0,W,H);
+    ctx.beginPath();ctx.arc(cx,cy,r,0,2*Math.PI);
+    ctx.strokeStyle='rgba(196,155,56,0.15)';ctx.lineWidth=3;ctx.stroke();
+    if(!paused){
+      var frac=t/10;
+      ctx.beginPath();ctx.arc(cx,cy,r,-Math.PI/2,-Math.PI/2+2*Math.PI*frac);
+      ctx.strokeStyle='#c49b38';ctx.lineWidth=3;ctx.stroke();
+    } else {
+      // Paused: show full ring in muted colour
+      ctx.beginPath();ctx.arc(cx,cy,r,0,2*Math.PI);
+      ctx.strokeStyle='rgba(196,155,56,0.35)';ctx.lineWidth=3;ctx.stroke();
+      // Draw two pause bars
+      ctx.fillStyle='rgba(196,155,56,0.5)';
+      ctx.fillRect(cx-5,cy-6,3,12);
+      ctx.fillRect(cx+2,cy-6,3,12);
+    }
+    var numEl=document.getElementById('wc-timer-num');
+    if(numEl)numEl.textContent=paused?'\u23F8':t;
+  }
+
+  // ── init ──────────────────────────────────────────────────────────────────
+  function _init(){
+    _drawTimer(10,false);
+    var inp=document.getElementById('wc-input');
+    if(inp){inp.value='';setTimeout(function(){if(window.wcPreview)wcPreview();},100);}
+    _timer=setInterval(function(){
+      if(_paused)return;
+      _remaining--;
+      _drawTimer(_remaining,false);
+      if(_remaining<=0){clearInterval(_timer);window.wcLaunch();}
+    },1000);
+    setTimeout(function(){var i=document.getElementById('wc-input');if(i)i.focus();},200);
+    // Pause on any keypress in the input to give the user time
+    var inp2=document.getElementById('wc-input');
+    if(inp2) inp2.addEventListener('focus',function(){
+      if(!_paused&&!_launched)window.wcTogglePause();
+    });
+  }
+
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',_init);
+  else _init();
+
+})();
+</script>
+
 </script>
 
 </body>
