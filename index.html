@@ -2886,7 +2886,7 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
                   <!-- Label mode -->
                   <div>
                     <div style="margin-bottom:5px;color:var(--gold);">LABEL MODE</div>
-                    <select id="f-label" onchange="fareyRedraw()" style="background:var(--parchment-deep);color:var(--ink);border:1px solid var(--border);padding:3px 6px;font-family:'Cinzel',serif;font-size:0.62rem;width:100%;margin-bottom:6px;">
+                    <select id="f-label" onchange="window._wcLabelLimit=99999;fareyRedraw()" style="background:var(--parchment-deep);color:var(--ink);border:1px solid var(--border);padding:3px 6px;font-family:'Cinzel',serif;font-size:0.62rem;width:100%;margin-bottom:6px;">
                       <option value="gcd">GCD</option>
                       <option value="none" selected>None</option>
                       <option value="fraction">r/m</option>
@@ -3452,28 +3452,44 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
               </div>
 
 <!-- ══ SACKS SPIRAL ══ -->
-<div id="sacks-section" style="display:none;margin-top:8px;background:var(--parchment-dark);border:1px solid var(--panel-border);border-radius:4px;">
-  <div onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'" style="display:flex;align-items:center;justify-content:space-between;padding:10px 16px;cursor:pointer;user-select:none;">
-    <span style="font-family:'Cinzel',serif;font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);">&#9697; Sacks Number Spiral</span>
-    <span style="font-family:'Cinzel',serif;font-size:0.58rem;color:#9a8060;">Archimedean spiral · integers at angle 2π√n, radius √n</span>
+<div id="sacks-section" style="display:block;margin-top:8px;background:var(--parchment-dark);border:1px solid var(--panel-border);border-radius:4px;">
+  <div onclick="var b=document.getElementById('sacks-body');var ic=document.getElementById('sacks-icon');if(b){var open=b.style.display!=='none';b.style.display=open?'none':'block';ic.textContent=open?'▼':'▲';if(!open&&window.sacksDrawSpiral&&!window._sacksDrewOnce){window._sacksDrewOnce=true;window.sacksDrawSpiral();}}" style="display:flex;align-items:center;justify-content:space-between;padding:7px 14px;cursor:pointer;user-select:none;">
+    <span style="font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);">&#9697; Sacks Number Spiral <span style="color:#9a8060;font-size:0.48rem;">— Archimedean spiral · integers at angle 2π√n, radius √n</span></span>
+    <span id="sacks-icon" style="color:var(--gold);font-size:0.7rem;">&#9660;</span>
   </div>
-  <div style="padding:0 16px 16px;">
-    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:8px;font-family:'Cinzel',serif;font-size:0.58rem;">
+  <div id="sacks-body" style="display:none;padding:0 16px 16px;">
+    <!-- Row 1: limit + dot size + rotation -->
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:6px;font-family:'Cinzel',serif;font-size:0.56rem;">
       <span style="color:#9a8060;">LIMIT</span>
-      <input id="sacks-limit" type="number" min="10" max="50000" value="2000" style="width:60px;background:var(--parchment-deep);color:var(--ink);border:1px solid var(--border);padding:2px 4px;font-family:'Cinzel',serif;font-size:0.58rem;text-align:center;">
-      <span style="color:rgba(160,120,48,0.4);">|</span>
-      <span style="color:#9a8060;">DOT SIZE</span>
-      <input id="sacks-dotsize" type="range" min="1" max="20" value="5" style="width:60px;accent-color:var(--gold);" oninput="document.getElementById('sacks-dotsize-val').textContent=(this.value/10).toFixed(1);if(window.sacksDrawSpiral)sacksDrawSpiral();">
+      <input id="sacks-limit" type="number" min="10" max="100000" value="2000" style="width:64px;background:var(--parchment-deep);color:var(--ink);border:1px solid var(--border);padding:2px 4px;font-family:'Cinzel',serif;font-size:0.56rem;text-align:center;" onchange="if(window.sacksDrawSpiral)sacksDrawSpiral()">
+      <span style="color:rgba(160,120,48,0.3);">|</span>
+      <span style="color:#9a8060;">DOT</span>
+      <input id="sacks-dotsize" type="range" min="1" max="40" value="5" style="width:60px;accent-color:var(--gold);" oninput="document.getElementById('sacks-dotsize-val').textContent=(this.value/10).toFixed(1);if(window.sacksDrawSpiral)sacksDrawSpiral();">
       <span id="sacks-dotsize-val" style="color:var(--gold);min-width:22px;">0.5</span>
-      <span style="color:rgba(160,120,48,0.4);">|</span>
-      <label style="display:flex;align-items:center;gap:4px;cursor:pointer;color:#9a8060;"><input type="checkbox" id="sacks-primes-only" style="accent-color:var(--gold);"> Primes only</label>
-      <label style="display:flex;align-items:center;gap:4px;cursor:pointer;color:#9a8060;"><input type="checkbox" id="sacks-show-primes" checked style="accent-color:#34d399;"> Highlight primes</label>
-      <label style="display:flex;align-items:center;gap:4px;cursor:pointer;color:#9a8060;"><input type="checkbox" id="sacks-color-divisors" style="accent-color:#f97316;"> Color by d(n)</label>
-      <span style="color:rgba(160,120,48,0.4);">|</span>
+      <span style="color:rgba(160,120,48,0.3);">|</span>
+      <span style="color:#9a8060;">ROTATE</span>
+      <input id="sacks-rotate" type="range" min="0" max="360" value="0" style="width:70px;accent-color:#4ecdc4;" oninput="document.getElementById('sacks-rotate-val').textContent=this.value+'°';if(window.sacksDrawSpiral)sacksDrawSpiral();">
+      <span id="sacks-rotate-val" style="color:#4ecdc4;min-width:28px;">0°</span>
+      <button onclick="document.getElementById('sacks-rotate').value=0;document.getElementById('sacks-rotate-val').textContent='0°';if(window.sacksDrawSpiral)sacksDrawSpiral();" style="font-family:'Cinzel',serif;font-size:0.46rem;padding:1px 5px;border:1px solid rgba(78,205,196,0.4);background:var(--parchment-dark);color:#4ecdc4;cursor:pointer;">↺</button>
+    </div>
+    <!-- Row 2: checkboxes + buttons -->
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px;font-family:'Cinzel',serif;font-size:0.56rem;">
+      <label style="display:flex;align-items:center;gap:4px;cursor:pointer;color:#9a8060;"><input type="checkbox" id="sacks-primes-only" style="accent-color:var(--gold);" onchange="if(window.sacksDrawSpiral)sacksDrawSpiral()"> Primes only</label>
+      <label style="display:flex;align-items:center;gap:4px;cursor:pointer;color:#34d399;"><input type="checkbox" id="sacks-show-primes" checked style="accent-color:#34d399;" onchange="if(window.sacksDrawSpiral)sacksDrawSpiral()"> Highlight primes</label>
+      <label style="display:flex;align-items:center;gap:4px;cursor:pointer;color:#f97316;"><input type="checkbox" id="sacks-color-divisors" style="accent-color:#f97316;" onchange="if(window.sacksDrawSpiral)sacksDrawSpiral()"> Color by d(n)</label>
+      <label style="display:flex;align-items:center;gap:4px;cursor:pointer;color:#4a90d9;"><input type="checkbox" id="sacks-show-spiral" checked style="accent-color:#4a90d9;" onchange="if(window.sacksDrawSpiral)sacksDrawSpiral()"> Spiral guide</label>
+      <span style="color:rgba(160,120,48,0.3);">|</span>
+      <label style="display:flex;align-items:center;gap:4px;cursor:pointer;color:#e879f9;"><input type="checkbox" id="sacks-inspect" style="accent-color:#e879f9;" onchange="if(window.sacksSetInspect)sacksSetInspect(this.checked)"> Inspect</label>
+      <span style="color:rgba(160,120,48,0.3);">|</span>
       <button onclick="if(window.sacksDrawSpiral)sacksDrawSpiral()" style="font-family:'Cinzel',serif;font-size:0.54rem;padding:3px 10px;border:1px solid var(--gold);background:var(--parchment-dark);color:var(--gold);cursor:pointer;">Draw</button>
       <button onclick="if(window.sacksExport)sacksExport()" style="font-family:'Cinzel',serif;font-size:0.54rem;padding:3px 10px;border:1px solid #9a8060;background:var(--parchment-dark);color:#9a8060;cursor:pointer;">&#9633; PNG</button>
     </div>
-    <canvas id="sacks-canvas" width="800" height="800" style="display:block;width:100%;height:auto;background:#020100;border-radius:3px;cursor:crosshair;" title="Sacks spiral: integer n at (√n·cos(2π√n), √n·sin(2π√n))"></canvas>
+    <!-- Canvas -->
+    <div style="position:relative;">
+      <canvas id="sacks-canvas" width="800" height="800" style="display:block;width:100%;height:auto;background:#020100;border-radius:3px;cursor:crosshair;"></canvas>
+      <!-- Inspect tooltip -->
+      <div id="sacks-tooltip" style="display:none;position:absolute;pointer-events:none;background:#0e0b05;border:1px solid #c49b38;padding:8px 12px;font-family:'Cinzel',serif;font-size:0.58rem;line-height:1.8;color:#e8d9b0;min-width:140px;z-index:10;border-radius:3px;"></div>
+    </div>
     <div id="sacks-info" style="font-family:'Cinzel',serif;font-size:0.52rem;color:#9a8060;margin-top:6px;line-height:1.7;"></div>
   </div>
 </div>
@@ -5013,6 +5029,8 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
     var nthRow   = document.getElementById('f-label-nth-row');
     if (rangeRow) rangeRow.style.display = v==='range' ? 'flex' : 'none';
     if (nthRow)   nthRow.style.display   = v==='nth'   ? 'flex' : 'none';
+    // User manually changed scope — lift the popup label cap so all rings can label
+    window._wcLabelLimit = 99999;
     if (window.fareyRedraw) fareyRedraw();
   };
 
@@ -13376,10 +13394,10 @@ window.tbSendToMain = function() {
     var lx=pad.l+pw*0.60, ly=pad.t+12, ls=38;
     var items=[
       {col:'rgba(52,211,153,0.75)',lbl:'Farey gaps (N='+N+')',fill:true},
-      showRiemann&&{col:'rgba(250,204,21,0.75)',lbl:'\u03b6(\u00bd+it) zeros (n='+rGaps.length+')',fill:true,dash:true},
+      showRiemann&&{col:'rgba(250,204,21,0.75)',lbl:'\u03b6(\u00bd+it) zeros (n='+rGaps.length+')',fill:true},
       showGUE&&{col:'#a855f7',lbl:'GUE  P(s)=32s\u00b2/\u03c0\u00b2\u00b7e^(\u22124s\u00b2/\u03c0)',fill:false},
-      showGOE&&{col:'#f97316',lbl:'GOE  P(s)=\u03c0s/2\u00b7e^(\u2212\u03c0s\u00b2/4)',fill:false,dash:true},
-      showPoisson&&{col:'#4a90d9',lbl:'Poisson  P(s)=e^(\u2212s)',fill:false,dash:true},
+      showGOE&&{col:'#f97316',lbl:'GOE  P(s)=\u03c0s/2\u00b7e^(\u2212\u03c0s\u00b2/4)',fill:false,dash:[12,6]},
+      showPoisson&&{col:'#4a90d9',lbl:'Poisson  P(s)=e^(\u2212s)',fill:false,dash:[6,6]},
       showMagic&&{col:'rgba(248,113,113,0.8)',lbl:'Nuclear magic number spacings',fill:false,dash:[8,5]},
     ].filter(Boolean);
     items.forEach(function(it,i){
@@ -13982,11 +14000,11 @@ window.tbSendToMain = function() {
       // Colmode — always rainbow-residue
       setV('f-pt-colmode','rainbow-residue');
       if(window.fareyPtColModeChange)fareyPtColModeChange();
-      // Labels: fraction, all, size, limit
-      setV('f-label','fraction');
+      // Labels: none by default — scope/mode dropdowns work freely from here
+      setV('f-label','none');
       setV('f-label-scope','all');
       setV('f-lsize',s.lsize); setTxt('f-lsize-val',s.lsize);
-      window._wcLabelLimit=s.labelLimit;
+      window._wcLabelLimit=99999;  // no cap — user controls scope via dropdown
       // Mod N
       setV('f-mod',Math.min(512,n)); setV('f-mod-num',n);
       var modSl=document.getElementById('f-mod');
@@ -14089,134 +14107,213 @@ window.tbSendToMain = function() {
 <script>
 // ══ SACKS NUMBER SPIRAL ═══════════════════════════════════════════════════
 (function(){
-  function isPrime(n){
-    if(n<2)return false; if(n<4)return true;
-    if(n%2===0||n%3===0)return false;
-    for(var i=5;i*i<=n;i+=6) if(n%i===0||n%(i+2)===0) return false;
-    return true;
-  }
-  function numDivisors(n){
-    if(n===1)return 1;
-    var d=0,sq=Math.sqrt(n);
-    for(var i=1;i<=sq;i++) if(n%i===0) d+=i<sq?2:1;
-    return d;
+  // ── helpers ──────────────────────────────────────────────────────────────
+  function isPrime(n){if(n<2)return false;if(n<4)return true;if(n%2===0||n%3===0)return false;for(var i=5;i*i<=n;i+=6)if(n%i===0||n%(i+2)===0)return false;return true;}
+  function numDivisors(n){if(n===1)return 1;var d=0,sq=Math.sqrt(n);for(var i=1;i<=sq;i++)if(n%i===0)d+=i<sq?2:1;return d;}
+  function primeFactors(n){var f=[],k=n;for(var p=2;p*p<=k;p++){while(k%p===0){f.push(p);k/=p;}}if(k>1)f.push(k);return f;}
+
+  // ── state ─────────────────────────────────────────────────────────────────
+  var _pts      = [];   // {n, x, y, px, py, prime, divs} — pixel coords after last draw
+  var _sieve    = null;
+  var _lastLimit= 0;
+  var _inspectOn= false;
+  var _W=800, _H=800;
+
+  function _buildSieve(limit){
+    _sieve = new Uint8Array(limit+1);
+    _sieve[0]=_sieve[1]=1;
+    for(var i=2;i*i<=limit;i++) if(!_sieve[i]) for(var j=i*i;j<=limit;j+=i) _sieve[j]=1;
+    _lastLimit=limit;
   }
 
+  function _ptColor(n, prime, divs, maxDiv, hlPrimes, colorDiv){
+    if(prime) return hlPrimes ? '#34d399' : 'rgba(196,155,56,0.7)';
+    if(colorDiv){
+      var t=divs/maxDiv;
+      var r=Math.round(255*Math.min(1,t*2));
+      var g=Math.round(255*(t<0.5?t*2:1-(t-0.5)*2));
+      var b=Math.round(255*Math.max(0,1-t*2));
+      return 'rgb('+r+','+g+','+b+')';
+    }
+    return 'rgba(196,155,56,0.45)';
+  }
+
+  // ── main draw ─────────────────────────────────────────────────────────────
   window.sacksDrawSpiral = function(overrideN){
     var c = document.getElementById('sacks-canvas'); if(!c) return;
     var ctx = c.getContext('2d');
-    var W = c.width, H = c.height;
-    ctx.clearRect(0,0,W,H);
-    ctx.fillStyle = '#020100'; ctx.fillRect(0,0,W,H);
+    _W = c.width; _H = c.height;
+    ctx.clearRect(0,0,_W,_H);
+    ctx.fillStyle='#020100'; ctx.fillRect(0,0,_W,_H);
 
-    var limit      = overrideN || parseInt(document.getElementById('sacks-limit').value) || 2000;
+    var limit      = overrideN || parseInt((document.getElementById('sacks-limit')||{value:'2000'}).value)||2000;
     var dotSizePx  = parseInt((document.getElementById('sacks-dotsize')||{value:'5'}).value)/10;
-    var primesOnly = (document.getElementById('sacks-primes-only')||{}).checked;
+    var primesOnly = !!(document.getElementById('sacks-primes-only')||{}).checked;
     var hlPrimes   = (document.getElementById('sacks-show-primes')||{checked:true}).checked;
-    var colorDiv   = (document.getElementById('sacks-color-divisors')||{}).checked;
+    var colorDiv   = !!(document.getElementById('sacks-color-divisors')||{}).checked;
+    var showSpiral = (document.getElementById('sacks-show-spiral')||{checked:true}).checked;
+    var rotDeg     = parseInt((document.getElementById('sacks-rotate')||{value:'0'}).value)||0;
+    var rotRad     = rotDeg * Math.PI / 180;
 
-    // Sacks: n sits at angle θ=2π√n (radians), radius r=√n
-    // Scale so √limit fits comfortably in canvas
-    var margin = 0.05;
-    var maxR   = Math.sqrt(limit);
-    var scale  = (W/2) * (1 - margin) / maxR;
-    var cx = W/2, cy = H/2;
+    if(!_sieve || _lastLimit < limit) _buildSieve(limit);
 
-    // Pre-sieve primes for speed
-    var sieve = new Uint8Array(limit+1);
-    sieve[0]=sieve[1]=1;
-    for(var i=2;i*i<=limit;i++) if(!sieve[i]) for(var j=i*i;j<=limit;j+=i) sieve[j]=1;
+    var maxR  = Math.sqrt(limit);
+    var margin= 0.05;
+    var scale = (_W/2)*(1-margin)/maxR;
+    var cx=_W/2, cy=_H/2;
 
     // Max divisors for colour normalisation
-    var maxDiv = 1;
-    if(colorDiv){
-      for(var k=1;k<=Math.min(limit,10000);k++){ var d=numDivisors(k); if(d>maxDiv)maxDiv=d; }
+    var maxDiv=1;
+    if(colorDiv) for(var k=2;k<=limit;k++){var d=numDivisors(k);if(d>maxDiv)maxDiv=d;}
+
+    // Spiral guide
+    if(showSpiral){
+      ctx.beginPath();
+      for(var s=0;s<=limit*4;s++){
+        var t=s/4, sq2=Math.sqrt(t);
+        var ang=2*Math.PI*sq2-Math.PI/2+rotRad;
+        var rx=cx+sq2*scale*Math.cos(ang), ry=cy+sq2*scale*Math.sin(ang);
+        s===0?ctx.moveTo(rx,ry):ctx.lineTo(rx,ry);
+      }
+      ctx.strokeStyle='rgba(196,155,56,0.07)'; ctx.lineWidth=0.5; ctx.stroke();
     }
 
-    // Draw connecting spiral arm (faint guide)
-    ctx.beginPath();
-    var steps = limit*4;
-    for(var s=0;s<=steps;s++){
-      var t = s/4; // fractional n
-      var sq2 = Math.sqrt(t);
-      var ang = 2*Math.PI*sq2 - Math.PI/2;
-      var rx = cx + sq2*scale*Math.cos(ang);
-      var ry = cy + sq2*scale*Math.sin(ang);
-      s===0 ? ctx.moveTo(rx,ry) : ctx.lineTo(rx,ry);
-    }
-    ctx.strokeStyle='rgba(196,155,56,0.06)'; ctx.lineWidth=0.5; ctx.stroke();
+    // Crosshairs
+    ctx.strokeStyle='rgba(196,155,56,0.08)'; ctx.lineWidth=0.5;
+    ctx.beginPath(); ctx.moveTo(cx,0); ctx.lineTo(cx,_H); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(0,cy); ctx.lineTo(_W,cy); ctx.stroke();
 
-    // Draw integers
+    // Draw points — batch by color
+    _pts=[];
+    var batches={};
     var primeCount=0, compositeCount=0;
     for(var n=1;n<=limit;n++){
-      var prime = !sieve[n];
-      if(primesOnly && !prime) continue;
-
-      var sqN = Math.sqrt(n);
-      var ang = 2*Math.PI*sqN - Math.PI/2; // −π/2 so 0 starts at top
-      var px  = cx + sqN*scale*Math.cos(ang);
-      var py  = cy + sqN*scale*Math.sin(ang);
-
-      // Colour
-      var col;
-      if(colorDiv && !prime){
-        var dv = numDivisors(n);
-        var t2 = dv/maxDiv; // 0→1
-        // Heat map: low=blue, mid=green, high=orange/red
-        var r2=Math.round(255*Math.min(1,t2*2));
-        var g2=Math.round(255*(t2<0.5?t2*2:1-(t2-0.5)*2));
-        var b2=Math.round(255*Math.max(0,1-t2*2));
-        col='rgb('+r2+','+g2+','+b2+')';
-      } else if(prime && hlPrimes){
-        col='#34d399'; // bright green for primes
-      } else if(prime){
-        col='#34d399';
-      } else {
-        // Composite: dim gold, size proportional to divisor count
-        col='rgba(196,155,56,0.55)';
-      }
-
-      var r2 = prime ? Math.max(dotSizePx*1.5, 1.5) : Math.max(dotSizePx, 0.8);
-      ctx.beginPath(); ctx.arc(px,py,r2,0,2*Math.PI);
-      ctx.fillStyle=col; ctx.fill();
-
+      var prime=!_sieve[n];
+      if(primesOnly&&!prime) continue;
+      var sqN=Math.sqrt(n);
+      var ang=2*Math.PI*sqN-Math.PI/2+rotRad;
+      var px=cx+sqN*scale*Math.cos(ang);
+      var py=cy+sqN*scale*Math.sin(ang);
+      var divs=colorDiv&&!prime?numDivisors(n):2;
+      var col=_ptColor(n,prime,divs,maxDiv,hlPrimes,colorDiv);
+      var r2=prime?Math.max(dotSizePx*1.6,1.5):Math.max(dotSizePx,0.8);
+      if(!batches[col]) batches[col]=[];
+      batches[col].push({px:px,py:py,r:r2});
+      _pts.push({n:n,px:px,py:py,r:r2,prime:prime,divs:colorDiv?numDivisors(n):0});
       if(prime) primeCount++; else compositeCount++;
     }
-
-    // Axis crosshairs
-    ctx.strokeStyle='rgba(196,155,56,0.1)'; ctx.lineWidth=0.5;
-    ctx.beginPath(); ctx.moveTo(cx,0); ctx.lineTo(cx,H); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(0,cy); ctx.lineTo(W,cy); ctx.stroke();
+    // Render batches
+    Object.keys(batches).forEach(function(col){
+      ctx.fillStyle=col;
+      ctx.beginPath();
+      batches[col].forEach(function(d){ctx.moveTo(d.px+d.r,d.py);ctx.arc(d.px,d.py,d.r,0,2*Math.PI);});
+      ctx.fill();
+    });
 
     // Info
     var infoEl=document.getElementById('sacks-info');
     if(infoEl) infoEl.innerHTML=
-      'n = 1 … '+limit.toLocaleString()+
-      ' &nbsp;·&nbsp; <span style="color:#34d399;">'+primeCount.toLocaleString()+' primes</span>'+
-      (primesOnly?'':' &nbsp;·&nbsp; <span style="color:rgba(196,155,56,0.7);">'+compositeCount.toLocaleString()+' composites</span>')+
-      ' &nbsp;·&nbsp; dot size '+dotSizePx.toFixed(1)+'px'+
-      ' &nbsp;·&nbsp; <span style="color:rgba(255,255,255,0.35);">Sacks (1994): θ = 2π√n, r = √n</span>';
+      'n = 1…'+limit.toLocaleString()+
+      ' · <span style="color:#34d399;">'+primeCount.toLocaleString()+' primes</span>'+
+      (primesOnly?'':' · <span style="color:rgba(196,155,56,0.7);">'+compositeCount.toLocaleString()+' composites</span>')+
+      ' · dot '+dotSizePx.toFixed(1)+'px · rotate '+rotDeg+'°'+
+      ' · <span style="color:rgba(255,255,255,0.3);">θ = 2π√n, r = √n</span>';
   };
 
+  // ── inspect ───────────────────────────────────────────────────────────────
+  window.sacksSetInspect = function(on){
+    _inspectOn=on;
+    var c=document.getElementById('sacks-canvas');
+    if(c) c.style.cursor=on?'crosshair':'default';
+    if(!on){
+      var tt=document.getElementById('sacks-tooltip');
+      if(tt) tt.style.display='none';
+    }
+  };
+
+  function _nearestPt(mx, my){
+    var best=null, bestD=Infinity;
+    // Scale mouse coords to canvas pixel coords
+    var c=document.getElementById('sacks-canvas');
+    var rect=c.getBoundingClientRect();
+    var scaleX=c.width/rect.width, scaleY=c.height/rect.height;
+    var cx=(mx-rect.left)*scaleX, cy2=(my-rect.top)*scaleY;
+    for(var i=0;i<_pts.length;i++){
+      var p=_pts[i];
+      var d=Math.hypot(p.px-cx,p.py-cy2);
+      if(d<bestD&&d<Math.max(p.r+12,16)){bestD=d;best=p;}
+    }
+    return best;
+  }
+
+  function _showTooltip(p, mx, my){
+    var tt=document.getElementById('sacks-tooltip'); if(!tt) return;
+    var c=document.getElementById('sacks-canvas');
+    var rect=c.getBoundingClientRect();
+    // Position relative to canvas div
+    var relX=(mx-rect.left)/rect.width*100;
+    var relY=(my-rect.top)/rect.height*100;
+    var n=p.n;
+    var divs=numDivisors(n);
+    var pf=primeFactors(n);
+    var sqN=Math.sqrt(n);
+    var ang=(2*Math.PI*sqN)*180/Math.PI;
+    var col=p.prime?'#34d399':'#c49b38';
+    tt.innerHTML=
+      '<div style="color:'+col+';font-size:0.66rem;font-weight:700;margin-bottom:3px;">n = '+n+(p.prime?' <span style="color:#34d399;font-size:0.5rem;">PRIME</span>':'')+'</div>'+
+      '<div style="color:#9a8060;">factored: <span style="color:#e8d9b0;">'+(pf.length?pf.join('·'):'1')+'</span></div>'+
+      '<div style="color:#9a8060;">d(n) divisors: <span style="color:#e8d9b0;">'+divs+'</span></div>'+
+      '<div style="color:#9a8060;">√n: <span style="color:#4ecdc4;">'+sqN.toFixed(4)+'</span></div>'+
+      '<div style="color:#9a8060;">θ (turns): <span style="color:#4ecdc4;">'+(sqN % 1).toFixed(4)+'</span></div>';
+    // Position: flip if near right/bottom edge
+    var left=relX>60?'auto':'calc('+relX+'% + 8px)';
+    var right=relX>60?'calc('+(100-relX)+'% + 8px)':'auto';
+    var top=relY>70?'auto':'calc('+relY+'% + 8px)';
+    var bottom=relY>70?'calc('+(100-relY)+'% + 8px)':'auto';
+    tt.style.left=left; tt.style.right=right; tt.style.top=top; tt.style.bottom=bottom;
+    tt.style.display='block';
+  }
+
+  // ── canvas events ─────────────────────────────────────────────────────────
+  document.addEventListener('DOMContentLoaded', function(){
+    var c=document.getElementById('sacks-canvas'); if(!c) return;
+    var tt=document.getElementById('sacks-tooltip');
+
+    c.addEventListener('mousemove', function(e){
+      if(!_inspectOn||!_pts.length) return;
+      var p=_nearestPt(e.clientX, e.clientY);
+      if(p) _showTooltip(p, e.clientX, e.clientY);
+      else if(tt) tt.style.display='none';
+    });
+    c.addEventListener('mouseleave', function(){
+      if(tt) tt.style.display='none';
+    });
+    c.addEventListener('click', function(e){
+      if(!_inspectOn||!_pts.length) return;
+      var p=_nearestPt(e.clientX, e.clientY);
+      if(p) _showTooltip(p, e.clientX, e.clientY);
+    });
+    // Touch support
+    c.addEventListener('touchstart', function(e){
+      if(!_inspectOn||!_pts.length) return;
+      var t=e.touches[0];
+      var p=_nearestPt(t.clientX, t.clientY);
+      if(p){_showTooltip(p,t.clientX,t.clientY);e.preventDefault();}
+    },{passive:false});
+  });
+
+  // ── export ────────────────────────────────────────────────────────────────
   window.sacksExport = function(){
     var c=document.getElementById('sacks-canvas'); if(!c)return;
     var a=document.createElement('a');
     var lim=(document.getElementById('sacks-limit')||{value:'2000'}).value;
-    a.download='sacks_spiral_n'+lim+'.png';
+    var rot=(document.getElementById('sacks-rotate')||{value:'0'}).value;
+    a.download='sacks_spiral_n'+lim+'_r'+rot+'.png';
     a.href=c.toDataURL('image/png'); a.click();
   };
 
-  // Auto-draw when section becomes visible (MutationObserver on display)
-  var _sacksDone=false;
-  var _sacksObs=new MutationObserver(function(){
-    var sec=document.getElementById('sacks-section');
-    if(sec&&sec.style.display!=='none'&&!_sacksDone){
-      _sacksDone=true;
-      window.sacksDrawSpiral();
-    }
-  });
-  var _sec=document.getElementById('sacks-section');
-  if(_sec) _sacksObs.observe(_sec,{attributes:true,attributeFilter:['style']});
+  // ── auto-draw tracked via _sacksDrewOnce flag set by header onclick ────────
+  window._sacksDrewOnce = false;
 
 })();
 </script>
