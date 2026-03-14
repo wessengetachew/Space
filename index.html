@@ -2605,11 +2605,28 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
                     </div>
                     <!-- Row 3: live tower sequence display -->
                     <div id="f-lift-sequence" style="color:#4ecdc4;font-size:0.55rem;letter-spacing:0.04em;line-height:1.8;"></div>
-                    <!-- Row 4: highlight point size (independent of global) -->
-                    <div style="display:flex;align-items:center;gap:8px;">
+                    <!-- Row 4: highlight point size + bg point opacity -->
+                    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
                       <span style="color:#9a8060;letter-spacing:0.08em;">HL SIZE</span>
-                      <input id="f-lift-hl-size" type="range" min="50" max="600" value="200" style="flex:1;accent-color:#4ecdc4;" oninput="document.getElementById('f-lift-hl-val').textContent=this.value+'%';fareyRedraw()">
-                      <span id="f-lift-hl-val" style="color:#4ecdc4;min-width:36px;text-align:right;">200%</span>
+                      <input id="f-lift-hl-size" type="range" min="50" max="600" value="200" style="width:70px;accent-color:#4ecdc4;" oninput="document.getElementById('f-lift-hl-val').textContent=this.value+'%';fareyRedraw()">
+                      <span id="f-lift-hl-val" style="color:#4ecdc4;min-width:36px;">200%</span>
+                      <span style="color:rgba(160,120,48,0.4);">|</span>
+                      <span style="color:#9a8060;letter-spacing:0.08em;" title="Opacity of non-lift background points — slide to 0 to hide all non-tower points">BG OPACITY</span>
+                      <input id="f-lift-bg-opacity" type="range" min="0" max="100" value="100" style="width:60px;accent-color:#4ecdc4;" oninput="document.getElementById('f-lift-bg-op-val').textContent=this.value+'%';fareyRedraw()">
+                      <span id="f-lift-bg-op-val" style="color:#4ecdc4;min-width:32px;">100%</span>
+                    </div>
+                    <!-- Row 5: line opacity -->
+                    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                      <span style="color:#9a8060;letter-spacing:0.08em;">LINE OPACITY</span>
+                      <input id="f-lift-line-opacity" type="range" min="5" max="100" value="85" style="width:70px;accent-color:#4ecdc4;" oninput="document.getElementById('f-lift-line-op-val').textContent=this.value+'%';fareyRedraw()">
+                      <span id="f-lift-line-op-val" style="color:#4ecdc4;min-width:32px;">85%</span>
+                      <span style="color:rgba(160,120,48,0.4);">|</span>
+                      <!-- Data sheet toggle -->
+                      <button id="f-lift-sheet-btn" onclick="if(window.fareyLiftSheetToggle)fareyLiftSheetToggle()" style="font-family:'Cinzel',serif;font-size:0.48rem;letter-spacing:0.07em;text-transform:uppercase;padding:2px 8px;border:1px solid #4ecdc4;background:var(--parchment-dark);color:#4ecdc4;cursor:pointer;">&#9660; Data Sheet</button>
+                    </div>
+                    <!-- Lift data sheet (collapsible) -->
+                    <div id="farey-lift-sheet" style="display:none;margin-top:4px;background:rgba(0,0,0,0.3);border:1px solid rgba(78,205,196,0.2);border-radius:3px;padding:6px 10px;font-size:0.5rem;max-height:260px;overflow-y:auto;">
+                      <div id="farey-lift-sheet-body" style="color:#e8d9b0;line-height:1.9;"></div>
                     </div>
                   </div>
                 </div>
@@ -3067,10 +3084,10 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
                     </div>
                     <div style="margin-top:8px;color:#9a8060;font-size:0.58rem;">POINT SIZE</div>
                     <div style="display:flex;align-items:center;gap:8px;margin-top:3px;">
-                      <input id="f-ptsize" type="range" min="1" max="400" value="100" style="flex:1;accent-color:var(--gold);" oninput="document.getElementById('f-ptsize-num').value=this.value;document.getElementById('f-ptsize-val').textContent=this.value+'%';fareyRedraw()">
-                      <input id="f-ptsize-num" type="number" min="1" max="400" value="100" style="width:44px;background:var(--parchment-deep);color:var(--ink);border:1px solid var(--border);padding:1px 3px;font-family:'Cinzel',serif;font-size:0.6rem;text-align:center;" oninput="var v=Math.min(400,Math.max(1,parseInt(this.value)||1));document.getElementById('f-ptsize').value=v;document.getElementById('f-ptsize-val').textContent=v+'%';fareyRedraw()"><span id="f-ptsize-val" style="display:none;">100%</span>
+                      <input id="f-ptsize" type="range" min="0" max="400" value="100" style="flex:1;accent-color:var(--gold);" oninput="document.getElementById('f-ptsize-num').value=this.value;document.getElementById('f-ptsize-val').textContent=this.value+'%';fareyRedraw()">
+                      <input id="f-ptsize-num" type="number" min="0" max="400" value="100" style="width:44px;background:var(--parchment-deep);color:var(--ink);border:1px solid var(--border);padding:1px 3px;font-family:'Cinzel',serif;font-size:0.6rem;text-align:center;" oninput="var v=Math.min(400,Math.max(0,parseInt(this.value)||0));document.getElementById('f-ptsize').value=v;document.getElementById('f-ptsize-val').textContent=v+'%';fareyRedraw()"><span id="f-ptsize-val" style="display:none;">100%</span>
                     </div>
-<div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:4px;"><button onclick="document.getElementById('f-ptsize').value=1;document.getElementById('f-ptsize-num').value=1;fareyRedraw()" style="font-family:'Cinzel',serif;font-size:0.54rem;padding:2px 6px;border:1px solid var(--border);background:var(--parchment-dark);color:var(--gold);cursor:pointer;">1</button><button onclick="document.getElementById('f-ptsize').value=25;document.getElementById('f-ptsize-num').value=25;fareyRedraw()" style="font-family:'Cinzel',serif;font-size:0.54rem;padding:2px 6px;border:1px solid var(--border);background:var(--parchment-dark);color:var(--gold);cursor:pointer;">25</button><button onclick="document.getElementById('f-ptsize').value=50;document.getElementById('f-ptsize-num').value=50;fareyRedraw()" style="font-family:'Cinzel',serif;font-size:0.54rem;padding:2px 6px;border:1px solid var(--border);background:var(--parchment-dark);color:var(--gold);cursor:pointer;">50</button><button onclick="document.getElementById('f-ptsize').value=75;document.getElementById('f-ptsize-num').value=75;fareyRedraw()" style="font-family:'Cinzel',serif;font-size:0.54rem;padding:2px 6px;border:1px solid var(--border);background:var(--parchment-dark);color:var(--gold);cursor:pointer;">75</button><button onclick="document.getElementById('f-ptsize').value=100;document.getElementById('f-ptsize-num').value=100;fareyRedraw()" style="font-family:'Cinzel',serif;font-size:0.54rem;padding:2px 6px;border:1px solid var(--border);background:var(--parchment-dark);color:var(--gold);cursor:pointer;">100</button><button onclick="document.getElementById('f-ptsize').value=200;document.getElementById('f-ptsize-num').value=200;fareyRedraw()" style="font-family:'Cinzel',serif;font-size:0.54rem;padding:2px 6px;border:1px solid var(--border);background:var(--parchment-dark);color:var(--gold);cursor:pointer;">200</button></div>
+<div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:4px;"><button onclick="document.getElementById('f-ptsize').value=0;document.getElementById('f-ptsize-num').value=0;fareyRedraw()" style="font-family:'Cinzel',serif;font-size:0.54rem;padding:2px 6px;border:1px solid var(--border);background:var(--parchment-dark);color:#c94040;cursor:pointer;">0</button><button onclick="document.getElementById('f-ptsize').value=1;document.getElementById('f-ptsize-num').value=1;fareyRedraw()" style="font-family:'Cinzel',serif;font-size:0.54rem;padding:2px 6px;border:1px solid var(--border);background:var(--parchment-dark);color:var(--gold);cursor:pointer;">1</button><button onclick="document.getElementById('f-ptsize').value=25;document.getElementById('f-ptsize-num').value=25;fareyRedraw()" style="font-family:'Cinzel',serif;font-size:0.54rem;padding:2px 6px;border:1px solid var(--border);background:var(--parchment-dark);color:var(--gold);cursor:pointer;">25</button><button onclick="document.getElementById('f-ptsize').value=50;document.getElementById('f-ptsize-num').value=50;fareyRedraw()" style="font-family:'Cinzel',serif;font-size:0.54rem;padding:2px 6px;border:1px solid var(--border);background:var(--parchment-dark);color:var(--gold);cursor:pointer;">50</button><button onclick="document.getElementById('f-ptsize').value=75;document.getElementById('f-ptsize-num').value=75;fareyRedraw()" style="font-family:'Cinzel',serif;font-size:0.54rem;padding:2px 6px;border:1px solid var(--border);background:var(--parchment-dark);color:var(--gold);cursor:pointer;">75</button><button onclick="document.getElementById('f-ptsize').value=100;document.getElementById('f-ptsize-num').value=100;fareyRedraw()" style="font-family:'Cinzel',serif;font-size:0.54rem;padding:2px 6px;border:1px solid var(--border);background:var(--parchment-dark);color:var(--gold);cursor:pointer;">100</button><button onclick="document.getElementById('f-ptsize').value=200;document.getElementById('f-ptsize-num').value=200;fareyRedraw()" style="font-family:'Cinzel',serif;font-size:0.54rem;padding:2px 6px;border:1px solid var(--border);background:var(--parchment-dark);color:var(--gold);cursor:pointer;">200</button></div>
                     </div>
                   </div>
 
@@ -3211,8 +3228,8 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
                     </div>
                     <div style="margin-top:8px;color:#4ecdc4;">LIFT LINE THICKNESS</div>
                     <div style="display:flex;align-items:center;gap:8px;margin-top:4px;">
-                      <input id="f-lift-thick" type="range" min="1" max="40" value="12" style="flex:1;accent-color:#4ecdc4;" oninput="document.getElementById('f-lift-thick-val').textContent=(this.value/10).toFixed(1);fareyRedraw()">
-                      <span id="f-lift-thick-val" style="color:#4ecdc4;min-width:28px;text-align:right;">1.2</span>
+                      <input id="f-lift-thick" type="range" min="1" max="200" value="20" style="flex:1;accent-color:#4ecdc4;" oninput="document.getElementById('f-lift-thick-val').textContent=this.value+'px';fareyRedraw()">
+                      <span id="f-lift-thick-val" style="color:#4ecdc4;min-width:28px;text-align:right;">20px</span>
                     </div>
                   </div>
 
@@ -3904,6 +3921,10 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
       else { syncCombinedSize(); drawCombined(); }
     } else {
       drawFarey('coprime'); drawFarey('noncoprime');
+      // Gap overlay on coprime canvas in basic split view
+      if (window._overlayGap !== null && window._overlayGap !== undefined && window._overlayPairs && window._overlayPairs.length > 0) {
+        if (typeof window.drawGapOverlay === 'function') window.drawGapOverlay(document.getElementById('fc-coprime'));
+      }
     }
     if (window._collapsedOn && typeof window.fareyDrawCollapsed === 'function') fareyDrawCollapsed();
     // Keep rz section mod in sync with top Farey tool
@@ -4201,14 +4222,33 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
       html2 += row('Share of all r/m', (ncpRatio*_dp(100)) + '%');
       html2 += row('Ratio ncp / total', ncpCount + ' / ' + total);
       html2 += divider();
+      // Show first 8, then collapsible "show all" toggle
       var showN = Math.min(8, gcdList.length);
       gcdList.slice(0, showN).forEach(function(g){
         var cnt = gcds[g];
-        html2 += row('gcd = ' + g, cnt + ' &nbsp;(' + ((cnt/ncpCount)*_dp(100)) + '%)');
+        html2 += row('gcd = ' + g, cnt.toLocaleString() + ' &nbsp;(' + ((cnt/ncpCount*100).toFixed(1)) + '%)');
       });
       if (gcdList.length > showN) {
-        var rem = gcdList.slice(showN).reduce(function(s,g){return s+gcds[g];},0);
-        html2 += row('+' + (gcdList.length-showN) + ' more gcd values', rem + ' pts', '#9a8060');
+        var hiddenGcds = gcdList.slice(showN);
+        var rem = hiddenGcds.reduce(function(s,g){return s+gcds[g];},0);
+        var uid = 'ncp-gcd-expand-' + modN;
+        // Collapsed summary row (click to expand)
+        html2 += '<div id="' + uid + '-btn" onclick="(function(){'
+          + 'var b=document.getElementById(\'' + uid + '-body\');'
+          + 'var t=document.getElementById(\'' + uid + '-btn\');'
+          + 'if(b.style.display===\'none\'){b.style.display=\'block\';t.querySelector(\'span\').textContent=\'\u25b2 collapse\';}' 
+          + 'else{b.style.display=\'none\';t.querySelector(\'span\').textContent=\'+' + hiddenGcds.length + ' more gcd values (' + rem.toLocaleString() + ' pts)\';}' 
+          + '})()" style="display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid rgba(196,155,56,0.07);padding:1px 0;cursor:pointer;">'
+          + '<span style="color:#4ecdc4;font-size:0.54rem;">+' + hiddenGcds.length + ' more gcd values (' + rem.toLocaleString() + ' pts)</span>'
+          + '<span style="color:#9a8060;font-size:0.46rem;">&#9660; expand</span>'
+          + '</div>';
+        // Hidden full list
+        html2 += '<div id="' + uid + '-body" style="display:none;">';
+        hiddenGcds.forEach(function(g){
+          var cnt = gcds[g];
+          html2 += row('gcd = ' + g, cnt.toLocaleString() + ' &nbsp;(' + ((cnt/ncpCount*100).toFixed(1)) + '%)');
+        });
+        html2 += '</div>';
       }
       html2 += divider();
       html2 += row('T('+modN+') = Σ m, m=1…'+modN+'  (triangular)', (verified?'✓ ':'! ') + triangleTotal.toLocaleString(), teal);
@@ -4486,15 +4526,17 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
     var _labelModMin = parseInt((document.getElementById('f-label-mod-min')||{value:'1'}).value)||1;
     var _labelModMax = parseInt((document.getElementById('f-label-mod-max')||{value:'19'}).value)||19;
     var _labelModNth = parseInt((document.getElementById('f-label-mod-nth')||{value:'5'}).value)||5;
-    var _ptScale=(parseInt(document.getElementById('f-ptsize')&&document.getElementById('f-ptsize').value)||100)/100;
-    var _noLabels = labelMode==='none' || !!window._showDipole;
+    var _ptScale=(document.getElementById('f-ptsize')?parseInt(document.getElementById('f-ptsize').value)/100:1);
+      var _noLabels = labelMode==='none' || !!window._showDipole;
 
     if (_noLabels) {
+      if (_ptScale <= 0) { ctx.globalAlpha=1; return; }  // ptsize=0: skip all points
       // ── Fast batch path: group by color, one fill() per color ────────────
       var _batches = {};
       pts.forEach(function(p){
         var xy = ptXY(p.r,p.m);
-        var dotR = Math.max(0.5, (1-p.m/modN*0.1) * (W/400) * _ptScale);
+        var dotR = (1-p.m/modN*0.1) * (W/400) * _ptScale;
+        if(!dotR||dotR<=0) return;
         var dotColor = getPointColor(p, which, modN, color);
         if (!_batches[dotColor]) _batches[dotColor] = [];
         _batches[dotColor].push({x:xy.x, y:xy.y, r:dotR});
@@ -4511,7 +4553,8 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
       var _lblCount=0, _lblLimit=window._wcLabelLimit||99999;
       pts.forEach(function(p){
         var xy=ptXY(p.r,p.m);
-        var dotR=Math.max(0.5, (1-p.m/modN*0.1) * (W/400) * _ptScale);
+        var dotR=(1-p.m/modN*0.1) * (W/400) * _ptScale;
+        if(dotR<=0) return;
         ctx.globalAlpha=1;
         var dotColor = getPointColor(p, which, modN, color);
         var lbl='';
@@ -4794,8 +4837,8 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
       var sp  = document.getElementById('f-spokes');        if (sp)  sp.checked  = false;
       var sm  = document.getElementById('f-samemod');       if (sm)  sm.checked  = false;
       var cx2 = document.getElementById('f-crossmod');      if (cx2) cx2.checked = false;
-      // Switch to split view on open
-      if (window.fareyAdvSplit) { fareyAdvSplit(); } else if (window.fareyCombinedMode) { fareyCombinedMode('coprime'); }
+      // Default to combined gcd=1 view on open (not split)
+      if (window.fareyCombinedMode) { fareyCombinedMode('coprime'); }
       if (!window._advancedEverOpened) {
         _combinedAngle = (_savedAngle + 90) % 360;
         window._advancedEverOpened = true;
@@ -6160,43 +6203,69 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
       var _labelModMax2 = parseInt((document.getElementById('f-label-mod-max')||{value:'19'}).value)||19;
       var _labelModNth2 = parseInt((document.getElementById('f-label-mod-nth')||{value:'5'}).value)||5;
       var _which = s.color === col1 ? 'coprime' : 'noncoprime';
-      var _ptScale=(parseInt(document.getElementById('f-ptsize')&&document.getElementById('f-ptsize').value)||100)/100;
+      var _ptScale=(document.getElementById('f-ptsize')?parseInt(document.getElementById('f-ptsize').value)/100:1);
       var _noLabels = labelMode==='none' || !!window._showDipole;
+      // Lift mode: bg opacity + hl-size boost for tower rings
+      var _isLiftOn = !!(window._liftModeActive && window._liftModeActive());
+      var _liftBgOp2   = _isLiftOn ? parseInt((document.getElementById('f-lift-bg-opacity')||{value:'100'}).value)/100 : 1;
+      var _liftHlSc2   = _isLiftOn ? parseInt((document.getElementById('f-lift-hl-size')||{value:'200'}).value)/100 : 1;
+      var _liftRings2  = null;
+      if (_isLiftOn) {
+        var _lp2x = window._getLiftParams ? window._getLiftParams() : {};
+        _liftRings2 = (_lp2x.seq || null);
+        if (!_liftRings2 && _lp2x.base && _lp2x.mult) {
+          _liftRings2 = []; var _cr2x = _lp2x.base;
+          while (_cr2x <= modN) { _liftRings2.push(_cr2x); _cr2x = Math.round(_cr2x * _lp2x.mult); }
+        }
+        if (_liftRings2) _liftRings2 = _liftRings2.filter(function(m){ return m <= modN; });
+      }
+      function _isOnLiftTower(m){ return !!(_liftRings2 && _liftRings2.indexOf(m) >= 0); }
 
       if (_noLabels && !_activeTooltipPt) {
-        // ── Fast batch: group by color, one fill() per bucket ──────────────
+        // ── Fast batch: group by color + tower status ──────────────────────
         var _cbatch = {};
         pts.forEach(function(p){
           var xy=ptXY(p.r,p.m); if(!xy) return;
-          var dotR=Math.max(0.5,(1-p.m/modN*0.1)*(W/400)*_ptScale);
+          var onTower = _isOnLiftTower(p.m);
+          var szScale = onTower ? _liftHlSc2 : 1;
+          var dotR=(1-p.m/modN*0.1)*(W/400)*_ptScale*szScale;
+          if(dotR<=0) return;
           var dotColor=getPointColor(p,_which,modN,color);
-          if(!_cbatch[dotColor]) _cbatch[dotColor]=[];
-          _cbatch[dotColor].push({x:xy.x,y:xy.y,r:dotR,pr:p.r,pm:p.m});
+          var bkey=dotColor+'|'+(onTower?'hl':'bg');
+          if(!_cbatch[bkey]) _cbatch[bkey]={col:dotColor,alpha:onTower?1:_liftBgOp2,pts:[]};
+          _cbatch[bkey].pts.push({x:xy.x,y:xy.y,r:dotR});
           var _ptKey=p.r+'/'+p.m;
           if(!_lastCombinedPtsSeen[_ptKey]){
             _lastCombinedPtsSeen[_ptKey]=true;
             _lastCombinedPts.push({px:xy.x,py:xy.y,r:p.r,m:p.m,gcd1:gcd(p.r,p.m)===1});
           }
         });
-        ctx.globalAlpha=1;
-        Object.keys(_cbatch).forEach(function(col){
+        Object.keys(_cbatch).forEach(function(bkey){
+          var bucket=_cbatch[bkey];
+          ctx.globalAlpha=bucket.alpha;
           ctx.beginPath();
-          _cbatch[col].forEach(function(d){ ctx.moveTo(d.x+d.r,d.y); ctx.arc(d.x,d.y,d.r,0,2*Math.PI); });
-          ctx.fillStyle=col; ctx.fill();
+          bucket.pts.forEach(function(d){ ctx.moveTo(d.x+d.r,d.y); ctx.arc(d.x,d.y,d.r,0,2*Math.PI); });
+          ctx.fillStyle=bucket.col; ctx.fill();
         });
+        ctx.globalAlpha=1;
       } else {
         // ── Per-point draw (labels or active tooltip) ─────────────────────
         var _wcLblCount2=0;
         pts.forEach(function(p){
           var xy=ptXY(p.r,p.m); if(!xy) return;
-          var dotR=Math.max(0.5,(1-p.m/modN*0.1)*(W/400)*_ptScale);
+          var onTower = _isOnLiftTower(p.m);
+          var szScale = onTower ? _liftHlSc2 : 1;
+          var dotR=(1-p.m/modN*0.1)*(W/400)*_ptScale*szScale;
+          if(dotR<=0){
+            if(isActive) dotR=2; else return;
+          }
           var isActive=_activeTooltipPt&&_activeTooltipPt.r===p.r&&_activeTooltipPt.m===p.m;
           var _ptKey=p.r+'/'+p.m;
           if(!_lastCombinedPtsSeen[_ptKey]){
             _lastCombinedPtsSeen[_ptKey]=true;
             _lastCombinedPts.push({px:xy.x,py:xy.y,r:p.r,m:p.m,gcd1:gcd(p.r,p.m)===1});
           }
-          ctx.globalAlpha=1;
+          ctx.globalAlpha = onTower ? 1 : _liftBgOp2;
           var dotColor=isActive?'#f0d060':getPointColor(p,_which,modN,color);
           var _lblLimit2=window._wcLabelLimit||99999;
           var showLabel=_wcLblCount2<_lblLimit2 && (
@@ -6545,7 +6614,9 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
     // ── LIFTING TOWER: b × a^n residue connections ───────────────────────
     if (window._liftModeActive && window._liftModeActive()) {
       function _gcd2(a,b){ while(b){var t=b;b=a%b;a=t;} return a; }
-      var _liftThick = parseInt((document.getElementById('f-lift-thick')||{value:'12'}).value) / 10;
+      var _liftThick = parseInt((document.getElementById('f-lift-thick')||{value:'20'}).value);
+      var _liftLineOpacity = parseInt((document.getElementById('f-lift-line-opacity')||{value:'85'}).value) / 100;
+      var _liftBgOpacity   = parseInt((document.getElementById('f-lift-bg-opacity')||{value:'100'}).value) / 100;
       var _lp = window._getLiftParams ? window._getLiftParams() : {};
       // Build tower sequence from params
       var liftRings = _lp.seq || null;
@@ -6581,6 +6652,7 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
       }
 
       // ── Mode A: seed selected — draw from that specific r/m ──────────
+      var _liftHlScale = parseInt((document.getElementById('f-lift-hl-size')||{value:'200'}).value)/100;
       if (_hasSeed && liftRings && liftRings.length >= 1) {
         // Find which ring the seed is on, or use seed's own m as base
         var seedBase = _seedM;
@@ -6598,12 +6670,11 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
         }
 
         // Draw YELLOW selected dot (the seed)
-        var _liftHlScale = parseInt((document.getElementById('f-lift-hl-size')||{value:'200'}).value)/100;
         var ptSeed = ptXY(_seedR, seedBase);
         if (ptSeed) {
           ctx.beginPath(); ctx.arc(ptSeed.x, ptSeed.y, Math.max(3, W*0.009*_liftHlScale), 0, 2*Math.PI);
           ctx.fillStyle = '#ffd700'; ctx.globalAlpha = 1; ctx.fill();
-          ctx.strokeStyle = '#fff'; ctx.lineWidth = Math.max(1, _liftThick*0.4);
+          ctx.strokeStyle = '#fff'; ctx.lineWidth = Math.max(1, _liftThick*0.3);
           ctx.globalAlpha = 0.8; ctx.stroke();
         }
 
@@ -6645,27 +6716,26 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
                   // WHITE — direct lift r→r
                   ctx.beginPath(); ctx.moveTo(pt1.x, pt1.y); ctx.lineTo(pt2.x, pt2.y);
                   ctx.strokeStyle = '#ffffff'; ctx.lineWidth = _liftThick;
-                  ctx.globalAlpha = 0.85; ctx.stroke();
+                  ctx.globalAlpha = _liftLineOpacity; ctx.stroke();
                 } else {
                   // BLACK (dark) — shifted copy r→r+k*m
                   ctx.beginPath(); ctx.moveTo(pt1.x, pt1.y); ctx.lineTo(pt2.x, pt2.y);
-                  ctx.strokeStyle = '#111111'; ctx.lineWidth = _liftThick;
-                  ctx.globalAlpha = 0.7; ctx.stroke();
+                  ctx.strokeStyle = '#4ecdc4'; ctx.lineWidth = _liftThick;
+                  ctx.globalAlpha = _liftLineOpacity * 0.82; ctx.stroke();
                   // secondary color border so visible on dark bg
                   ctx.beginPath(); ctx.moveTo(pt1.x, pt1.y); ctx.lineTo(pt2.x, pt2.y);
-                  ctx.strokeStyle = '#4ecdc4'; ctx.lineWidth = Math.max(0.5, _liftThick*0.35);
-                  ctx.globalAlpha = 0.5; ctx.stroke();
+                  
                 }
                 // Destination dot
-                ctx.beginPath(); ctx.arc(pt2.x, pt2.y, Math.max(3, W*0.007), 0, 2*Math.PI);
+                ctx.beginPath(); ctx.arc(pt2.x, pt2.y, Math.max(2, W*0.007*_liftHlScale), 0, 2*Math.PI);
                 ctx.fillStyle = isIdentity ? '#ffffff' : '#4ecdc4';
                 ctx.globalAlpha = 0.9; ctx.fill();
                 nextSurvivors.push(r2l);
               } else {
                 // Grey dashed — killed
                 ctx.beginPath(); ctx.moveTo(pt1.x, pt1.y); ctx.lineTo(pt2.x, pt2.y);
-                ctx.strokeStyle = '#666'; ctx.lineWidth = Math.max(0.4, _liftThick*0.3);
-                ctx.setLineDash([2,5]); ctx.globalAlpha = 0.2; ctx.stroke();
+                ctx.strokeStyle = '#555'; ctx.lineWidth = Math.max(1, _liftThick*0.15);
+                ctx.setLineDash([2,5]); ctx.globalAlpha = _liftLineOpacity * 0.25; ctx.stroke();
                 ctx.setLineDash([]);
               }
             }
@@ -6687,7 +6757,7 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
             if (_gcd2(r1l, m1) !== 1) continue;
             var pt1 = ptXY(r1l, m1);
             if (!pt1) continue;
-            ctx.beginPath(); ctx.arc(pt1.x, pt1.y, Math.max(2, W*0.005), 0, 2*Math.PI);
+            ctx.beginPath(); ctx.arc(pt1.x, pt1.y, Math.max(1.5, W*0.005*_liftHlScale), 0, 2*Math.PI);
             ctx.fillStyle = '#4ecdc4'; ctx.globalAlpha = alpha; ctx.fill();
 
             for (var k = 0; k < ratio; k++) {
@@ -6700,12 +6770,12 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
                 ctx.beginPath(); ctx.moveTo(pt1.x, pt1.y); ctx.lineTo(pt2.x, pt2.y);
                 ctx.strokeStyle = k===0 ? '#ffffff' : '#4ecdc4';
                 ctx.lineWidth = _liftThick * (k===0 ? 1 : 0.7);
-                ctx.globalAlpha = alpha * 0.7; ctx.stroke();
-                ctx.beginPath(); ctx.arc(pt2.x, pt2.y, Math.max(2, W*0.005), 0, 2*Math.PI);
+                ctx.globalAlpha = _liftLineOpacity * alpha * 0.7; ctx.stroke();
+                ctx.beginPath(); ctx.arc(pt2.x, pt2.y, Math.max(1.5, W*0.005*_liftHlScale), 0, 2*Math.PI);
                 ctx.fillStyle = k===0 ? '#ffffff' : '#4ecdc4'; ctx.globalAlpha = alpha+0.1; ctx.fill();
               } else {
                 ctx.beginPath(); ctx.moveTo(pt1.x, pt1.y); ctx.lineTo(pt2.x, pt2.y);
-                ctx.strokeStyle='#555'; ctx.lineWidth=Math.max(0.3,_liftThick*0.25);
+                ctx.strokeStyle='#555'; ctx.lineWidth=Math.max(1,_liftThick*0.15);
                 ctx.setLineDash([2,5]); ctx.globalAlpha=0.18; ctx.stroke(); ctx.setLineDash([]);
               }
             }
@@ -8548,6 +8618,11 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
 
   window.fareyShowGapOverlay = function (gap) {
     gap = parseInt(gap);
+    // Auto-switch to coprime combined view so gap lines are visible
+    var _combView = document.getElementById('farey-combined-view');
+    if (_combView && _combView.style.display === 'none') {
+      if (window.fareyCombinedMode) window.fareyCombinedMode('coprime');
+    }
     if (!_isValidPrimeGap(gap)) {
       alert('Gap ' + gap + ' is not a valid prime gap. Gaps must be 1 (for prime 2) or even.');
       return;
@@ -8777,6 +8852,11 @@ A unit circle is the set of points satisfying <em>x</em>² + <em>y</em>² = 1 �
   };
 
   window.fareyGapInputApply = function() {
+    // Auto-switch to combined view when gap is activated
+    var _combView = document.getElementById('farey-combined-view');
+    if (_combView && _combView.style.display === 'none') {
+      if (window.fareyCombinedMode) window.fareyCombinedMode('coprime');
+    }
     var el     = document.getElementById('f-gap-input');
     var status = document.getElementById('f-gap-input-status');
     if (!el) return;
